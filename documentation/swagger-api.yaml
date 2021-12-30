@@ -1,0 +1,601 @@
+swagger: "2.0"
+info:
+  description: "EPRO Projekt WS2021"
+  version: "1.0.0"
+  title: "EPRO OKR Projekt"
+host: "localhost:8080"
+basePath: "/api/v1"
+schemes:
+  - "http"
+paths:
+  /companyobjectives:
+    get:
+      tags:
+        - "Company Objectives"
+      summary: "Get all Companyobjectives"
+      description: "Gets all companyobjectives"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CompanyObjective"
+
+  /companyobjective/{id}:
+    get:
+      tags:
+        - "Company Objectives"
+      summary: "Get a CompanyObjective"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of CO to return"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: A companyobjective object
+          schema:
+            $ref: "#/definitions/CompanyObjective"
+        400:
+          description: Bad request. CO ID must be an integer and bigger than 0.
+        404:
+          description: CO with the specified ID not found
+    put:
+      tags:
+        - "Company Objectives"
+      summary: "Update a CompanyObjective"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Company Objective to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "Business Unit Objective to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+      responses:
+        200:
+          description: "Successfully Updated the Company Objective"
+
+  /companyobjective:
+    post:
+      tags:
+        - "Company Objectives"
+      summary: "Add a new CompanyObjective"
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Business Unit Objective to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+      responses:
+        "405":
+          description: "Invalid input"
+
+  /companykeyresults:
+    get:
+      tags:
+        - "Company Key Results"
+      summary: "Returns all Company Key Results"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successfully got all Company Key Results"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CompanyKeyResult"
+
+  /companyobjective/{coId}/keyresults:
+    get:
+      tags:
+        - "Company Key Results"
+      summary: "Returns all Key Results of the specified Company Objective"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "coId"
+          description: "The CompanyObjective for which the Keyresult are to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successfully got all Key Results"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CompanyKeyResult"
+    post:
+      tags:
+        - "Company Key Results"
+      summary: "Create a new Key Result for the specified Company Objective"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "coId"
+          description: "The CompanyObjective for which the new Keyresult shall be created"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "Key Result to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/CompanyKeyResult"
+      responses:
+        200:
+          description: "successfully created key result"
+
+  /companyKeyResults/{id}:
+    get:
+      tags:
+        - "Company Key Results"
+      summary: "Return the specified Company Key Result"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the C-KR to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned keyresult"
+          schema:
+            $ref: "#/definitions/CompanyKeyResult"
+    put:
+      tags:
+        - "Company Key Results"
+      summary: "Update the specified Company Key Result"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the C-KR to be updated"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated Key Result Object"
+          required: true
+          schema:
+            $ref: "#/definitions/CompanyKeyResult"
+      responses:
+        200:
+          description: "Successfully updated"
+
+  /companyKeyResults/{id}/history:
+    get:
+      tags:
+        - "Company Key Results"
+      summary: "Returns the history of the specified Company Key Result"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the C-KR of which the history is to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned KeyResult History"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CompanyKeyResult"
+
+  /companyKeyResults/{id}/history/{id}:
+    get:
+      tags:
+        - "Company Key Results"
+      summary: "Returns the specific Entry from the history of a keyresult"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the C-KR of which the history is to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned KeyResult History"
+          schema:
+            $ref: "#/definitions/CompanyKeyResult"
+
+  /businessUnits:
+    get:
+      tags:
+        - "Business Unit"
+      summary: "Get all Business Units"
+      description: "Gets all Business Units"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnit"
+
+  /businessUnit/{id}:
+    get:
+      tags:
+        - "Business Unit"
+      summary: "Get a Business Unit Object"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Business Unit to return"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/BusinessUnit"
+    put:
+      tags:
+        - "Business Unit"
+      summary: "Update a Business Unit"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Business Unit to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The new Business Unit Object"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnit"
+      responses:
+        200:
+          description: "Successfully Updated the Business Unit"
+
+  /businessUnit:
+    post:
+      tags:
+        - "Business Unit"
+      summary: "Create a Business Unit"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "The new Business Unit Object"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnit"
+      responses:
+        200:
+          description: "succesfully create Business Unit"
+
+  /businessUnitObjectives:
+    get:
+      tags:
+        - "Business Unit Objectives"
+      summary: "Get all Business Unit Objectives of all Business Units"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successfully returned all BUOs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitObjective"
+
+  /businessUnit/{businessUnitId}/objectives:
+    get:
+      tags:
+        - "Business Unit Objectives"
+      summary: "Get all Business Unit Objectives of a certain Business Unit"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "businessUnitId"
+          in: "path"
+          description: "ID of the Business Unit of which the Objectives will be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitObjective"
+    post:
+      tags:
+        - "Business Unit Objectives"
+      summary: "create a Business Unit Objective for the specified Business Unit"
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "businessUnitId"
+          in: "path"
+          description: "ID of the Business Unit for which the objective will be created"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The new Business Unit Objective"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+      responses:
+        200:
+          description: "successful operation"
+
+  /businessUnitObjective/{objectiveId}:
+    get:
+      tags:
+        - "Business Unit Objectives"
+      summary: "Get the specified Business Unit objective"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "objectiveId"
+          in: "path"
+          description: "Id of the Business Unit Objective"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+    put:
+      tags:
+        - "Business Unit Objectives"
+      summary: "Update the specified Business Unit objective"
+      consumes:
+        - "application/json"
+      parameters:
+        - name: "objectiveId"
+          in: "path"
+          description: "Id of the Business Unit Objective"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated Business Unit Objective"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+      responses:
+        200:
+          description: "successful operation"
+
+  /businessUnitKeyResults:
+    get:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Returns all BUO-Key Results"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successfully got all BUO-KRs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitKeyResult"
+
+  /businessUnitObjective/{buoId}/keyresults:
+    get:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Returns all Key Results of the specified Business Unit Objective"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "buoId"
+          description: "The BusinessUnitObjective for which the Keyresult are to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successfully got all BUO-KRs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitKeyResult"
+    post:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Create a new Key Result for the specified Business Unit Objective"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "buoId"
+          description: "The Business Unit Objective for which the new Keyresult shall be created"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "Key Result to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitKeyResult"
+      responses:
+        200:
+          description: "successfully created key result"
+
+  /businessUnitKeyResults/{id}:
+    get:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Return the specified Business Unit Key Result"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the BUO-KR to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned keyresult"
+          schema:
+            $ref: "#/definitions/BusinessUnitKeyResult"
+    put:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Update the specified Business Unit Key Result"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the BU-KR to be updated"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated Key Result Object"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitKeyResult"
+      responses:
+        200:
+          description: "Successfully updated"
+
+  /businessUnitKeyResults/{id}/history:
+    get:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Returns the history of the specified BusinessUnit Key Result"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the BU-KR of which the history is to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned KeyResult History"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitKeyResult"
+
+  /businessUnitKeyResults/{id}/history/{id}:
+    get:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Returns the specific Entry from the history of a keyresult"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the BU-KR of which the history is to be returned"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned KeyResult History"
+          schema:
+            $ref: "#/definitions/BusinessUnitKeyResult"
+definitions:
+  CompanyObjective:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      achievement:
+        type: "number"
+      name:
+        type: "string"
+  BusinessUnit:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+  BusinessUnitObjective:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      achievement:
+        type: "number"
+      businessUnitId:
+        type: "integer"
+  CompanyKeyResult:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      confidenceLvl:
+        type: "number"
+      comment:
+        type: "string"
+      goalValue:
+        type: "number"
+      currentValue:
+        type: "number"
+      achievement:
+        type: "number"
+      companyObjectiveId:
+        type: "integer"
+  BusinessUnitKeyResult:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      confidenceLvl:
+        type: "number"
+      comment:
+        type: "string"
+      goalValue:
+        type: "number"
+      currentValue:
+        type: "number"
+      achievement:
+        type: "number"
+      businessUnitObjectiveId:
+        type: "integer"
