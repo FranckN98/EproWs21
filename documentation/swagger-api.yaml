@@ -201,7 +201,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             type: "array"
             items:
@@ -222,7 +222,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             $ref: "#/definitions/CompanyKeyResult"
 
@@ -509,7 +509,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             type: "array"
             items:
@@ -530,7 +530,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             $ref: "#/definitions/BusinessUnitKeyResult"
 definitions:
