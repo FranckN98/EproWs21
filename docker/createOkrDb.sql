@@ -99,6 +99,31 @@ CREATE TRIGGER update_company_objective_achievement
     FOR EACH ROW
     EXECUTE PROCEDURE update_company_objective_achievement();
 
+CREATE FUNCTION update_businessunit_objective_achievement()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    WITH subq AS (
+        SELECT avg(achievement) as average
+        FROM BusinessUnitKeyResult
+        WHERE businessUnitObjectiveId = NEW.businessUnitObjectiveId
+    )
+    UPDATE BusinessUnitObjective
+    SET achievement = subq.average
+    FROM subq
+    WHERE id = NEW.businessUnitObjectiveId;
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER update_businessunit_objective_achievement
+    AFTER INSERT OR UPDATE
+    ON BusinessUnitKeyResult
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_businessunit_objective_achievement();
+
 insert into BusinessUnit (name)
 values ('Personal');
 insert into BusinessUnit (name)
@@ -114,3 +139,14 @@ values ('Test', 1, 10, 99, 'Kommentar', 1);
 
 insert into CompanyKeyResult (name, currentValue, goalValue, confidenceLevel, comment, companyObjectiveId)
 values ('Test', 1, 1, 99, 'Kommentar', 1);
+
+insert into BusinessUnitObjective (name, achievement)
+values ('BUO1', 0);
+insert into BusinessUnitObjective (name, achievement)
+values ('BUO2', 0);
+
+insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
+values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1);
+
+insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
+values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1);
