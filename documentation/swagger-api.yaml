@@ -3,7 +3,7 @@ info:
   description: "EPRO Projekt WS2021"
   version: "1.0.0"
   title: "EPRO OKR Projekt"
-host: "localhost:8080"
+host: "localhost:8081"
 basePath: "/api/v1"
 schemes:
   - "http"
