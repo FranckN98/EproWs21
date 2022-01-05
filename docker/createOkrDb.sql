@@ -1,3 +1,5 @@
+-- region Create tables
+
 create table BusinessUnit
 (
     id   integer primary key generated always as identity,
@@ -24,6 +26,15 @@ create table CompanyKeyResult
     timestamp          timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
+create table CompanyKeyResultHistory
+(
+    id              int primary key generated always as identity,
+    refId           int         NOT NULL references CompanyKeyResult (id),
+    changeTimeStamp timestamptz NOT NULL DEFAULT now(),
+    historicalData  jsonb
+);
+
 create table BusinessUnitObjective
 (
     id             int primary key generated always as identity,
@@ -43,6 +54,15 @@ create table BusinessUnitKeyResult
     comment                 text,
     businessUnitObjectiveId int REFERENCES BusinessUnitObjective (id),
     timestamp               timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
+create table BusinessUnitKeyResultHistory
+(
+    id              int primary key generated always as identity,
+    refId           int         NOT NULL references BusinessUnitKeyResult (id),
+    changeTimeStamp timestamptz NOT NULL DEFAULT now(),
+    historicalData  jsonb
 );
 
 create table Role
@@ -74,10 +94,64 @@ create table OkrUser
     businessUnitId int REFERENCES BusinessUnit (id)
 );
 
+-- endregion
+
+-- region triggers
+
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
+-- region do_businessunit_keyresult_historization
+
+CREATE OR REPLACE FUNCTION do_businessunit_keyresult_historization()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    INSERT INTO BusinessUnitKeyResultHistory (refId, historicalData)
+    VALUES (old.id, to_jsonb(old));
+
+    RETURN NEW;
+end;
+$$;
+
+CREATE TRIGGER do_businessunit_keyresult_historization
+    BEFORE UPDATE
+    ON BusinessUnitKeyResult
+    FOR EACH ROW
+EXECUTE PROCEDURE do_businessunit_keyresult_historization();
+
+-- endregion
+
+-- region do_company_keyresult_historization
+
+CREATE OR REPLACE FUNCTION do_company_keyresult_historization()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    INSERT INTO CompanyKeyResultHistory (refId, historicalData)
+    VALUES (old.id, to_jsonb(old));
+
+    RETURN NEW;
+end;
+$$;
+
+CREATE TRIGGER do_company_keyresult_historization
+    BEFORE UPDATE
+    ON CompanyKeyResult
+    FOR EACH ROW
+EXECUTE PROCEDURE do_company_keyresult_historization();
+
+-- endregion
+
+-- region update_company_objective_achievement
+
 CREATE FUNCTION update_company_objective_achievement()
     RETURNS TRIGGER
     LANGUAGE plpgsql
-AS $$
+AS
+$$
 BEGIN
     WITH subq AS (
         SELECT avg(achievement) as average
@@ -97,12 +171,17 @@ CREATE TRIGGER update_company_objective_achievement
     AFTER INSERT OR UPDATE
     ON CompanyKeyResult
     FOR EACH ROW
-    EXECUTE PROCEDURE update_company_objective_achievement();
+EXECUTE PROCEDURE update_company_objective_achievement();
+
+-- endregion
+
+-- region update_businessunit_objective_achievement
 
 CREATE FUNCTION update_businessunit_objective_achievement()
     RETURNS TRIGGER
     LANGUAGE plpgsql
-AS $$
+AS
+$$
 BEGIN
     WITH subq AS (
         SELECT avg(achievement) as average
@@ -122,7 +201,13 @@ CREATE TRIGGER update_businessunit_objective_achievement
     AFTER INSERT OR UPDATE
     ON BusinessUnitKeyResult
     FOR EACH ROW
-    EXECUTE PROCEDURE update_businessunit_objective_achievement();
+EXECUTE PROCEDURE update_businessunit_objective_achievement();
+
+-- endregion
+
+-- endregion
+
+-- region insert sample data
 
 insert into BusinessUnit (name)
 values ('Personal');
@@ -150,3 +235,5 @@ values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1);
 
 insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
 values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1);
+
+-- endregion
