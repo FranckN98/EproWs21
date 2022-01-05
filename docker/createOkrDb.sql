@@ -225,15 +225,36 @@ values ('Test', 1, 10, 99, 'Kommentar', 1);
 insert into CompanyKeyResult (name, currentValue, goalValue, confidenceLevel, comment, companyObjectiveId)
 values ('Test', 1, 1, 99, 'Kommentar', 1);
 
-insert into BusinessUnitObjective (name, achievement)
-values ('BUO1', 0);
-insert into BusinessUnitObjective (name, achievement)
-values ('BUO2', 0);
+update CompanyKeyResult
+set name = 'Test1'
+where id = 1;
+
+insert into BusinessUnitObjective (name, achievement, businessUnitId)
+values ('BUO1', 0, 1);
+insert into BusinessUnitObjective (name, achievement, businessUnitId)
+values ('BUO2', 0, 1);
 
 insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
 values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1);
 
 insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
 values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1);
+
+update BusinessUnitKeyResult
+set name = 'Test1'
+where id = 1;
+
+insert into Role (name)
+VALUES ('Rolle');
+
+insert into Privilege (name)
+VALUES ('Privileg');
+
+insert into privilegesinrole (privilegeId, roleId)
+VALUES (1, 1);
+
+insert into OkrUser (name, surname, password, roleId, businessUnitId)
+VALUES ('Vorname', 'Nachname', 'plaintext', 1, 1);
+
 
 -- endregion
