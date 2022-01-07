@@ -1,29 +1,25 @@
 -- region Create tables
 
-create table BusinessUnit
-(
-    id   integer primary key generated always as identity,
-    name varchar(64)
-);
-
 create table CompanyObjective
 (
     id          int primary key generated always as identity,
-    name        varchar(64),
-    achievement decimal DEFAULT 0
+    name        varchar(64) NOT NULL,
+    achievement decimal     NOT NULL DEFAULT 0,
+    startDate   date        NOT NULL,
+    endDate     date        NOT NULL
 );
 
 create table CompanyKeyResult
 (
     id                 int primary key generated always as identity,
-    name               varchar(64),
-    currentValue       decimal     DEFAULT 0,
-    goalValue          decimal,
-    confidenceLevel    decimal,
-    achievement        decimal GENERATED ALWAYS AS ( currentValue / NULLIF(goalValue, 0) ) STORED,
-    comment            text,
-    companyObjectiveId int REFERENCES CompanyObjective (id),
-    timestamp          timestamptz DEFAULT CURRENT_TIMESTAMP
+    name               varchar(64) NOT NULL,
+    currentValue       decimal     NOT NULL DEFAULT 0,
+    goalValue          decimal     NOT NULL,
+    confidenceLevel    decimal     NOT NULL,
+    achievement        decimal     NOT NULL GENERATED ALWAYS AS ( currentValue / NULLIF(goalValue, 0) ) STORED,
+    comment            text        NOT NULL,
+    companyObjectiveId int         NOT NULL REFERENCES CompanyObjective (id),
+    timestamp          timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
@@ -32,28 +28,38 @@ create table CompanyKeyResultHistory
     id              int primary key generated always as identity,
     refId           int         NOT NULL references CompanyKeyResult (id),
     changeTimeStamp timestamptz NOT NULL DEFAULT now(),
-    historicalData  jsonb
+    historicalData  jsonb       NOT NULL
+);
+
+create table BusinessUnit
+(
+    id   integer primary key generated always as identity,
+    name varchar(64) NOT NULL
 );
 
 create table BusinessUnitObjective
 (
-    id             int primary key generated always as identity,
-    name           varchar(64),
-    achievement    decimal DEFAULT 0,
-    businessUnitId int REFERENCES BusinessUnit (id)
+    id                  int primary key generated always as identity,
+    name                varchar(64)                      NOT NULL,
+    achievement         decimal DEFAULT 0                NOT NULL,
+    businessUnitId      int REFERENCES BusinessUnit (id) NOT NULL,
+    startDate           date                             NOT NULL,
+    endDate             date                             NOT NULL,
+    companyKeyResultRef int REFERENCES CompanyKeyResult (id)
 );
 
 create table BusinessUnitKeyResult
 (
     id                      int primary key generated always as identity,
-    name                    varchar(64),
-    currentValue            decimal     DEFAULT 0,
-    goalValue               decimal,
-    confidenceLevel         decimal,
-    achievement             decimal GENERATED ALWAYS AS ( currentValue / NULLIF(goalValue, 0) ) STORED,
-    comment                 text,
-    businessUnitObjectiveId int REFERENCES BusinessUnitObjective (id),
-    timestamp               timestamptz DEFAULT CURRENT_TIMESTAMP
+    name                    varchar(64) NOT NULL,
+    currentValue            decimal     NOT NULL DEFAULT 0,
+    goalValue               decimal     NOT NULL,
+    confidenceLevel         decimal     NOT NULL,
+    achievement             decimal     NOT NULL GENERATED ALWAYS AS ( currentValue / NULLIF(goalValue, 0) ) STORED,
+    comment                 text        NOT NULL,
+    businessUnitObjectiveId int         NOT NULL REFERENCES BusinessUnitObjective (id),
+    timestamp               timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    companyKeyResultRef     int REFERENCES CompanyKeyResult (id)
 );
 
 -- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
@@ -62,36 +68,36 @@ create table BusinessUnitKeyResultHistory
     id              int primary key generated always as identity,
     refId           int         NOT NULL references BusinessUnitKeyResult (id),
     changeTimeStamp timestamptz NOT NULL DEFAULT now(),
-    historicalData  jsonb
+    historicalData  jsonb       NOT NULL
 );
 
 create table Role
 (
     id   int primary key generated always as identity,
-    name varchar(64)
+    name varchar(64) NOT NULL
 );
 
 create table Privilege
 (
     id   int primary key generated always as identity,
-    name varchar(64)
+    name varchar(64) NOT NULL
 );
 
 create table PrivilegesInRole
 (
-    privilegeId int REFERENCES Privilege (id),
-    roleId      int REFERENCES Role (id),
+    privilegeId int NOT NULL REFERENCES Privilege (id),
+    roleId      int NOT NULL REFERENCES Role (id),
     CONSTRAINT privilege_role_pkey PRIMARY KEY (privilegeId, roleId)
 );
 
 create table OkrUser
 (
     id             int primary key generated always as identity,
-    name           varchar(64),
-    surname        varchar(64),
-    password       varchar(64) DEFAULT 'passwort',
+    name           varchar(64) NOT NULL,
+    surname        varchar(64) NOT NULL,
+    password       varchar(64) NOT NULL DEFAULT 'passwort',
     roleId         int REFERENCES Role (id),
-    businessUnitId int REFERENCES BusinessUnit (id)
+    businessUnitId int         NOT NULL REFERENCES BusinessUnit (id)
 );
 
 -- endregion
@@ -214,10 +220,10 @@ values ('Personal');
 insert into BusinessUnit (name)
 values ('IT');
 
-insert into CompanyObjective (name, achievement)
-values ('Geld verdienen', 0);
-insert into CompanyObjective (name, achievement)
-values ('Menschen einstellen', 0);
+insert into CompanyObjective (name, achievement, startDate, endDate)
+values ('Geld verdienen', 0, '2022-01-01', '2022-12-31');
+insert into CompanyObjective (name, achievement, startDate, endDate)
+values ('Menschen einstellen', 0, '2022-01-01', '2022-12-31');
 
 insert into CompanyKeyResult (name, currentValue, goalValue, confidenceLevel, comment, companyObjectiveId)
 values ('Test', 1, 10, 99, 'Kommentar', 1);
@@ -229,16 +235,16 @@ update CompanyKeyResult
 set name = 'Test1'
 where id = 1;
 
-insert into BusinessUnitObjective (name, achievement, businessUnitId)
-values ('BUO1', 0, 1);
-insert into BusinessUnitObjective (name, achievement, businessUnitId)
-values ('BUO2', 0, 1);
+insert into BusinessUnitObjective (name, achievement, businessUnitId, startDate, endDate, companyKeyResultRef)
+values ('BUO1', 0, 1, '2022-01-01', '2022-12-31', 1);
+insert into BusinessUnitObjective (name, achievement, businessUnitId, startDate, endDate, companyKeyResultRef)
+values ('BUO2', 0, 1, '2022-01-01', '2022-12-31', 2);
 
-insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
-values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1);
+insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId, companyKeyResultRef)
+values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1, 1);
 
-insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId)
-values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1);
+insert into BusinessUnitKeyResult (name, currentValue, goalValue, confidenceLevel, comment, businessUnitObjectiveId, companyKeyResultRef)
+values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1, 1);
 
 update BusinessUnitKeyResult
 set name = 'Test1'
