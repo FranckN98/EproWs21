@@ -1,23 +1,37 @@
 package de.thbingen.epro21.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="businessunitobjective")
 public class BusinessUnitObjective
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="coid")
     private Long id;
-    private Integer achievement;
-    private String name;
-    private Long businessUnitId;
 
-    public BusinessUnitObjective(Integer achievement, String name, Long businessUnitId) {
+    @Column(nullable = false)
+    private Integer achievement;
+
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_unit_id")
+    private  BusinessUnit businessUnit;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_key_result_id")
+    private  CompanyKeyResult companyKeyResult;
+
+    @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_unit_objective_id")
+    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
+
+    public BusinessUnitObjective(Integer achievement, String name) {
         this.achievement = achievement;
         this.name = name;
-        this.businessUnitId = businessUnitId;
     }
 
     public BusinessUnitObjective() {
@@ -47,11 +61,15 @@ public class BusinessUnitObjective
         this.name = name;
     }
 
-    public Long getBusinessUnitId() {
-        return businessUnitId;
+    public BusinessUnit getBusinessUnit() {
+        return businessUnit;
     }
 
-    public void setBusinessUnitId(Long businessUnitId) {
-        this.businessUnitId = businessUnitId;
+    public Set<BusinessUnitKeyResult> getBusinessUnitKeyResults() {
+        return businessUnitKeyResults;
+    }
+
+    public CompanyKeyResult getCompanyKeyResult() {
+        return companyKeyResult;
     }
 }

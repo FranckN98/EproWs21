@@ -4,10 +4,10 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
-public class BusinessUnit
+public class Role
 {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,20 +15,19 @@ public class BusinessUnit
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="business_unit_id")
-    private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id")
+    private Privilege privilege;
 
     @OneToMany(targetEntity = OKRUser.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="business_unit_id")
+    @JoinColumn(name="role_id")
     private Set<OKRUser> okrUsers = new HashSet<>();
 
-    public BusinessUnit(String name) {
+    public Role(String name) {
         this.name = name;
     }
 
-    public BusinessUnit() {
-    }
+    public Role() {}
 
     public Long getId() {
         return id;
@@ -44,9 +43,5 @@ public class BusinessUnit
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
-        return businessUnitObjectives;
     }
 }

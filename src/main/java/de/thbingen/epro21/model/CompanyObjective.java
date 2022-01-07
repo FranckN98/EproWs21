@@ -1,8 +1,7 @@
 package de.thbingen.epro21.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name="CompanyObjective")
@@ -11,7 +10,6 @@ public class CompanyObjective {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
-            name="coid",
             updatable = false
     )
     private Long id;
@@ -28,20 +26,28 @@ public class CompanyObjective {
             cascade = CascadeType.ALL
     )
     @JoinColumn(
-            name="coid",
-            referencedColumnName = "coid"
+            name="company_objective_id"
     )
-    private List<CompanyKeyResult> keyResultList = new ArrayList<>();
-
-
+    private Set<CompanyKeyResult> keyResultList = new HashSet<>();
+    @Column(
+            name="startdate",
+            nullable = false,
+            columnDefinition = "Date"
+    )
+    private Date startDate;
+    @Column(
+            name="enddate",
+            nullable = false,
+            columnDefinition = "Date"
+    )
+    private Date endDate;
 
     public CompanyObjective(Integer achievement, String name)
     {
         this.achievement = achievement;
         this.name = name;
     }
-    public CompanyObjective() {
-    }
+    public CompanyObjective() {}
     public void setId(Long id) {
         this.id = id;
     }
@@ -60,7 +66,7 @@ public class CompanyObjective {
     public void setName(String name) {
         this.name = name;
     }
-    public List<CompanyKeyResult> getKeyResultList() {
+    public Set<CompanyKeyResult> getKeyResultList() {
         return keyResultList;
     }
 

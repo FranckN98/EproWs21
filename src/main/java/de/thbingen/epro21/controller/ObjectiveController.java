@@ -17,24 +17,19 @@ public class ObjectiveController {
     public ObjectiveController(CompanyObjectiveRepository objectiveRepository) {
         this.objectiveRepository = objectiveRepository;
     }
-
     @GetMapping("/greeting")
-    public String getGreat()
-    {
-            return "hello i great you.";
+    public String getGreat() {
+        return "hello i great you.";
     }
-
-
     //add objective
     @PostMapping("/add")
     public CompanyObjective save(@RequestBody CompanyObjective objective) {
         return this.objectiveRepository.save(objective);
     }
-
     // get objectives
     @GetMapping("/all")
-    public List<CompanyObjective> getAll()
-    {
+    public List<CompanyObjective> getAll() {
         return this.objectiveRepository.findAll();
     }
+
 }

@@ -2,54 +2,57 @@ package de.thbingen.epro21.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="companykeyresult")
 public class CompanyKeyResult
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name="krid",
-            updatable = false
-    )
+    @Column(updatable = false)
     private Long id;
-    @Column(
-            name="goalvalue",
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private Integer goalValue;
-    @Column(
-            name="confidencelevel",
-            nullable = false
-    )
-    private Integer confidencelevel;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
+    private Integer confidenceLevel;
+
+    @Column(nullable = false)
     private Integer achievement;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private String name;
-    @Column(
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String comment;
-    private Integer companyobjectivid;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private Date timestamp;
 
-    public CompanyKeyResult(Integer goalvalue, Integer confidencelevel, Integer achievement, String name, String comment, Integer companyobjectivid, Date timestamp) {
-        this.goalValue = goalvalue;
-        this.confidencelevel = confidencelevel;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_objective_id")
+    private  CompanyObjective companyObjective;
+
+    @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="company_key_result_id")
+    private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
+
+    @OneToMany(targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="company_key_result_id")
+    private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();
+
+    @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="company_key_result_id")
+    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
+
+    public CompanyKeyResult(Integer goalValue, Integer confidenceLevel, Integer achievement, String name, String comment, Date timestamp) {
+        this.goalValue = goalValue;
+        this.confidenceLevel = confidenceLevel;
         this.achievement = achievement;
         this.name = name;
         this.comment = comment;
-        this.companyobjectivid = companyobjectivid;
         this.timestamp = timestamp;
     }
 
@@ -68,16 +71,16 @@ public class CompanyKeyResult
         return goalValue;
     }
 
-    public void setGoalValue(Integer goalvalue) {
-        this.goalValue = goalvalue;
+    public void setGoalValue(Integer goalValue) {
+        this.goalValue = goalValue;
     }
 
-    public Integer getConfidencelevel() {
-        return confidencelevel;
+    public Integer getConfidenceLevel() {
+        return confidenceLevel;
     }
 
-    public void setConfidencelevel(Integer confidencelevel) {
-        this.confidencelevel = confidencelevel;
+    public void setConfidenceLevel(Integer confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
     }
 
     public Integer getAchievement() {
@@ -104,19 +107,27 @@ public class CompanyKeyResult
         this.comment = comment;
     }
 
-    public Integer getCompanyobjectivid() {
-        return companyobjectivid;
-    }
-
-    public void setCompanyobjectivid(Integer companyobjectivid) {
-        this.companyobjectivid = companyobjectivid;
-    }
-
     public Date getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public CompanyObjective getCompanyObjective() {
+        return companyObjective;
+    }
+
+    public Set<CompanyKeyResultHistory> getCompanyKeyResultHistories() {
+        return companyKeyResultHistories;
+    }
+
+    public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
+        return businessUnitObjectives;
+    }
+
+    public Set<BusinessUnitKeyResult> getBusinessUnitKeyResults() {
+        return businessUnitKeyResults;
     }
 }

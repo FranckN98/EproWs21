@@ -1,26 +1,34 @@
 package de.thbingen.epro21.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="businessunitkeyresult")
 public class BusinessUnitKeyResult
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            name="coid",
-            updatable = false
-    )
+    @Column(updatable = false)
     private Long id;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private Integer achievement;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private String name;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "business_unit_objective_id")
+    private  BusinessUnitObjective businessUnitObjective;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_key_result_id")
+    private  CompanyKeyResult companyKeyResult;
+
+    @OneToMany(targetEntity = BusinessUnitKeyResultHistory.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="business_unit_key_result_id")
+    private Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories = new HashSet<>();
 
     public BusinessUnitKeyResult(Integer achievement, String name) {
         this.achievement = achievement;
@@ -44,5 +52,21 @@ public class BusinessUnitKeyResult
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public CompanyKeyResult getCompanyKeyResult() {
+        return companyKeyResult;
+    }
+
+    public BusinessUnitObjective getBusinessUnitObjective() {
+        return businessUnitObjective;
+    }
+
+    public Set<BusinessUnitKeyResultHistory> getBusinessUnitKeyResultHistories() {
+        return businessUnitKeyResultHistories;
     }
 }
