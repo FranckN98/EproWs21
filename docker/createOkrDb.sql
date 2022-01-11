@@ -221,7 +221,7 @@ insert into BusinessUnit (name)
 values ('IT');
 
 insert into CompanyObjective (name, achievement, startDate, endDate)
-values ('Geld verdienen', 0, '2022-01-01', '2022-12-31');
+values ('Geld verdienen', 0, '2021-01-01', '2021-12-31');
 insert into CompanyObjective (name, achievement, startDate, endDate)
 values ('Menschen einstellen', 0, '2022-01-01', '2022-12-31');
 
@@ -229,14 +229,14 @@ insert into CompanyKeyResult (name, currentValue, goalValue, confidenceLevel, co
 values ('Test', 1, 10, 99, 'Kommentar', 1);
 
 insert into CompanyKeyResult (name, currentValue, goalValue, confidenceLevel, comment, companyObjectiveId)
-values ('Test', 1, 1, 99, 'Kommentar', 1);
+values ('Test', 1, 1, 99, 'Kommentar', 2);
 
 update CompanyKeyResult
 set name = 'Test1'
 where id = 1;
 
 insert into BusinessUnitObjective (name, achievement, businessUnitId, startDate, endDate, companyKeyResultRef)
-values ('BUO1', 0, 1, '2022-01-01', '2022-12-31', 1);
+values ('BUO1', 0, 1, '2021-01-01', '2021-12-31', 1);
 insert into BusinessUnitObjective (name, achievement, businessUnitId, startDate, endDate, companyKeyResultRef)
 values ('BUO2', 0, 1, '2022-01-01', '2022-12-31', 2);
 
