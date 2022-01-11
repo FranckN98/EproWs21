@@ -9,41 +9,29 @@ public class CompanyObjective {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(
-            updatable = false
-    )
+    @Column(updatable = false)
     private Long id;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private Integer achievement;
-    @Column(
-            nullable = false
-    )
+
+    @Column(nullable = false)
     private String name;
-    @OneToMany(
-            targetEntity = CompanyKeyResult.class,
-            cascade = CascadeType.ALL
-    )
-    @JoinColumn(
-            name="company_objective_id"
-    )
-    private Set<CompanyKeyResult> keyResultList = new HashSet<>();
-    @Column(
-            name="startdate",
-            nullable = false,
-            columnDefinition = "Date"
-    )
+
+    @OneToMany(targetEntity = CompanyKeyResult.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="company_objective_id")
+    private Set<CompanyKeyResult> companyKeyResults = new HashSet<>();
+
+    @Column(nullable = false, columnDefinition = "Date")
     private Date startDate;
-    @Column(
-            name="enddate",
-            nullable = false,
-            columnDefinition = "Date"
-    )
+
+
+
+
+    @Column(nullable = false, columnDefinition = "Date")
     private Date endDate;
 
-    public CompanyObjective(Integer achievement, String name)
-    {
+    public CompanyObjective(Integer achievement, String name) {
         this.achievement = achievement;
         this.name = name;
     }
@@ -66,8 +54,8 @@ public class CompanyObjective {
     public void setName(String name) {
         this.name = name;
     }
-    public Set<CompanyKeyResult> getKeyResultList() {
-        return keyResultList;
+    public Set<CompanyKeyResult> getCompanyKeyResults() {
+        return companyKeyResults;
     }
 
 }

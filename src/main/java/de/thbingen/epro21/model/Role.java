@@ -16,7 +16,7 @@ public class Role
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "privilege_id")
     private Privilege privilege;
 
     @OneToMany(targetEntity = OKRUser.class, cascade = CascadeType.ALL)
@@ -43,5 +43,13 @@ public class Role
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Privilege getPrivilege() {
+        return privilege;
+    }
+
+    public Set<OKRUser> getOkrUsers() {
+        return okrUsers;
     }
 }

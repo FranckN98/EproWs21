@@ -18,8 +18,9 @@ public class OKRUser
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private Integer roleId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_unit_id")
@@ -59,12 +60,8 @@ public class OKRUser
         this.password = password;
     }
 
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public Role getRole() {
+        return role;
     }
 
     public BusinessUnit getBusinessUnit() {

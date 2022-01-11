@@ -12,8 +12,9 @@ public class Privilege {
     @Column(nullable = false)
     private String name;
 
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "privilege_id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public Privilege() {}
@@ -45,4 +46,6 @@ public class Privilege {
     public void setRole(Role role) {
         this.role = role;
     }
+
+
 }
