@@ -2,16 +2,16 @@ SELECT *
 FROM businessunit;
 
 SELECT *
-FROM businessunitobjective;
+FROM business_unit_objective;
 
 SELECT *
-FROM businessunitkeyresult;
+FROM business_unit_key_result;
 
 SELECT *
-FROM businessunitkeyresulthistory;
+FROM business_unit_key_result_history;
 
 SELECT *
-FROM companyobjective;
+FROM company_objective;
 
 SELECT *
 FROM companykeyresult;

@@ -1,4 +1,4 @@
-package de.thbingen.epro21;
+package de.thbingen.epro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

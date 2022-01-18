@@ -1,4 +1,4 @@
-package de.thbingen.epro21.model;
+package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 

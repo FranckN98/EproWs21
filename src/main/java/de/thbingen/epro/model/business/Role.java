@@ -1,4 +1,4 @@
-package de.thbingen.epro21.model;
+package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -52,4 +52,6 @@ public class Role
     public Set<OKRUser> getOkrUsers() {
         return okrUsers;
     }
+
+
 }

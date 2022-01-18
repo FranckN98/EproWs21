@@ -1,6 +1,6 @@
-package de.thbingen.epro21.repository;
+package de.thbingen.epro.repository;
 
-import de.thbingen.epro21.model.BusinessUnitObjective;
+import de.thbingen.epro.model.business.BusinessUnitObjective;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BusinessUnitObjectiveRepository extends JpaRepository<BusinessUnitObjective, Long> {

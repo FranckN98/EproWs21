@@ -1,8 +1,6 @@
-package de.thbingen.epro21.model;
+package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class BusinessUnitObjective
@@ -22,12 +20,8 @@ public class BusinessUnitObjective
     private  BusinessUnit businessUnit;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_key_result_id")
+    @JoinColumn(name = "company_key_result_ref")
     private  CompanyKeyResult companyKeyResult;
-
-    @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "business_unit_objective_id")
-    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
 
     public BusinessUnitObjective(Integer achievement, String name) {
         this.achievement = achievement;
@@ -63,10 +57,6 @@ public class BusinessUnitObjective
 
     public BusinessUnit getBusinessUnit() {
         return businessUnit;
-    }
-
-    public Set<BusinessUnitKeyResult> getBusinessUnitKeyResults() {
-        return businessUnitKeyResults;
     }
 
     public CompanyKeyResult getCompanyKeyResult() {

@@ -1,11 +1,10 @@
-package de.thbingen.epro21.model;
-
+package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class BusinessUnitKeyResultHistory
+public class CompanyKeyResultHistory
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,19 +14,21 @@ public class BusinessUnitKeyResultHistory
     @Column(nullable = false)
     private Date changeTimeStamp;
 
-    @Column(nullable = false, columnDefinition = "TEXT" )// insert JSON TYPE here if this Type exist in PostgreSQL
+    @Column(
+            nullable = false,
+            columnDefinition = "TEXT" // insert JSON TYPE here if this Type exist in PostgreSQL
+    )
     private String historicalData;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "business_unit_key_result_id")
-    private BusinessUnitKeyResult businessUnitKeyResult ;
-
-    public BusinessUnitKeyResultHistory(Date changeTimeStamp, String historicalData) {
+    public CompanyKeyResultHistory(Date changeTimeStamp, String historicalData) {
         this.changeTimeStamp = changeTimeStamp;
         this.historicalData = historicalData;
     }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ref_id")
+    private CompanyKeyResult companyKeyResult ;
 
-    public BusinessUnitKeyResultHistory() {
+    public CompanyKeyResultHistory() {
     }
 
     public Long getId() {
@@ -54,7 +55,7 @@ public class BusinessUnitKeyResultHistory
         this.historicalData = historicalData;
     }
 
-    public BusinessUnitKeyResult getCompanyKeyResult() {
-        return businessUnitKeyResult;
+    public CompanyKeyResult getCompanyKeyResult() {
+        return companyKeyResult;
     }
 }

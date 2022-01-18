@@ -1,17 +1,20 @@
-package de.thbingen.epro21.model;
+package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-public class CompanyKeyResult
-{
+public class CompanyKeyResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private Integer currentValue;
 
     @Column(nullable = false)
     private Integer goalValue;
@@ -22,9 +25,6 @@ public class CompanyKeyResult
     @Column(nullable = false)
     private Integer achievement;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String comment;
 
@@ -33,9 +33,9 @@ public class CompanyKeyResult
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_objective_id")
-    private  CompanyObjective companyObjective;
+    private CompanyObjective companyObjective;
 
-    @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
+    /*@OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
     @JoinColumn(name="company_key_result_id")
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
 
@@ -45,7 +45,10 @@ public class CompanyKeyResult
 
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
     @JoinColumn(name="company_key_result_id")
-    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
+    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();*/
+
+    public CompanyKeyResult() {
+    }
 
     public CompanyKeyResult(Integer goalValue, Integer confidenceLevel, Integer achievement, String name, String comment, Date timestamp) {
         this.goalValue = goalValue;
@@ -56,8 +59,20 @@ public class CompanyKeyResult
         this.timestamp = timestamp;
     }
 
-    public CompanyKeyResult() {
-    }
+    /*public CompanyKeyResult(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, Date timestamp, CompanyObjective companyObjective, Set<BusinessUnitObjective> businessUnitObjectives, Set<CompanyKeyResultHistory> companyKeyResultHistories, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+        this.id = id;
+        this.name = name;
+        this.currentValue = currentValue;
+        this.goalValue = goalValue;
+        this.confidenceLevel = confidenceLevel;
+        this.achievement = achievement;
+        this.comment = comment;
+        this.timestamp = timestamp;
+        this.companyObjective = companyObjective;
+        this.businessUnitObjectives = businessUnitObjectives;
+        this.companyKeyResultHistories = companyKeyResultHistories;
+        this.businessUnitKeyResults = businessUnitKeyResults;
+    }*/
 
     public Long getId() {
         return id;
@@ -65,6 +80,22 @@ public class CompanyKeyResult
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(Integer currentValue) {
+        this.currentValue = currentValue;
     }
 
     public Integer getGoalValue() {
@@ -91,14 +122,6 @@ public class CompanyKeyResult
         this.achievement = achievement;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -119,15 +142,31 @@ public class CompanyKeyResult
         return companyObjective;
     }
 
+    public void setCompanyObjective(CompanyObjective companyObjective) {
+        this.companyObjective = companyObjective;
+    }
+
+    /*public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
+        return businessUnitObjectives;
+    }
+
+    public void setBusinessUnitObjectives(Set<BusinessUnitObjective> businessUnitObjectives) {
+        this.businessUnitObjectives = businessUnitObjectives;
+    }
+
     public Set<CompanyKeyResultHistory> getCompanyKeyResultHistories() {
         return companyKeyResultHistories;
     }
 
-    public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
-        return businessUnitObjectives;
+    public void setCompanyKeyResultHistories(Set<CompanyKeyResultHistory> companyKeyResultHistories) {
+        this.companyKeyResultHistories = companyKeyResultHistories;
     }
 
     public Set<BusinessUnitKeyResult> getBusinessUnitKeyResults() {
         return businessUnitKeyResults;
     }
+
+    public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+        this.businessUnitKeyResults = businessUnitKeyResults;
+    }*/
 }
