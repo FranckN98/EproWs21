@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = BusinessUnitController.class)
 @Import(BusinessUnitController.class)
-public class BusinessUnitControllerMapTest {
+public class BusinessUnitControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
