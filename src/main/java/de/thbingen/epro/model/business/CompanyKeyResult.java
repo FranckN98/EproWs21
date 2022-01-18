@@ -2,6 +2,8 @@ package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class CompanyKeyResult {
@@ -39,8 +41,7 @@ public class CompanyKeyResult {
     @JoinColumn(name="company_key_result_id")
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
 
-    @OneToMany(targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="company_key_result_id")
+    @OneToMany(mappedBy = "companyKeyResult", targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
     private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();
 
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)

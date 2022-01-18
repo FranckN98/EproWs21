@@ -5,30 +5,30 @@ create table company_objective
     id          int primary key generated always as identity,
     name        varchar(64) NOT NULL,
     achievement decimal     NOT NULL DEFAULT 0,
-    start_date   date        NOT NULL,
-    end_date     date        NOT NULL
+    start_date  date        NOT NULL,
+    end_date    date        NOT NULL
 );
 
 create table company_key_result
 (
-    id                 int primary key generated always as identity,
-    name               varchar(64) NOT NULL,
-    current_value       decimal     NOT NULL DEFAULT 0,
-    goal_value          decimal     NOT NULL,
-    confidence_level    decimal     NOT NULL,
-    achievement        decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
-    comment            text        NOT NULL,
-    company_objective_id int         NOT NULL REFERENCES company_objective (id),
-    timestamp          timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id                   int primary key generated always as identity,
+    name                 varchar(64) NOT NULL,
+    current_value        decimal     NOT NULL DEFAULT 0,
+    goal_value           decimal     NOT NULL,
+    confidence_level     decimal     NOT NULL,
+    achievement          decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
+    comment              text        NOT NULL,
+    company_objective_id int         NOT NULL REFERENCES company_objective (id) ON DELETE CASCADE,
+    timestamp            timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
 create table company_key_result_history
 (
-    id              int primary key generated always as identity,
-    ref_id           int         NOT NULL references company_key_result (id),
+    id                int primary key generated always as identity,
+    ref_id            int         NOT NULL references company_key_result (id) ON DELETE CASCADE,
     change_time_stamp timestamptz NOT NULL DEFAULT now(),
-    historical_data  jsonb       NOT NULL
+    historical_data   jsonb       NOT NULL
 );
 
 create table business_unit
@@ -39,36 +39,36 @@ create table business_unit
 
 create table business_unit_objective
 (
-    id                  int primary key generated always as identity,
-    name                varchar(64)                      NOT NULL,
-    achievement         decimal DEFAULT 0                NOT NULL,
-    business_unit_id      int REFERENCES business_unit (id) NOT NULL,
-    start_date           date                             NOT NULL,
-    end_date             date                             NOT NULL,
-    company_key_result_ref int REFERENCES company_key_result (id)
+    id                     int primary key generated always as identity,
+    name                   varchar(64)                       NOT NULL,
+    achievement            decimal DEFAULT 0                 NOT NULL,
+    business_unit_id       int REFERENCES business_unit (id) NOT NULL,
+    start_date             date                              NOT NULL,
+    end_date               date                              NOT NULL,
+    company_key_result_ref int REFERENCES company_key_result (id) ON DELETE SET NULL
 );
 
 create table business_unit_key_result
 (
-    id                      int primary key generated always as identity,
-    name                    varchar(64) NOT NULL,
-    current_value            decimal     NOT NULL DEFAULT 0,
-    goal_value               decimal     NOT NULL,
-    confidence_level         decimal     NOT NULL,
-    achievement             decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
-    comment                 text        NOT NULL,
+    id                         int primary key generated always as identity,
+    name                       varchar(64) NOT NULL,
+    current_value              decimal     NOT NULL DEFAULT 0,
+    goal_value                 decimal     NOT NULL,
+    confidence_level           decimal     NOT NULL,
+    achievement                decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
+    comment                    text        NOT NULL,
     business_unit_objective_id int         NOT NULL REFERENCES business_unit_objective (id),
-    timestamp               timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    company_key_result_ref     int REFERENCES company_key_result (id)
+    timestamp                  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    company_key_result_ref     int REFERENCES company_key_result (id) ON DELETE SET NULL
 );
 
 -- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
 create table business_unit_key_result_history
 (
-    id              int primary key generated always as identity,
-    ref_id           int         NOT NULL references business_unit_key_result (id),
+    id                int primary key generated always as identity,
+    ref_id            int         NOT NULL references business_unit_key_result (id),
     change_time_stamp timestamptz NOT NULL DEFAULT now(),
-    historical_data  jsonb       NOT NULL
+    historical_data   jsonb       NOT NULL
 );
 
 create table role
@@ -92,11 +92,11 @@ create table privileges_in_role
 
 create table okr_user
 (
-    id             int primary key generated always as identity,
-    name           varchar(64) NOT NULL,
-    surname        varchar(64) NOT NULL,
-    password       varchar(64) NOT NULL DEFAULT 'passwort',
-    role_id         int REFERENCES Role (id),
+    id               int primary key generated always as identity,
+    name             varchar(64) NOT NULL,
+    surname          varchar(64) NOT NULL,
+    password         varchar(64) NOT NULL DEFAULT 'passwort',
+    role_id          int REFERENCES Role (id),
     business_unit_id int         NOT NULL REFERENCES business_unit (id)
 );
 
@@ -240,10 +240,12 @@ values ('BUO1', 0, 1, '2021-01-01', '2021-12-31', 1);
 insert into business_unit_objective (name, achievement, business_unit_id, start_date, end_date, company_key_result_ref)
 values ('BUO2', 0, 1, '2022-01-01', '2022-12-31', 2);
 
-insert into business_unit_key_result (name, current_value, goal_value, confidence_level, comment, business_unit_objective_id, company_key_result_ref)
+insert into business_unit_key_result (name, current_value, goal_value, confidence_level, comment,
+                                      business_unit_objective_id, company_key_result_ref)
 values ('BUO-KR1', 1, 10, 99, 'Kommentar', 1, 1);
 
-insert into business_unit_key_result (name, current_value, goal_value, confidence_level, comment, business_unit_objective_id, company_key_result_ref)
+insert into business_unit_key_result (name, current_value, goal_value, confidence_level, comment,
+                                      business_unit_objective_id, company_key_result_ref)
 values ('BUO-KR2', 1, 1, 99, 'Kommentar', 1, 1);
 
 update business_unit_key_result

@@ -22,8 +22,7 @@ public class CompanyObjective {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(targetEntity = CompanyKeyResult.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_objective_id")
+    @OneToMany(mappedBy = "companyObjective", targetEntity = CompanyKeyResult.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<CompanyKeyResult> companyKeyResults = new HashSet<>();
 
     @Column(nullable = false)
