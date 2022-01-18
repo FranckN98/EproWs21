@@ -6,7 +6,6 @@ import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,19 @@ public class BusinessUnitService {
 
     public Optional<BusinessUnitDto> findById(Long id) {
         Optional<BusinessUnit> businessUnit = businessUnitRepository.findById(id);
-        return businessUnit.map(businessUnitMapper::businessUnitToBusinessUnitDto);
+        return businessUnit.map(businessUnitMapper::businessUnitToDto);
+    }
+
+    public BusinessUnitDto saveBusinessUnit(BusinessUnitDto businessUnitDto) {
+        BusinessUnit businessUnit = businessUnitMapper.dtoToBusinessUnit(businessUnitDto);
+        return businessUnitMapper.businessUnitToDto(businessUnitRepository.save(businessUnit));
+    }
+
+    public boolean existsById(Long id) {
+        return businessUnitRepository.existsById(id);
+    }
+
+    public void deleteById(Long id) {
+        businessUnitRepository.deleteById(id);
     }
 }

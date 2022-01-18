@@ -13,7 +13,10 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/companyobjectives")
@@ -73,7 +76,7 @@ public class CompanyObjectiveController {
             return this.addNew(companyObjectiveDto);
         }
 
-        return ResponseEntity.ok(companyObjectiveService.updateById(companyObjectiveDto));
+        return ResponseEntity.ok(companyObjectiveService.saveCompanyObjective(companyObjectiveDto));
     }
 
     @DeleteMapping("/{id}")

@@ -46,11 +46,6 @@ public class CompanyObjectiveService {
         return optional.map(companyObjectiveMapper::companyObjectiveToDtoIncludeKeyResults);
     }
 
-    public CompanyObjectiveDto updateById(CompanyObjectiveDto companyObjectiveDto) {
-        CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
-        return companyObjectiveMapper.companyObjectiveToDtoIncludeKeyResults(companyObjectiveRepository.save(companyObjective));
-    }
-
     public void deleteById(Long id) {
         companyObjectiveRepository.deleteById(id);
     }
