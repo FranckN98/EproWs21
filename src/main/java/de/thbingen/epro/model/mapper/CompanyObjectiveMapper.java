@@ -21,6 +21,8 @@ public abstract class CompanyObjectiveMapper {
     @Mapping(target = "companyKeyResults", ignore = true)
     public abstract List<CompanyObjectiveDto> companyObjectiveListToDto(List<CompanyObjective> companyObjectives);
 
+    public abstract CompanyObjective dtoToCompanyObjective(CompanyObjectiveDto companyObjectiveDto);
+
     @Named("withKeyResults")
     public CompanyObjectiveDto companyObjectiveToDtoIncludeKeyResults(CompanyObjective companyObjective) {
         CompanyObjectiveDto companyObjectiveDto = companyObjectiveToDto(companyObjective);

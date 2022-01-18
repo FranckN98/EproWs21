@@ -36,7 +36,8 @@ public class CompanyObjectiveService {
         }
     }
 
-    public CompanyObjectiveDto saveCompanyObjective(CompanyObjective companyObjective) {
+    public CompanyObjectiveDto saveCompanyObjective(CompanyObjectiveDto companyObjectiveDto) {
+        CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
         return companyObjectiveMapper.companyObjectiveToDto(companyObjectiveRepository.save(companyObjective));
     }
 
@@ -45,7 +46,8 @@ public class CompanyObjectiveService {
         return optional.map(companyObjectiveMapper::companyObjectiveToDtoIncludeKeyResults);
     }
 
-    public CompanyObjectiveDto updateById(CompanyObjective companyObjective) {
+    public CompanyObjectiveDto updateById(CompanyObjectiveDto companyObjectiveDto) {
+        CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
         return companyObjectiveMapper.companyObjectiveToDtoIncludeKeyResults(companyObjectiveRepository.save(companyObjective));
     }
 

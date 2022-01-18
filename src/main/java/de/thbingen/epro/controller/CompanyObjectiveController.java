@@ -1,9 +1,7 @@
 package de.thbingen.epro.controller;
 
 import de.thbingen.epro.ApiError;
-import de.thbingen.epro.model.business.CompanyObjective;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
-import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,7 @@ public class CompanyObjectiveController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjective newCompanyObjective) {
+    public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
         CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.saveCompanyObjective(newCompanyObjective);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
@@ -60,11 +58,11 @@ public class CompanyObjectiveController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyObjectiveDto> updateById(@PathVariable Long id, @RequestBody CompanyObjective companyObjective) {
-        if (companyObjective.getId() == null) {
-            companyObjective.setId(id);
+    public ResponseEntity<CompanyObjectiveDto> updateById(@PathVariable Long id, @RequestBody CompanyObjectiveDto companyObjectiveDto) {
+        if (companyObjectiveDto.getId() == null) {
+            companyObjectiveDto.setId(id);
         }
-        if (!Objects.equals(companyObjective.getId(), id)) {
+        if (!Objects.equals(companyObjectiveDto.getId(), id)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Id in path and id of companyObjective do not match"
@@ -72,10 +70,10 @@ public class CompanyObjectiveController {
         }
 
         if(!companyObjectiveService.existsById(id)) {
-            return this.addNew(companyObjective);
+            return this.addNew(companyObjectiveDto);
         }
 
-        return ResponseEntity.ok(companyObjectiveService.updateById(companyObjective));
+        return ResponseEntity.ok(companyObjectiveService.updateById(companyObjectiveDto));
     }
 
     @DeleteMapping("/{id}")
