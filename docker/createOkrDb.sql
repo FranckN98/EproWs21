@@ -40,12 +40,12 @@ create table business_unit
 create table business_unit_objective
 (
     id                     int primary key generated always as identity,
-    name                   varchar(64)                       NOT NULL,
-    achievement            decimal DEFAULT 0                 NOT NULL,
-    business_unit_id       int REFERENCES business_unit (id) NOT NULL,
-    start_date             date                              NOT NULL,
-    end_date               date                              NOT NULL,
-    company_key_result_ref int REFERENCES company_key_result (id) ON DELETE SET NULL
+    name                   varchar(64)       NOT NULL,
+    achievement            decimal DEFAULT 0 NOT NULL,
+    business_unit_id       int               NOT NULL REFERENCES business_unit (id) ON DELETE CASCADE,
+    start_date             date              NOT NULL,
+    end_date               date              NOT NULL,
+    company_key_result_ref int               REFERENCES company_key_result (id) ON DELETE SET NULL
 );
 
 create table business_unit_key_result
@@ -57,16 +57,16 @@ create table business_unit_key_result
     confidence_level           decimal     NOT NULL,
     achievement                decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
     comment                    text        NOT NULL,
-    business_unit_objective_id int         NOT NULL REFERENCES business_unit_objective (id),
+    business_unit_objective_id int         NOT NULL REFERENCES business_unit_objective (id) ON DELETE CASCADE,
     timestamp                  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    company_key_result_ref     int REFERENCES company_key_result (id) ON DELETE SET NULL
+    company_key_result_ref     int         REFERENCES company_key_result (id) ON DELETE SET NULL
 );
 
 -- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
 create table business_unit_key_result_history
 (
     id                int primary key generated always as identity,
-    ref_id            int         NOT NULL references business_unit_key_result (id),
+    ref_id            int         NOT NULL references business_unit_key_result (id) ON DELETE CASCADE,
     change_time_stamp timestamptz NOT NULL DEFAULT now(),
     historical_data   jsonb       NOT NULL
 );
@@ -85,8 +85,8 @@ create table Privilege
 
 create table privileges_in_role
 (
-    privilege_id int NOT NULL REFERENCES Privilege (id),
-    role_id      int NOT NULL REFERENCES Role (id),
+    privilege_id int NOT NULL REFERENCES Privilege (id) ON DELETE CASCADE,
+    role_id      int NOT NULL REFERENCES Role (id) ON DELETE CASCADE,
     CONSTRAINT privilege_role_pkey PRIMARY KEY (privilege_id, role_id)
 );
 
@@ -96,8 +96,8 @@ create table okr_user
     name             varchar(64) NOT NULL,
     surname          varchar(64) NOT NULL,
     password         varchar(64) NOT NULL DEFAULT 'passwort',
-    role_id          int REFERENCES Role (id),
-    business_unit_id int         NOT NULL REFERENCES business_unit (id)
+    role_id          int         REFERENCES Role (id) ON DELETE SET NULL,
+    business_unit_id int REFERENCES business_unit (id) ON DELETE SET DEFAULT
 );
 
 -- endregion
