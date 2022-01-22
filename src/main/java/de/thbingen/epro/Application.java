@@ -17,4 +17,16 @@ public class Application {
     public String getTest() {
         return "YAY";
     }
+
+    //open to everyone with any Role
+    @GetMapping("/something")
+    public String getSomething() { return "Something";}
+
+    //restricted, normal users cannot access
+    @GetMapping("restricted")
+    public String getRestricted() {return "Restricted";}
+
+    //restricted, only accessible to CO Admin
+    @GetMapping("/administration")
+    public String getAdministration() {return "Administration";}
 }
