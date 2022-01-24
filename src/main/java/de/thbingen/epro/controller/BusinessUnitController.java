@@ -1,14 +1,14 @@
 package de.thbingen.epro.controller;
 
+import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.service.BusinessUnitService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
@@ -32,11 +32,9 @@ public class BusinessUnitController {
     @GetMapping("/{id}")
     public BusinessUnitDto findById(@PathVariable Long id) {
         Optional<BusinessUnitDto> result = businessUnitService.findById(id);
-        if(result.isPresent())
+        if (result.isPresent())
             return result.get();
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "No BusinessUnit with this id exists"
-        );
+        throw new EntityNotFoundException("No BusinessUnit with this id exists");
     }
 
     @PostMapping
@@ -52,18 +50,15 @@ public class BusinessUnitController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody BusinessUnitDto businessUnitDto) {
+    public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (businessUnitDto.getId() == null) {
             businessUnitDto.setId(id);
         }
         if (!Objects.equals(businessUnitDto.getId(), id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Id in path and id of businessUnit do not match"
-            );
+            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         }
 
-        if(!businessUnitService.existsById(id)) {
+        if (!businessUnitService.existsById(id)) {
             return this.addNew(businessUnitDto);
         }
 
@@ -72,8 +67,8 @@ public class BusinessUnitController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        if(!businessUnitService.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        if (!businessUnitService.existsById(id)) {
+            throw new EntityNotFoundException("No BusinessUnit with this id exists");
         }
         businessUnitService.deleteById(id);
         return ResponseEntity.noContent().build();

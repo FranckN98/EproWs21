@@ -1,19 +1,15 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.ApiError;
+import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.service.CompanyObjectiveService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -55,9 +51,7 @@ public class CompanyObjectiveController {
         if (result.isPresent()) {
             return result.get();
         }
-        throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "No CompanyObjective with this id exists"
-        );
+        throw new EntityNotFoundException("No CompanyObjective with this id exists");
     }
 
     @PutMapping("/{id}")
@@ -66,13 +60,10 @@ public class CompanyObjectiveController {
             companyObjectiveDto.setId(id);
         }
         if (!Objects.equals(companyObjectiveDto.getId(), id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Id in path and id of companyObjective do not match"
-            );
+            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         }
 
-        if(!companyObjectiveService.existsById(id)) {
+        if (!companyObjectiveService.existsById(id)) {
             return this.addNew(companyObjectiveDto);
         }
 
@@ -81,23 +72,10 @@ public class CompanyObjectiveController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        if(!companyObjectiveService.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        if (!companyObjectiveService.existsById(id)) {
+            throw new EntityNotFoundException("No CompanyObjective with this id exists");
         }
         companyObjectiveService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleException(MethodArgumentNotValidException ex) {
-        List<String> errors = new ArrayList<>();
-
-        for (FieldError error :
-                ex.getBindingResult().getFieldErrors()) {
-            errors.add(error.getField() + ": " + error.getDefaultMessage());
-        }
-
-        return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors), HttpStatus.BAD_REQUEST);
-    }
-
 }

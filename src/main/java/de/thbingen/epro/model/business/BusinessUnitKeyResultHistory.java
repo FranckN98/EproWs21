@@ -19,25 +19,25 @@ public class BusinessUnitKeyResultHistory {
     @Column(updatable = false)
     private Long id;
 
+    @Column(nullable = false)
+    private OffsetDateTime changeTimeStamp;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ref_id")
     private BusinessUnitKeyResult currentBusinessUnitKeyResult;
 
-    @Column(nullable = false)
-    private OffsetDateTime changeTimeStamp;
-
     @Column(name = "historical_data", nullable = false, columnDefinition = "jsonb")
     @Type(type = "jsonb")
-    private BusinessUnitKeyResultHistoryDto businessUnitKeyResultHistoricalDto;
+    private HistoricalBusinessUnitKeyResult historicalBusinessUnitKeyResult;
 
     @Transient
     private BusinessUnitKeyResult businessUnitKeyResultHistorical;
 
-    public BusinessUnitKeyResultHistory(Long id, BusinessUnitKeyResult currentBusinessUnitKeyResult, OffsetDateTime changeTimeStamp, BusinessUnitKeyResultHistoryDto businessUnitKeyResultHistorical) {
+    public BusinessUnitKeyResultHistory(Long id, BusinessUnitKeyResult currentBusinessUnitKeyResult, OffsetDateTime changeTimeStamp, HistoricalBusinessUnitKeyResult businessUnitKeyResultHistorical) {
         this.id = id;
         this.currentBusinessUnitKeyResult = currentBusinessUnitKeyResult;
         this.changeTimeStamp = changeTimeStamp;
-        this.businessUnitKeyResultHistoricalDto = businessUnitKeyResultHistorical;
+        this.historicalBusinessUnitKeyResult = businessUnitKeyResultHistorical;
     }
 
     public BusinessUnitKeyResultHistory() {
@@ -68,13 +68,13 @@ public class BusinessUnitKeyResultHistory {
     }
 
     @JsonIgnore
-    public BusinessUnitKeyResultHistoryDto getBusinessUnitKeyResultHistoricalDto() {
-        return businessUnitKeyResultHistoricalDto;
+    public HistoricalBusinessUnitKeyResult getHistoricalBusinessUnitKeyResult() {
+        return historicalBusinessUnitKeyResult;
     }
 
     @JsonProperty
-    public void setBusinessUnitKeyResultHistoricalDto(BusinessUnitKeyResultHistoryDto businessUnitKeyResultHistorical) {
-        this.businessUnitKeyResultHistoricalDto = businessUnitKeyResultHistorical;
+    public void setHistoricalBusinessUnitKeyResult(HistoricalBusinessUnitKeyResult businessUnitKeyResultHistorical) {
+        this.historicalBusinessUnitKeyResult = businessUnitKeyResultHistorical;
     }
 
     public BusinessUnitKeyResult getBusinessUnitKeyResultHistorical() {

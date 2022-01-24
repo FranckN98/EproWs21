@@ -1,7 +1,5 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.model.dto.BusinessUnitDto;
-import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @WebMvcTest(controllers = CompanyObjectiveController.class)
-public class CompanyObjectiveControllerMapTest {
+public class CompanyObjectiveControllerTest {
 
 
     @Autowired

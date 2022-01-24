@@ -1,12 +1,11 @@
 package de.thbingen.epro.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.thbingen.epro.model.business.CompanyKeyResult;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.OffsetDateTime;
 
-public class CompanyKeyResultDto {
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class HistoricalCompanyKeyResultDto {
     private Long id;
     private String name;
     private Integer currentValue;
@@ -15,8 +14,23 @@ public class CompanyKeyResultDto {
     private Integer achievement;
     private String comment;
     private OffsetDateTime timestamp;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    // TODO: change to CompanyObjectiveDto
     private CompanyObjectiveDto companyObjective;
+
+    public HistoricalCompanyKeyResultDto() {
+    }
+
+    public HistoricalCompanyKeyResultDto(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, CompanyObjectiveDto companyObjective) {
+        this.id = id;
+        this.name = name;
+        this.currentValue = currentValue;
+        this.goalValue = goalValue;
+        this.confidenceLevel = confidenceLevel;
+        this.achievement = achievement;
+        this.comment = comment;
+        this.timestamp = timestamp;
+        this.companyObjective = companyObjective;
+    }
 
     public Long getId() {
         return id;
@@ -88,25 +102,5 @@ public class CompanyKeyResultDto {
 
     public void setCompanyObjective(CompanyObjectiveDto companyObjective) {
         this.companyObjective = companyObjective;
-    }
-
-    static CompanyKeyResultDto from(CompanyKeyResult companyKeyResult, Boolean includeObjective) {
-        CompanyKeyResultDto companyKeyResultDto = new CompanyKeyResultDto();
-        companyKeyResultDto.id = companyKeyResult.getId();
-        companyKeyResultDto.name = companyKeyResult.getName();
-        companyKeyResultDto.currentValue = companyKeyResult.getCurrentValue();
-        companyKeyResultDto.goalValue = companyKeyResult.getGoalValue();
-        companyKeyResultDto.confidenceLevel = companyKeyResult.getConfidenceLevel();
-        companyKeyResultDto.achievement = companyKeyResult.getAchievement();
-        companyKeyResultDto.comment = companyKeyResult.getComment();
-        companyKeyResultDto.timestamp = companyKeyResult.getTimestamp();
-        if(includeObjective) {
-            companyKeyResultDto.companyObjective = CompanyObjectiveDto.from(companyKeyResult.getCompanyObjective());
-        }
-        return companyKeyResultDto;
-    }
-
-    static CompanyKeyResultDto from(CompanyKeyResult companyKeyResult) {
-        return from(companyKeyResult, true);
     }
 }

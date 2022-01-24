@@ -1,9 +1,7 @@
 package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.OffsetDateTime;
 
 @Entity
 public class CompanyKeyResult {
@@ -31,7 +29,7 @@ public class CompanyKeyResult {
     private String comment;
 
     @Column(nullable = false)
-    private Date timestamp;
+    private OffsetDateTime timestamp;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_objective_id")
@@ -51,7 +49,7 @@ public class CompanyKeyResult {
     public CompanyKeyResult() {
     }
 
-    public CompanyKeyResult(Integer goalValue, Integer confidenceLevel, Integer achievement, String name, String comment, Date timestamp) {
+    public CompanyKeyResult(Integer goalValue, Integer confidenceLevel, Integer achievement, String name, String comment, OffsetDateTime timestamp) {
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
         this.achievement = achievement;
@@ -131,11 +129,11 @@ public class CompanyKeyResult {
         this.comment = comment;
     }
 
-    public Date getTimestamp() {
+    public OffsetDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

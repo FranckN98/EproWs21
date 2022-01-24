@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class BusinessUnitKeyResult {
 
     @Id

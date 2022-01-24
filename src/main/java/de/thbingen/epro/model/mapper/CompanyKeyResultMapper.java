@@ -4,11 +4,12 @@ import de.thbingen.epro.model.business.CompanyKeyResult;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 import java.util.Set;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CompanyKeyResultMapper {
 
     @Mapping(target = "companyObjective", ignore = true)
