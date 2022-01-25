@@ -3,7 +3,7 @@ info:
   description: "EPRO Projekt WS2021"
   version: "1.0.0"
   title: "EPRO OKR Projekt"
-host: "localhost:8080"
+host: "localhost:8081"
 basePath: "/api/v1"
 schemes:
   - "http"
@@ -69,6 +69,22 @@ paths:
       responses:
         200:
           description: "Successfully Updated the Company Objective"
+
+    delete:
+      tags:
+        - "Company Objectives"
+      summary: "Deletes a CompanyObjective"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Company Objective to be deleted"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully deleted company objective"
+        404:
+          description: "Did not find Company Objective"
 
   /companyobjective:
     post:
@@ -186,6 +202,22 @@ paths:
         200:
           description: "Successfully updated"
 
+    delete:
+      tags:
+        - "Company Key Results"
+      summary: "Delete the specified Company Key Result"
+      parameters:
+        - in: path
+          name: id
+          description: The id of the C-KR to be deleted
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successfully Deleted
+        404:
+          description: Not found
+
   /companyKeyResults/{id}/history:
     get:
       tags:
@@ -201,7 +233,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             type: "array"
             items:
@@ -222,7 +254,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             $ref: "#/definitions/CompanyKeyResult"
 
@@ -241,6 +273,24 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/BusinessUnit"
+
+  /businessUnit:
+    post:
+      tags:
+        - "Business Unit"
+      summary: "Create a Business Unit"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "The new Business Unit Object"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnit"
+      responses:
+        200:
+          description: "succesfully create Business Unit"
 
   /businessUnit/{id}:
     get:
@@ -282,23 +332,36 @@ paths:
         200:
           description: "Successfully Updated the Business Unit"
 
-  /businessUnit:
-    post:
+    delete:
       tags:
         - "Business Unit"
-      summary: "Create a Business Unit"
-      consumes:
-        - "application/json"
+      summary: "Delete a Business Unit"
       parameters:
-        - in: "body"
-          name: "body"
-          description: "The new Business Unit Object"
+        - name: "id"
+          in: path
+          description: ID of the Business Unit to be delted
           required: true
-          schema:
-            $ref: "#/definitions/BusinessUnit"
+          type: integer
       responses:
         200:
-          description: "succesfully create Business Unit"
+          description: successfully deleted
+        404:
+          description: not found
+
+  /businessUnit/{id}/objectives:
+    get:
+      tags:
+        - "Business Unit"
+      summary: "Get all Business Unit Objectives of the specified Business Unit"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successfully returned all BUOs"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/BusinessUnitObjective"
 
   /businessUnitObjectives:
     get:
@@ -396,6 +459,21 @@ paths:
       responses:
         200:
           description: "successful operation"
+    delete:
+      tags:
+        - "Business Unit Objectives"
+      summary: "delete the specified Business Unit objective"
+      parameters:
+        - name: "objectiveId"
+          in: "path"
+          description: "Id of the Business Unit Objective"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+        404:
+          description: "not found"
 
   /businessUnitKeyResults:
     get:
@@ -493,6 +571,23 @@ paths:
       responses:
         200:
           description: "Successfully updated"
+    delete:
+      tags:
+        - "Business Unit Key Results"
+      summary: "Delete the specified Business Unit Key Result"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "The id of the BU-KR to be updated"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully updated"
+        404:
+          description: "Successfully deleted"
 
   /businessUnitKeyResults/{id}/history:
     get:
@@ -509,7 +604,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             type: "array"
             items:
@@ -530,7 +625,7 @@ paths:
           type: "integer"
       responses:
         200:
-          description: "Successfully returned KeyResult History"
+          description: "Successfully returned CompanyKeyResult History"
           schema:
             $ref: "#/definitions/BusinessUnitKeyResult"
 definitions:
