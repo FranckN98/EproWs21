@@ -5,6 +5,8 @@ import de.thbingen.epro.model.dto.PrivilegeDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface PrivilegeMapper {
 
@@ -12,5 +14,7 @@ public interface PrivilegeMapper {
 
     @Mapping(target = "role", ignore = true)
     public Privilege dtoToPrivilege(PrivilegeDto privilegeDto);
+
+    public List<PrivilegeDto> privilegeListToPrivilegeDtoList(List<Privilege> privileges);
 
 }
