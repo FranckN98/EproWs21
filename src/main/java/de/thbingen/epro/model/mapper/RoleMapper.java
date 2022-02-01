@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    public RoleDto RoleToDto(Role role);
+    public RoleDto roleToDto(Role role);
 
     @Mapping(target = "privilege", ignore = true)
     @Mapping(target = "okrUsers", ignore = true)
-    public Role DtoToRole(RoleDto roleDto);
+    public Role dtoToRole(RoleDto roleDto);
 }

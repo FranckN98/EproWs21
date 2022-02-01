@@ -8,9 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface OKRUserMapper {
 
-    public OKRUserDto OKRUserToDto(OKRUser okrUser);
+    public OKRUserDto oKRUserToDto(OKRUser okrUser);
 
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)
-    public OKRUser DtoToOKRUser(OKRUserDto okrUserDto);
+    public OKRUser dtoToOKRUser(OKRUserDto okrUserDto);
+
 }

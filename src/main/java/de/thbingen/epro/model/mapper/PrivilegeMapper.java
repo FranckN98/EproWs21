@@ -8,9 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PrivilegeMapper {
 
-    public PrivilegeDto PrivilegeToDto(Privilege privilege);
+    public PrivilegeDto privilegeToDto(Privilege privilege);
 
     @Mapping(target = "role", ignore = true)
-    public Privilege DtoToPrivilege(PrivilegeDto privilegeDto);
+    public Privilege dtoToPrivilege(PrivilegeDto privilegeDto);
 
 }
