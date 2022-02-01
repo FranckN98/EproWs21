@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OKRUserMapper {
 
-    public OKRUserDto oKRUserToDto(OKRUser okrUser);
+    public OKRUserDto okrUserToDto(OKRUser okrUser);
 
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)
