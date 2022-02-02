@@ -3,7 +3,7 @@ package de.thbingen.epro.model.business;
 import javax.persistence.*;
 
 @Entity
-public class OKRUser
+public class OkrUser
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class OKRUser
     @JoinColumn(name = "business_unit_id")
     private BusinessUnit businessUnit;
 
-    public OKRUser() {}
+    public OkrUser() {}
 
     public Long getId() {
         return id;

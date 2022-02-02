@@ -19,9 +19,9 @@ public class Role
     @JoinColumn(name = "privilege_id")
     private Privilege privilege;
 
-    @OneToMany(targetEntity = OKRUser.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = OkrUser.class, cascade = CascadeType.ALL)
     @JoinColumn(name="role_id")
-    private Set<OKRUser> okrUsers = new HashSet<>();
+    private Set<OkrUser> OkrUsers = new HashSet<>();
 
     public Role(String name) {
         this.name = name;
@@ -49,8 +49,8 @@ public class Role
         return privilege;
     }
 
-    public Set<OKRUser> getOkrUsers() {
-        return okrUsers;
+    public Set<OkrUser> getOkrUsers() {
+        return OkrUsers;
     }
 
 

@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.dto;
 
 
-public class OKRUserDto {
+public class OkrUserDto {
 
     private Long id;
 
@@ -11,10 +11,10 @@ public class OKRUserDto {
 
     private String password;
 
-    public OKRUserDto() {
+    public OkrUserDto() {
     }
 
-    public OKRUserDto(Long id, String name, String surname, String password) {
+    public OkrUserDto(Long id, String name, String surname, String password) {
         this.id = id;
         this.name = name;
         this.surname = surname;

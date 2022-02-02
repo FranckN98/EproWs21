@@ -1,7 +1,7 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.model.dto.OKRUserDto;
-import de.thbingen.epro.service.OKRUserService;
+import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.service.OkrUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -14,45 +14,45 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-public class OKRUserController {
+public class OkrUserController {
 
-    final OKRUserService okrUserService;
+    final OkrUserService OkrUserService;
 
-    public OKRUserController(OKRUserService okrUserService) {
-        this.okrUserService = okrUserService;
+    public OkrUserController(OkrUserService OkrUserService) {
+        this.OkrUserService = OkrUserService;
     }
 
     @GetMapping
-    public List<OKRUserDto> findAll() {
-        return okrUserService.findAll();
+    public List<OkrUserDto> findAll() {
+        return OkrUserService.findAll();
     }
 
     @GetMapping("/{id}")
-    public OKRUserDto findById(@PathVariable Long id) {
-        Optional<OKRUserDto> result = okrUserService.findById(id);
+    public OkrUserDto findById(@PathVariable Long id) {
+        Optional<OkrUserDto> result = OkrUserService.findById(id);
         if (result.isPresent())
             return result.get();
         throw new EntityNotFoundException("No User with this id exists");
     }
 
     @PostMapping
-    public ResponseEntity<OKRUserDto> addNew(@RequestBody @Valid OKRUserDto newUser) {
-        OKRUserDto okrUserDto = okrUserService.saveOKRUser(newUser);
+    public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
+        OkrUserDto OkrUserDto = OkrUserService.saveOkrUser(newUser);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("localhost")
                 .port(8080)
                 .path("/api/v1/users/{id}")
-                .buildAndExpand(okrUserDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(okrUserDto);
+                .buildAndExpand(OkrUserDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(OkrUserDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        if (!okrUserService.existsById(id)) {
-            throw new EntityNotFoundException("No OKRUser with this id exists");
+        if (!OkrUserService.existsById(id)) {
+            throw new EntityNotFoundException("No OkrUser with this id exists");
         }
-        okrUserService.deleteById(id);
+        OkrUserService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
