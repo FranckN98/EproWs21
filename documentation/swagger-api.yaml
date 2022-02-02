@@ -628,6 +628,286 @@ paths:
           description: "Successfully returned CompanyKeyResult History"
           schema:
             $ref: "#/definitions/BusinessUnitKeyResult"
+
+  /users:
+    get:
+      tags:
+        - "Users"
+      summary: "Get all Users"
+      description: "Gets all Users"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#definitions/User"
+
+  /user/{id}:
+    get:
+      tags:
+        - "Users"
+      summary: "Get a User"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of User to return"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned user object"
+          schema:
+            $ref: "#/definitions/User"
+    put:
+      tags:
+        - "Users"
+      summary: "Update a User"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the User to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated user object"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "Successfully updated the User"
+    delete:
+      tags:
+        - "Users"
+      summary: "Deletes a User"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the User to be deleted"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully deleted the User"
+        404:
+          description: "Did not find User"
+
+  /user:
+    post:
+      tags:
+        - "Users"
+      summary: "Add a new User"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "Successfully added User"
+        405:
+          description: "Invalid input"
+
+  /roles:
+    get:
+      tags:
+        - "Roles"
+      summary: "Get all Roles"
+      description: "Gets all Roles"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#definitions/Role"
+
+  /roles/{id}:
+    get:
+      tags:
+        - "Roles"
+      summary: "Get a Role"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of Role to return"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned role"
+          schema:
+            $ref: "#/definitions/Roles"
+    put:
+      tags:
+        - "Roles"
+      summary: "Update a Role"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Role to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated Role object"
+          required: true
+          schema:
+            $ref: "#/definitions/Role"
+      responses:
+        200:
+          description: "Successfully updated the Role"
+    delete:
+      tags:
+        - "Roles"
+      summary: "Deletes a Role"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Role to be deleted"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully deleted the Role"
+        404:
+          description: "Did not find Role"
+
+  /role:
+    post:
+      tags:
+        - "Roles"
+      summary: "Add a new Role"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Role to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Role"
+      responses:
+        200:
+         description: "Successfully added Role"
+        405:
+         description: "Invalid input"
+
+  /privileges:
+    get:
+      tags:
+        - "Privileges"
+      summary: "Get all Privileges"
+      description: "Gets all Privileges"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#definitions/Privilege"
+
+  /privileges/{id}:
+    get:
+      tags:
+        - "Privileges"
+      summary: "Get a Privilege"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of Privilege to return"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully returned privilege"
+          schema:
+            $ref: "#/definitions/Privilege"
+    put:
+      tags:
+        - "Privileges"
+      summary: "Update a Privilege"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Privilege to update"
+          required: true
+          type: "integer"
+        - in: "body"
+          name: "body"
+          description: "The updated Privilege object"
+          required: true
+          schema:
+            $ref: "#/definitions/Privilege"
+      responses:
+        200:
+          description: "Successfully updated the Privilege"
+    delete:
+      tags:
+        - "Privileges"
+      summary: "Deletes a Privilege"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the Privilege to be deleted"
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: "Successfully deleted the Privilege"
+        404:
+          description: "Did not find Privilege"
+
+  /privilege:
+    post:
+      tags:
+        - "Privileges"
+      summary: "Add a new Privilege"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Privilege to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/Privilege"
+      responses:
+        200:
+          description: "Successfully added Privilege"
+        405:
+          description: "Invalid input"
+
 definitions:
   CompanyObjective:
     type: "object"
@@ -694,3 +974,34 @@ definitions:
         type: "number"
       businessUnitObjectiveId:
         type: "integer"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
+      surname:
+        type: "string"
+      password:
+        type: "string"
+      roleId:
+        type: "integer"
+      businessUnitId:
+        type: "integer"
+  Role:
+    type: "object"
+    properties:
+     id:
+      type: "integer"
+     name:
+      type: "string"
+     privilegeId:
+        type: "integer"
+  Privilege:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      name:
+        type: "string"
