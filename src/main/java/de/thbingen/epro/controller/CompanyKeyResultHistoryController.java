@@ -35,7 +35,7 @@ public class CompanyKeyResultHistoryController {
     // region Forbidden Methods
 
     /**
-     * Historization is handled using DB-triggers, so Posting CompanyUnitKeyResultHistories is not allowed.
+     * Historization is handled using DB-triggers, so Posting CompanyKeyResultHistories is not allowed.
      * This method has only been added for documentation purposes.
      */
     @PostMapping("/{id}")
@@ -53,7 +53,7 @@ public class CompanyKeyResultHistoryController {
     }
 
     /**
-     * History should not be deleted, delete history by deleting the CompanyUnitKeyResult.
+     * History should not be deleted, delete history by deleting the CompanyKeyResult.
      * This method has only been added for documentation purposes.
      */
     @DeleteMapping("/{id}")

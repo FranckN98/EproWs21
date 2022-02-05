@@ -3,7 +3,7 @@ info:
   description: "EPRO Projekt WS2021"
   version: "1.0.0"
   title: "EPRO OKR Projekt"
-host: "localhost:8081"
+host: "localhost:8080"
 basePath: "/api/v1"
 schemes:
   - "http"
@@ -25,8 +25,25 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/CompanyObjective"
+    post:
+      tags:
+        - "Company Objectives"
+      summary: "Add a new CompanyObjective"
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Business Unit Objective to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/BusinessUnitObjective"
+      responses:
+        "405":
+          description: "Invalid input"
 
-  /companyobjective/{id}:
+  /companyobjectives/{id}:
     get:
       tags:
         - "Company Objectives"
@@ -85,25 +102,6 @@ paths:
           description: "Successfully deleted company objective"
         404:
           description: "Did not find Company Objective"
-
-  /companyobjective:
-    post:
-      tags:
-        - "Company Objectives"
-      summary: "Add a new CompanyObjective"
-      description: ""
-      consumes:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Business Unit Objective to be added"
-          required: true
-          schema:
-            $ref: "#/definitions/BusinessUnitObjective"
-      responses:
-        "405":
-          description: "Invalid input"
 
   /companykeyresults:
     get:
@@ -348,21 +346,6 @@ paths:
         404:
           description: not found
 
-  /businessUnit/{id}/objectives:
-    get:
-      tags:
-        - "Business Unit"
-      summary: "Get all Business Unit Objectives of the specified Business Unit"
-      produces:
-        - "application/json"
-      responses:
-        200:
-          description: "successfully returned all BUOs"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/BusinessUnitObjective"
-
   /businessUnitObjectives:
     get:
       tags:
@@ -382,6 +365,7 @@ paths:
     get:
       tags:
         - "Business Unit Objectives"
+        - "Business Unit"
       summary: "Get all Business Unit Objectives of a certain Business Unit"
       produces:
         - "application/json"

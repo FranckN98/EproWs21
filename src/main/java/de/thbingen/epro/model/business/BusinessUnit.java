@@ -3,7 +3,6 @@ package de.thbingen.epro.model.business;
 import javax.persistence.*;
 import java.util.Objects;
 
-
 @Entity
 public class BusinessUnit {
     @Id
