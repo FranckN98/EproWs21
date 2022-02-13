@@ -4,4 +4,5 @@ import de.thbingen.epro.model.business.OkrUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OkrUserRepository extends JpaRepository<OkrUser, Long> {
+    public OkrUser findBySurname(String surname);
 }
