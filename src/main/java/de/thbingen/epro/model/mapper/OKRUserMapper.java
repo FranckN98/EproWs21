@@ -16,6 +16,6 @@ public interface OkrUserMapper {
     @Mapping(target = "businessUnit", ignore = true)
     public OkrUser dtoToOkrUser(OkrUserDto OkrUserDto);
 
-    public List<OkrUserDto> OkrUserListToOkrUserList(List<OkrUser> OkrUserList);
+    public List<OkrUserDto> OkrUserListToOkrUserDtoList(List<OkrUser> OkrUserList);
 
 }
