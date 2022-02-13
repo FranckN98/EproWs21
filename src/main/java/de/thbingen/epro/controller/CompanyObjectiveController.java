@@ -1,7 +1,9 @@
 package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.NonMatchingIdsException;
+import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,12 @@ import java.util.Optional;
 @RequestMapping("/companyobjectives")
 public class CompanyObjectiveController {
 
+    private final CompanyKeyResultService companyKeyResultService;
     private final CompanyObjectiveService companyObjectiveService;
 
-    public CompanyObjectiveController(CompanyObjectiveService companyObjectiveService) {
+    public CompanyObjectiveController(CompanyObjectiveService companyObjectiveService, CompanyKeyResultService companyKeyResultService) {
         this.companyObjectiveService = companyObjectiveService;
+        this.companyKeyResultService = companyKeyResultService;
     }
 
     @GetMapping
@@ -77,5 +81,18 @@ public class CompanyObjectiveController {
         }
         companyObjectiveService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/{id}/keyresults")
+    public ResponseEntity<CompanyKeyResultDto> addNew(@PathVariable Long id, @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
+
+        CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.findById(id).get();
+        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResultWithObjective(newCompanyKeyResultDto,companyObjectiveDto);
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8080)
+                .path("/api/v1/companyKeyResults/{id}")
+                .buildAndExpand(companyKeyResultDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(companyKeyResultDto);
     }
 }

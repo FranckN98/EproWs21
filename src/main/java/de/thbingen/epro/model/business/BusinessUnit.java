@@ -1,7 +1,9 @@
 package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -54,4 +56,6 @@ public class BusinessUnit {
     public String toString() {
         return "BusinessUnit{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
+
+
 }

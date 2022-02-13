@@ -1,5 +1,7 @@
 package de.thbingen.epro.model.dto;
 
+import de.thbingen.epro.model.business.BusinessUnitKeyResultHistory;
+
 import java.time.OffsetDateTime;
 
 public class BusinessUnitKeyResultHistoryDto {
@@ -50,4 +52,6 @@ public class BusinessUnitKeyResultHistoryDto {
     public void setHistoricalBusinessUnitKeyResult(HistoricalBusinessUnitKeyResultDto historicalBusinessUnitKeyResult) {
         this.historicalBusinessUnitKeyResult = historicalBusinessUnitKeyResult;
     }
+
+
 }

@@ -1,7 +1,10 @@
 package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.NonMatchingIdsException;
+import de.thbingen.epro.model.business.BusinessUnit;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +22,11 @@ import java.util.Optional;
 public class BusinessUnitController {
 
     final BusinessUnitService businessUnitService;
+    private final BusinessUnitObjectiveService businessUnitObjectiveService;
 
-    public BusinessUnitController(BusinessUnitService businessUnitService) {
+    public BusinessUnitController(BusinessUnitService businessUnitService,BusinessUnitObjectiveService businessUnitObjectiveService) {
         this.businessUnitService = businessUnitService;
+        this.businessUnitObjectiveService = businessUnitObjectiveService;
     }
 
     @GetMapping
@@ -72,5 +77,19 @@ public class BusinessUnitController {
         }
         businessUnitService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/{id}/objectives")
+    public ResponseEntity<BusinessUnitObjectiveDto> addNewBusinessUnitObjective(@PathVariable Long id, @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
+        BusinessUnitDto businessUnit = businessUnitService.findById(id).get();
+        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto,businessUnit);
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8080)
+                .path("/api/v1/businessUnitObjectives/{id}")
+                .buildAndExpand(businessUnitObjectiveDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(businessUnitObjectiveDto);
     }
 }
