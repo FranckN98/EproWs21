@@ -10,11 +10,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface PrivilegeMapper {
 
-    public PrivilegeDto privilegeToDto(Privilege privilege);
+    PrivilegeDto privilegeToDto(Privilege privilege);
 
-    @Mapping(target = "role", ignore = true)
-    public Privilege dtoToPrivilege(PrivilegeDto privilegeDto);
+    @Mapping(target = "roles", ignore = true)
+    Privilege dtoToPrivilege(PrivilegeDto privilegeDto);
 
-    public List<PrivilegeDto> privilegeListToPrivilegeDtoList(List<Privilege> privileges);
+    List<PrivilegeDto> privilegeListToPrivilegeDtoList(List<Privilege> privileges);
 
 }

@@ -14,20 +14,24 @@ public interface CompanyKeyResultMapper {
 
 
     @Mapping(target = "businessUnitObjectives", ignore = true)
-    public CompanyKeyResultDto companyKeyResultToDto(CompanyKeyResult companyKeyResult);
+    CompanyKeyResultDto companyKeyResultToDto(CompanyKeyResult companyKeyResult);
 
     @Mapping(target = "businessUnitObjectives", ignore = true)
-    public CompanyKeyResult dtoToCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto);
+    CompanyKeyResult dtoToCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto);
+
     @Mapping(target = "companyObjective", ignore = true)
-    public List<CompanyKeyResultDto> companyKeyResultListToDto(List<CompanyKeyResult> companyKeyResults);
+    List<CompanyKeyResultDto> companyKeyResultListToDto(List<CompanyKeyResult> companyKeyResults);
+
     @Mapping(target = "companyObjective", ignore = true)
     @Mapping(target = "businessUnitObjectives", ignore = true)
-    public Set<CompanyKeyResultDto> companyKeyResultSetToDto(Set<CompanyKeyResult> companyKeyResultSet);
+    Set<CompanyKeyResultDto> companyKeyResultSetToDto(Set<CompanyKeyResult> companyKeyResultSet);
+
     @Mapping(target = "companyObjective", ignore = true)
-    public Set<CompanyKeyResult> dtoSetToCompanyKeyResultSet(Set<CompanyKeyResultDto> companyKeyResultSet);
+    Set<CompanyKeyResult> dtoSetToCompanyKeyResultSet(Set<CompanyKeyResultDto> companyKeyResultSet);
+
     @Mapping(target = "companyObjective", source = "companyObjectiveDto")
     @Mapping(target = "id", source = "companyKeyResultDto.id")
     @Mapping(target = "name", source = "companyKeyResultDto.name")
     @Mapping(target = "achievement", source = "companyKeyResultDto.achievement")
-    public CompanyKeyResult dtoToCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto);
+    CompanyKeyResult dtoToCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto);
 }

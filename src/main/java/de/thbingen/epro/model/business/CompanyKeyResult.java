@@ -38,8 +38,9 @@ public class CompanyKeyResult {
     private CompanyObjective companyObjective;
 
     @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="company_key_result_ref")
+    @JoinColumn(name = "company_key_result_ref")
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
+
     /*
     @OneToMany(mappedBy = "companyKeyResult", targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
     private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();

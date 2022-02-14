@@ -10,11 +10,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    public RoleDto roleToDto(Role role);
+    RoleDto roleToDto(Role role);
 
-    @Mapping(target = "privilege", ignore = true)
+    @Mapping(target = "privileges", ignore = true)
     @Mapping(target = "okrUsers", ignore = true)
-    public Role dtoToRole(RoleDto roleDto);
+    Role dtoToRole(RoleDto roleDto);
 
-    public List<RoleDto> roleListToRoleDtoList(List<Role> roleList);
+    List<RoleDto> roleListToRoleDtoList(List<Role> roleList);
 }

@@ -23,6 +23,7 @@ public class CompanyKeyResultController {
     public CompanyKeyResultController(CompanyKeyResultService companyKeyResultService) {
         this.companyKeyResultService = companyKeyResultService;
     }
+
     @GetMapping
     public Set<CompanyKeyResultDto> findAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
@@ -31,6 +32,7 @@ public class CompanyKeyResultController {
     ) {
         return companyKeyResultService.getAllCompanyKeyResults(pageNo, pageSize, sortBy);
     }
+
     @PostMapping
     public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
         CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResult(newCompanyKeyResultDto);
@@ -42,6 +44,7 @@ public class CompanyKeyResultController {
                 .buildAndExpand(companyKeyResultDto.getId());
         return ResponseEntity.created(uriComponents.toUri()).body(companyKeyResultDto);
     }
+
     @GetMapping("/{id}")
     public CompanyKeyResultDto findById(@PathVariable Long id) {
         Optional<CompanyKeyResultDto> result = companyKeyResultService.findById(id);
@@ -50,6 +53,7 @@ public class CompanyKeyResultController {
         }
         throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<CompanyKeyResultDto> updateById(@PathVariable Long id, @RequestBody CompanyKeyResultDto companyKeyResultDto) {
         if (companyKeyResultDto.getId() == null) {
@@ -63,6 +67,7 @@ public class CompanyKeyResultController {
         }
         return ResponseEntity.ok(companyKeyResultService.saveCompanyKeyResult(companyKeyResultDto));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!companyKeyResultService.existsById(id)) {

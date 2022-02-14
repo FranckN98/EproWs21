@@ -11,9 +11,6 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface BusinessUnitKeyResultMapper {
-
-
-
     @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     @Mapping(target = "businessUnitObjective", ignore = true)
     BusinessUnitKeyResultDto businessUnitKeyResultToDtoWithoutObjective(BusinessUnitKeyResult businessUnitKeyResult);

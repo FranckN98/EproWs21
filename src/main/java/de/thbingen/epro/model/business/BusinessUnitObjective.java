@@ -6,8 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class BusinessUnitObjective
-{
+public class BusinessUnitObjective {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +23,11 @@ public class BusinessUnitObjective
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_unit_id")
-    private  BusinessUnit businessUnit;
+    private BusinessUnit businessUnit;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_key_result_ref")
-    private  CompanyKeyResult companyKeyResult;
+    private CompanyKeyResult companyKeyResult;
 
 
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
