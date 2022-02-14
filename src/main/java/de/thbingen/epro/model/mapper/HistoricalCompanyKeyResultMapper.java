@@ -9,5 +9,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {HistoricalCompanyKeyResultMapperResolver.class})
 public interface HistoricalCompanyKeyResultMapper {
     @Mapping(source = "companyObjectiveId", target = "companyObjective")
-    public HistoricalCompanyKeyResultDto historicalCompanyKeyResultToDto(HistoricalCompanyKeyResult historicalCompanyKeyResult);
+    HistoricalCompanyKeyResultDto historicalCompanyKeyResultToDto(HistoricalCompanyKeyResult historicalCompanyKeyResult);
 }

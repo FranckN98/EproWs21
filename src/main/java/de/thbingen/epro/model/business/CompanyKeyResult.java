@@ -2,6 +2,8 @@ package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class CompanyKeyResult {
@@ -35,17 +37,18 @@ public class CompanyKeyResult {
     @JoinColumn(name = "company_objective_id")
     private CompanyObjective companyObjective;
 
-    /*@OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="company_key_result_id")
+    @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_key_result_ref")
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
 
+    /*
     @OneToMany(mappedBy = "companyKeyResult", targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
     private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();
 
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
     @JoinColumn(name="company_key_result_id")
-    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();*/
-
+    private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
+    */
     public CompanyKeyResult() {
     }
 
@@ -145,14 +148,14 @@ public class CompanyKeyResult {
         this.companyObjective = companyObjective;
     }
 
-    /*public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
+    public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
         return businessUnitObjectives;
     }
 
     public void setBusinessUnitObjectives(Set<BusinessUnitObjective> businessUnitObjectives) {
         this.businessUnitObjectives = businessUnitObjectives;
     }
-
+    /*
     public Set<CompanyKeyResultHistory> getCompanyKeyResultHistories() {
         return companyKeyResultHistories;
     }
@@ -168,4 +171,5 @@ public class CompanyKeyResult {
     public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResult> businessUnitKeyResults) {
         this.businessUnitKeyResults = businessUnitKeyResults;
     }*/
+
 }

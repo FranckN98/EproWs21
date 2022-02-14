@@ -16,7 +16,7 @@ public class CompanyObjective {
     @Column(updatable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private Integer achievement;
 
     @Column(nullable = false)

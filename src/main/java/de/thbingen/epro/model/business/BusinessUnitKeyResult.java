@@ -1,9 +1,8 @@
 package de.thbingen.epro.model.business;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,7 +26,7 @@ public class BusinessUnitKeyResult {
     private float confidenceLevel;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    private Integer achievement;
+    private Integer achievement = 0;
 
     @Column
     private String comment;
@@ -43,24 +42,22 @@ public class BusinessUnitKeyResult {
     @JoinColumn(name = "company_key_result_ref")
     private CompanyKeyResult companyKeyResult;
 
-    /*@OneToMany(targetEntity = BusinessUnitKeyResultHistory.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = BusinessUnitKeyResultHistory.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "ref_id")
-    private Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories = new HashSet<>();*/
+    private Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories = new HashSet<>();
 
     public BusinessUnitKeyResult() {
     }
 
-    public BusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, BusinessUnitObjective businessUnitObjective, CompanyKeyResult companyKeyResult, Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories) {
+    public BusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, String comment, OffsetDateTime timestamp, BusinessUnitObjective businessUnitObjective, CompanyKeyResult companyKeyResult, Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories) {
         this.id = id;
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
-        this.achievement = achievement;
         this.comment = comment;
         this.timestamp = timestamp;
         this.businessUnitObjective = businessUnitObjective;
-        this.companyKeyResult = companyKeyResult;
         //this.businessUnitKeyResultHistories = businessUnitKeyResultHistories;
     }
 
@@ -128,21 +125,13 @@ public class BusinessUnitKeyResult {
         this.businessUnitObjective = businessUnitObjective;
     }
 
-    public CompanyKeyResult getCompanyKeyResult() {
-        return companyKeyResult;
-    }
-
-    public void setCompanyKeyResult(CompanyKeyResult companyKeyResult) {
-        this.companyKeyResult = companyKeyResult;
-    }
-
-    /*public Set<BusinessUnitKeyResultHistory> getBusinessUnitKeyResultHistories() {
+    public Set<BusinessUnitKeyResultHistory> getBusinessUnitKeyResultHistories() {
         return businessUnitKeyResultHistories;
     }
 
     public void setBusinessUnitKeyResultHistories(Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories) {
         this.businessUnitKeyResultHistories = businessUnitKeyResultHistories;
-    }*/
+    }
 
     public OffsetDateTime getTimestamp() {
         return timestamp;
@@ -150,5 +139,13 @@ public class BusinessUnitKeyResult {
 
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public CompanyKeyResult getCompanyKeyResult() {
+        return companyKeyResult;
+    }
+
+    public void setCompanyKeyResult(CompanyKeyResult companyKeyResult) {
+        this.companyKeyResult = companyKeyResult;
     }
 }

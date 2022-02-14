@@ -14,9 +14,9 @@ create table company_key_result
     id                   int primary key generated always as identity,
     name                 varchar(64) NOT NULL,
     current_value        decimal     NOT NULL DEFAULT 0,
-    goal_value           decimal     NOT NULL,
+    goal_value           decimal     NOT NULL CHECK ( goal_value > 0 ),
     confidence_level     decimal     NOT NULL,
-    achievement          decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
+    achievement          decimal     NOT NULL GENERATED ALWAYS AS (CASE goal_value WHEN 0 THEN 0 ELSE ( current_value / NULLIF(goal_value, 0) ) END) STORED,
     comment              text        NOT NULL,
     company_objective_id int         NOT NULL REFERENCES company_objective (id) ON DELETE CASCADE,
     timestamp            timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -53,9 +53,9 @@ create table business_unit_key_result
     id                         int primary key generated always as identity,
     name                       varchar(64) NOT NULL,
     current_value              decimal     NOT NULL DEFAULT 0,
-    goal_value                 decimal     NOT NULL,
+    goal_value                 decimal     NOT NULL CHECK ( goal_value > 0 ),
     confidence_level           decimal     NOT NULL,
-    achievement                decimal     NOT NULL GENERATED ALWAYS AS ( current_value / NULLIF(goal_value, 0) ) STORED,
+    achievement                decimal     NOT NULL GENERATED ALWAYS AS (CASE goal_value WHEN 0 THEN 0 ELSE ( current_value / NULLIF(goal_value, 0) ) END) STORED,
     comment                    text        NOT NULL,
     business_unit_objective_id int         NOT NULL REFERENCES business_unit_objective (id) ON DELETE CASCADE,
     timestamp                  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -253,16 +253,60 @@ set name = 'Test1'
 where id = 1;
 
 insert into Role (name)
-VALUES ('Rolle');
+values ('CO_Admin');
+insert into Role (name)
+values ('BU_Admin');
+insert into Role (name)
+values ('Read_Only_User');
 
 insert into Privilege (name)
-VALUES ('Privileg');
+VALUES ('read');
+insert into Privilege (name)
+values ('add_users');
+insert into Privilege (name)
+values ('view_users');
+insert into Privilege (name)
+values ('change_BU_OKRs');
+insert into Privilege (name)
+values ('change_users');
+insert into Privilege (name)
+values ('access_roles');
+insert into Privilege (name)
+values ('access_privileges');
+insert into Privilege (name)
+values ('change_CO_OKRs');
 
 insert into privileges_in_role (privilege_id, role_id)
 VALUES (1, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(2, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(3, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(4, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(5, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(6, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(1, 2);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(2, 2);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(3, 2);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(4, 2);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(5, 2);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(1, 3);
 
 insert into okr_user (name, surname, password, role_id, business_unit_id)
-VALUES ('Vorname', 'Nachname', 'plaintext', 1, 1);
+VALUES ('Vorname1', 'Nachname1', 'password1', 1, 1);
+insert into okr_user (name, surname, password, role_id, business_unit_id)
+VALUES ('Vorname2', 'Nachname2', 'password2', 2, 2);
+insert into okr_user (name, surname, password, role_id, business_unit_id)
+VALUES ('Vorname3', 'Nachname3', 'password3', 3, 1);
 
 
 -- endregion

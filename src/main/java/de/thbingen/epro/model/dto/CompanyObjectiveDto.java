@@ -10,9 +10,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Relation(collectionRelation = "companyObjectives", itemRelation = "companyObjective")
 public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto> {
@@ -24,8 +21,6 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     private Integer achievement;
     @NotBlank
     private String name;
-    /*@JsonInclude(JsonInclude.Include.NON_NULL)
-    private Set<CompanyKeyResultDto> companyKeyResults = new HashSet<>();*/
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -79,4 +74,5 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
+
 }

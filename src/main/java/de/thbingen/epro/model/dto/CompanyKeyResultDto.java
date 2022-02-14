@@ -1,9 +1,11 @@
 package de.thbingen.epro.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.thbingen.epro.model.business.BusinessUnitObjective;
 import de.thbingen.epro.model.business.CompanyKeyResult;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 public class CompanyKeyResultDto {
 
@@ -17,6 +19,21 @@ public class CompanyKeyResultDto {
     private OffsetDateTime timestamp;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private CompanyObjectiveDto companyObjective;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Set<BusinessUnitObjectiveDto> businessUnitObjectives;
+
+    public CompanyKeyResultDto(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, CompanyObjectiveDto companyObjective, Set<BusinessUnitObjectiveDto> businessUnitObjectives) {
+        this.id = id;
+        this.name = name;
+        this.currentValue = currentValue;
+        this.goalValue = goalValue;
+        this.confidenceLevel = confidenceLevel;
+        this.achievement = achievement;
+        this.comment = comment;
+        this.timestamp = timestamp;
+        this.companyObjective = companyObjective;
+        this.businessUnitObjectives = businessUnitObjectives;
+    }
 
     public Long getId() {
         return id;
@@ -88,5 +105,13 @@ public class CompanyKeyResultDto {
 
     public void setCompanyObjective(CompanyObjectiveDto companyObjective) {
         this.companyObjective = companyObjective;
+    }
+
+    public Set<BusinessUnitObjectiveDto> getBusinessUnitObjectives() {
+        return businessUnitObjectives;
+    }
+
+    public void setBusinessUnitObjectives(Set<BusinessUnitObjectiveDto> businessUnitObjectives) {
+        this.businessUnitObjectives = businessUnitObjectives;
     }
 }

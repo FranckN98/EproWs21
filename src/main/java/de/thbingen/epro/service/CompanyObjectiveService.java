@@ -44,7 +44,7 @@ public class CompanyObjectiveService {
 
     public Optional<CompanyObjectiveDto> findById(Long id) {
         Optional<CompanyObjective> optional = companyObjectiveRepository.findById(id);
-        return optional.map(companyObjectiveAssembler::toModel);
+        return optional.map(companyObjectiveMapper::companyObjectiveToDto);
     }
 
     public void deleteById(Long id) {

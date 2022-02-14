@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import de.thbingen.epro.model.business.BusinessUnit;
+
 import javax.validation.constraints.NotBlank;
 
 @Relation(collectionRelation = "businessUnits", itemRelation = "businessUnit")
@@ -36,5 +38,9 @@ public class BusinessUnitDto extends RepresentationModel<BusinessUnitDto> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    static BusinessUnitDto from(BusinessUnit businessUnit) {
+        return new BusinessUnitDto(businessUnit.getId(), businessUnit.getName());
     }
 }
