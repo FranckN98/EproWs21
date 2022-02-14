@@ -23,12 +23,13 @@ public class BusinessUnitKeyResultController {
     public BusinessUnitKeyResultController(BusinessUnitKeyResultService businessUnitKeyResultService) {
         this.businessUnitKeyResultService = businessUnitKeyResultService;
     }
+
     @GetMapping
     public Set<BusinessUnitKeyResultDto> findAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy
-    ){
+    ) {
         return businessUnitKeyResultService.getAllBusinessUnitKeyResults(pageNo, pageSize, sortBy);
     }
 
@@ -43,6 +44,7 @@ public class BusinessUnitKeyResultController {
                 .buildAndExpand(businessUnitKeyResultDto.getId());
         return ResponseEntity.created(uriComponents.toUri()).body(businessUnitKeyResultDto);
     }
+
     @GetMapping("/{id}")
     public BusinessUnitKeyResultDto findById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultDto> result = businessUnitKeyResultService.findById(id);
@@ -51,6 +53,7 @@ public class BusinessUnitKeyResultController {
         }
         throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(@PathVariable Long id, @RequestBody BusinessUnitKeyResultDto businessUnitKeyResultDto) {
         if (businessUnitKeyResultDto.getId() == null) {
@@ -64,6 +67,7 @@ public class BusinessUnitKeyResultController {
         }
         return ResponseEntity.ok(businessUnitKeyResultService.saveBusinessUnitKeyResult(businessUnitKeyResultDto));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitKeyResultService.existsById(id)) {

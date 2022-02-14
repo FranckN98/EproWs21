@@ -10,12 +10,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OkrUserMapper {
 
-    public OkrUserDto OkrUserToDto(OkrUser OkrUser);
+    OkrUserDto okrUserToDto(OkrUser OkrUser);
 
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)
-    public OkrUser dtoToOkrUser(OkrUserDto OkrUserDto);
+    OkrUser dtoToOkrUser(OkrUserDto OkrUserDto);
 
-    public List<OkrUserDto> OkrUserListToOkrUserDtoList(List<OkrUser> OkrUserList);
+    List<OkrUserDto> okrUserListToOkrUserDtoList(List<OkrUser> OkrUserList);
 
 }

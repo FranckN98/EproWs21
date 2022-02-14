@@ -1,7 +1,6 @@
 package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.NonMatchingIdsException;
-import de.thbingen.epro.model.business.BusinessUnit;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
@@ -25,7 +24,7 @@ public class BusinessUnitController {
     final BusinessUnitService businessUnitService;
     private final BusinessUnitObjectiveService businessUnitObjectiveService;
 
-    public BusinessUnitController(BusinessUnitService businessUnitService,BusinessUnitObjectiveService businessUnitObjectiveService) {
+    public BusinessUnitController(BusinessUnitService businessUnitService, BusinessUnitObjectiveService businessUnitObjectiveService) {
         this.businessUnitService = businessUnitService;
         this.businessUnitObjectiveService = businessUnitObjectiveService;
     }
@@ -89,7 +88,7 @@ public class BusinessUnitController {
     @PostMapping("/{id}/objectives")
     public ResponseEntity<BusinessUnitObjectiveDto> addNewBusinessUnitObjective(@PathVariable Long id, @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
         BusinessUnitDto businessUnit = businessUnitService.findById(id).get();
-        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto,businessUnit);
+        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto, businessUnit);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("localhost")

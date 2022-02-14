@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface HistoricalBusinessUnitKeyResultMapper {
 
-    public HistoricalBusinessUnitKeyResultDto historicalBusinessUnitKeyResultToDto(HistoricalBusinessUnitKeyResult historicalBusinessUnitKeyResult);
+    HistoricalBusinessUnitKeyResultDto historicalBusinessUnitKeyResultToDto(HistoricalBusinessUnitKeyResult historicalBusinessUnitKeyResult);
 }

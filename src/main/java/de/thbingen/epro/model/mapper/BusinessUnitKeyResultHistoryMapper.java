@@ -16,5 +16,5 @@ public interface BusinessUnitKeyResultHistoryMapper {
     List<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryToDtos(List<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories);
 
     // TODO: check removal(?)
-    public BusinessUnitKeyResultDto BusinessUnitKeyResultToDto(BusinessUnitKeyResult businessUnitKeyResult);
+    BusinessUnitKeyResultDto BusinessUnitKeyResultToDto(BusinessUnitKeyResult businessUnitKeyResult);
 }

@@ -32,7 +32,7 @@ public class BusinessUnitKeyResult {
     private String comment;
 
     @Column
-    private OffsetDateTime timestamp ;
+    private OffsetDateTime timestamp;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_unit_objective_id")

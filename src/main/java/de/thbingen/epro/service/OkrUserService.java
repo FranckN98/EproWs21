@@ -22,17 +22,17 @@ public class OkrUserService {
 
     public List<OkrUserDto> findAll() {
         List<OkrUser> OkrUsers = OkrUserRepository.findAll();
-        return OkrUserMapper.OkrUserListToOkrUserList(OkrUsers);
+        return OkrUserMapper.okrUserListToOkrUserDtoList(OkrUsers);
     }
 
     public Optional<OkrUserDto> findById(Long id) {
         Optional<OkrUser> OkrUser = OkrUserRepository.findById(id);
-        return OkrUser.map(OkrUserMapper::OkrUserToDto);
+        return OkrUser.map(OkrUserMapper::okrUserToDto);
     }
 
     public OkrUserDto saveOkrUser(OkrUserDto OkrUserDto) {
         OkrUser OkrUser = OkrUserMapper.dtoToOkrUser(OkrUserDto);
-        return OkrUserMapper.OkrUserToDto(OkrUserRepository.save(OkrUser));
+        return OkrUserMapper.okrUserToDto(OkrUserRepository.save(OkrUser));
     }
 
     public boolean existsById(Long id) {

@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BusinessUnitMapper {
 
-    public BusinessUnitDto businessUnitToDto(BusinessUnit businessUnit);
+    BusinessUnitDto businessUnitToDto(BusinessUnit businessUnit);
 
-    public BusinessUnit dtoToBusinessUnit(BusinessUnitDto businessUnitDto);
+    BusinessUnit dtoToBusinessUnit(BusinessUnitDto businessUnitDto);
 
-    public List<BusinessUnitDto> businessUnitListToBusinessUnitDtoList(List<BusinessUnit> businessUnits);
+    List<BusinessUnitDto> businessUnitListToBusinessUnitDtoList(List<BusinessUnit> businessUnits);
 }
