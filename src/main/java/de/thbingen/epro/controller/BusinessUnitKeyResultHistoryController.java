@@ -3,6 +3,7 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -20,11 +21,13 @@ public class BusinessUnitKeyResultHistoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public List<BusinessUnitKeyResultHistoryDto> getAll() {
         return businessUnitKeyResultHistoryService.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitKeyResultHistoryDto getById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultHistoryDto> result = businessUnitKeyResultHistoryService.findById(id);
         if (result.isPresent())

@@ -6,6 +6,7 @@ import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,6 +30,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public List<CompanyObjectiveDto> findAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -38,6 +40,7 @@ public class CompanyObjectiveController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
         CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.saveCompanyObjective(newCompanyObjective);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -50,6 +53,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public CompanyObjectiveDto findById(@PathVariable Long id) {
         Optional<CompanyObjectiveDto> result = companyObjectiveService.findById(id);
         if (result.isPresent()) {
@@ -59,6 +63,7 @@ public class CompanyObjectiveController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyObjectiveDto> updateById(@PathVariable Long id, @RequestBody CompanyObjectiveDto companyObjectiveDto) {
         if (companyObjectiveDto.getId() == null) {
             companyObjectiveDto.setId(id);
@@ -75,6 +80,7 @@ public class CompanyObjectiveController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!companyObjectiveService.existsById(id)) {
             throw new EntityNotFoundException("No CompanyObjective with this id exists");

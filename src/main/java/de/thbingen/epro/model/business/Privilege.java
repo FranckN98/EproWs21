@@ -1,6 +1,7 @@
 package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Privilege {
@@ -13,9 +14,13 @@ public class Privilege {
     private String name;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "privileges_in_role",
+            joinColumns = @JoinColumn(name = "privilege_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     public Privilege() {}
 
@@ -39,13 +44,15 @@ public class Privilege {
         this.name = name;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
+
+
 
 
 }

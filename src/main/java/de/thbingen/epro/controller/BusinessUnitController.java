@@ -7,6 +7,7 @@ import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,11 +31,13 @@ public class BusinessUnitController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public List<BusinessUnitDto> findAll() {
         return businessUnitService.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitDto findById(@PathVariable Long id) {
         Optional<BusinessUnitDto> result = businessUnitService.findById(id);
         if (result.isPresent())
@@ -43,6 +46,7 @@ public class BusinessUnitController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
         BusinessUnitDto businessUnitDto = businessUnitService.saveBusinessUnit(newBusinessUnit);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -55,6 +59,7 @@ public class BusinessUnitController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (businessUnitDto.getId() == null) {
             businessUnitDto.setId(id);
@@ -71,6 +76,7 @@ public class BusinessUnitController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
