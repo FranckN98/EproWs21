@@ -22,7 +22,7 @@ public class CompanyKeyResult {
     @Column(nullable = false)
     private Integer confidenceLevel;
 
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private Integer achievement;
 
     @Column(nullable = false, columnDefinition = "TEXT")

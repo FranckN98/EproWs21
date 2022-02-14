@@ -1,5 +1,6 @@
 package de.thbingen.epro.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.OffsetDateTime;
@@ -14,7 +15,8 @@ public class HistoricalCompanyKeyResultDto {
     private Integer achievement;
     private String comment;
     private OffsetDateTime timestamp;
-    // TODO: change to CompanyObjectiveDto
+    // TODO: remove
+    @JsonIgnore
     private CompanyObjectiveDto companyObjective;
 
     public HistoricalCompanyKeyResultDto() {

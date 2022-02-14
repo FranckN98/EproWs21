@@ -89,24 +89,4 @@ public class CompanyKeyResultDto {
     public void setCompanyObjective(CompanyObjectiveDto companyObjective) {
         this.companyObjective = companyObjective;
     }
-
-    static CompanyKeyResultDto from(CompanyKeyResult companyKeyResult, Boolean includeObjective) {
-        CompanyKeyResultDto companyKeyResultDto = new CompanyKeyResultDto();
-        companyKeyResultDto.id = companyKeyResult.getId();
-        companyKeyResultDto.name = companyKeyResult.getName();
-        companyKeyResultDto.currentValue = companyKeyResult.getCurrentValue();
-        companyKeyResultDto.goalValue = companyKeyResult.getGoalValue();
-        companyKeyResultDto.confidenceLevel = companyKeyResult.getConfidenceLevel();
-        companyKeyResultDto.achievement = companyKeyResult.getAchievement();
-        companyKeyResultDto.comment = companyKeyResult.getComment();
-        companyKeyResultDto.timestamp = companyKeyResult.getTimestamp();
-        if(includeObjective) {
-            companyKeyResultDto.companyObjective = CompanyObjectiveDto.from(companyKeyResult.getCompanyObjective());
-        }
-        return companyKeyResultDto;
-    }
-
-    static CompanyKeyResultDto from(CompanyKeyResult companyKeyResult) {
-        return from(companyKeyResult, true);
-    }
 }

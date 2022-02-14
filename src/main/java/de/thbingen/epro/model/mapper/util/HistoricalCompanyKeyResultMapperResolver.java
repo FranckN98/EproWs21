@@ -19,7 +19,6 @@ public class HistoricalCompanyKeyResultMapperResolver {
         Optional<CompanyObjectiveDto> optional = companyObjectiveService.findById(id);
         if (optional.isPresent()) {
             CompanyObjectiveDto companyObjectiveDto = optional.get();
-            companyObjectiveDto.setCompanyKeyResults(null);
             return companyObjectiveDto;
         }
         return null;

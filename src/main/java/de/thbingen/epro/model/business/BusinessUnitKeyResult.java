@@ -26,7 +26,7 @@ public class BusinessUnitKeyResult {
     @Column
     private float confidenceLevel;
 
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private Integer achievement;
 
     @Column

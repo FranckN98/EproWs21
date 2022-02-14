@@ -3,6 +3,9 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.service.CompanyObjectiveService;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -10,7 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,18 +21,20 @@ import java.util.Optional;
 public class CompanyObjectiveController {
 
     private final CompanyObjectiveService companyObjectiveService;
+    private final PagedResourcesAssembler<CompanyObjectiveDto> pagedResourcesAssembler;
 
-    public CompanyObjectiveController(CompanyObjectiveService companyObjectiveService) {
+    public CompanyObjectiveController(CompanyObjectiveService companyObjectiveService, PagedResourcesAssembler<CompanyObjectiveDto> pagedResourcesAssembler) {
         this.companyObjectiveService = companyObjectiveService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
-    public List<CompanyObjectiveDto> findAll(
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
+    public PagedModel<EntityModel<CompanyObjectiveDto>> findAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "id") String sortBy
     ) {
-        return companyObjectiveService.getAllCompanyObjectives(pageNo, pageSize, sortBy);
+        return pagedResourcesAssembler.toModel(companyObjectiveService.getAllCompanyObjectives(page, size, sortBy));
     }
 
     @PostMapping

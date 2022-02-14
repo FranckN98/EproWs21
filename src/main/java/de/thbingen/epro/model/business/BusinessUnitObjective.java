@@ -1,10 +1,10 @@
 package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Entity
-public class BusinessUnitObjective
-{
+public class BusinessUnitObjective {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,11 +17,14 @@ public class BusinessUnitObjective
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_unit_id")
-    private  BusinessUnit businessUnit;
+    private BusinessUnit businessUnit;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_key_result_ref")
-    private  CompanyKeyResult companyKeyResult;
+    private CompanyKeyResult companyKeyResult;
+
+    private OffsetDateTime startDate = OffsetDateTime.now();
+    private OffsetDateTime endDate = OffsetDateTime.now();
 
     public BusinessUnitObjective(Integer achievement, String name) {
         this.achievement = achievement;
@@ -61,5 +64,29 @@ public class BusinessUnitObjective
 
     public CompanyKeyResult getCompanyKeyResult() {
         return companyKeyResult;
+    }
+
+    public void setBusinessUnit(BusinessUnit businessUnit) {
+        this.businessUnit = businessUnit;
+    }
+
+    public void setCompanyKeyResult(CompanyKeyResult companyKeyResult) {
+        this.companyKeyResult = companyKeyResult;
+    }
+
+    public OffsetDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(OffsetDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public OffsetDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(OffsetDateTime endDate) {
+        this.endDate = endDate;
     }
 }

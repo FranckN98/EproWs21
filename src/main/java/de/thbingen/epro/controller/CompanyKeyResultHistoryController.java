@@ -2,11 +2,13 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -14,14 +16,20 @@ import java.util.Optional;
 public class CompanyKeyResultHistoryController {
 
     private final CompanyKeyResultHistoryService companyKeyResultHistoryService;
+    private final PagedResourcesAssembler<CompanyKeyResultHistoryDto> pagedResourcesAssembler;
 
-    public CompanyKeyResultHistoryController(CompanyKeyResultHistoryService companyKeyResultHistoryService) {
+    public CompanyKeyResultHistoryController(CompanyKeyResultHistoryService companyKeyResultHistoryService, PagedResourcesAssembler<CompanyKeyResultHistoryDto> pagedResourcesAssembler) {
         this.companyKeyResultHistoryService = companyKeyResultHistoryService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
-    public List<CompanyKeyResultHistoryDto> getAll() {
-        return companyKeyResultHistoryService.findAll();
+    public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        return pagedResourcesAssembler.toModel(companyKeyResultHistoryService.findAll(page, size, sortBy));
     }
 
     @GetMapping("/{id}")

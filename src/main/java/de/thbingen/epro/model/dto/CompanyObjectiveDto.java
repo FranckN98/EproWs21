@@ -1,7 +1,10 @@
 package de.thbingen.epro.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.thbingen.epro.model.business.CompanyObjective;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,27 +14,28 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CompanyObjectiveDto {
+@Relation(collectionRelation = "companyObjectives", itemRelation = "companyObjective")
+public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto> {
 
+    @JsonIgnore
     private Long id;
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     private Integer achievement;
     @NotBlank
     private String name;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Set<CompanyKeyResultDto> companyKeyResults = new HashSet<>();
+    /*@JsonInclude(JsonInclude.Include.NON_NULL)
+    private Set<CompanyKeyResultDto> companyKeyResults = new HashSet<>();*/
     private LocalDate startDate;
     private LocalDate endDate;
 
     public CompanyObjectiveDto() {
     }
 
-    public CompanyObjectiveDto(Long id, Integer achievement, String name, Set<CompanyKeyResultDto> companyKeyResults, LocalDate startDate, LocalDate endDate) {
+    public CompanyObjectiveDto(Long id, Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
-        this.companyKeyResults = companyKeyResults;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -60,14 +64,6 @@ public class CompanyObjectiveDto {
         this.name = name;
     }
 
-    public Set<CompanyKeyResultDto> getCompanyKeyResults() {
-        return companyKeyResults;
-    }
-
-    public void setCompanyKeyResults(Set<CompanyKeyResultDto> companyKeyResults) {
-        this.companyKeyResults = companyKeyResults;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -82,25 +78,5 @@ public class CompanyObjectiveDto {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public static CompanyObjectiveDto from(CompanyObjective companyObjective, Boolean includeKeyResults) {
-        CompanyObjectiveDto result = new CompanyObjectiveDto();
-        result.id = companyObjective.getId();
-        result.achievement = companyObjective.getAchievement();
-        result.startDate = companyObjective.getStartDate();
-        result.endDate = companyObjective.getEndDate();
-        result.name = companyObjective.getName();
-        if (includeKeyResults) {
-            result.companyKeyResults = companyObjective.getCompanyKeyResults().
-                    stream()
-                    .map(item -> CompanyKeyResultDto.from(item, false))
-                    .collect(Collectors.toSet());
-        }
-        return result;
-    }
-
-    public static CompanyObjectiveDto from(CompanyObjective companyObjective) {
-        return from(companyObjective, true);
     }
 }

@@ -1,9 +1,15 @@
 package de.thbingen.epro.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import javax.validation.constraints.NotBlank;
 
-public class BusinessUnitDto {
+@Relation(collectionRelation = "businessUnits", itemRelation = "businessUnit")
+public class BusinessUnitDto extends RepresentationModel<BusinessUnitDto> {
 
+    @JsonIgnore
     private Long id;
     @NotBlank
     private String name;

@@ -1,10 +1,18 @@
 package de.thbingen.epro.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
+
 import java.time.OffsetDateTime;
 
-public class BusinessUnitKeyResultHistoryDto {
+@Relation(collectionRelation = "businessUnitKeyResultHistoryList", itemRelation = "businessUnitKeyResultHistory")
+public class BusinessUnitKeyResultHistoryDto extends RepresentationModel<BusinessUnitKeyResultHistoryDto> {
 
+    //TODO: Remove jsonignores in dtos!
+    @JsonIgnore
     private Long id;
+    @JsonIgnore
     private BusinessUnitKeyResultDto currentBusinessUnitKeyResult;
     private OffsetDateTime changeTimeStamp;
     private HistoricalBusinessUnitKeyResultDto historicalBusinessUnitKeyResult;
