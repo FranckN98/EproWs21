@@ -16,13 +16,14 @@ public class CompanyObjective {
     @Column(updatable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private Integer achievement;
 
     @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "companyObjective", targetEntity = CompanyKeyResult.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
     private Set<CompanyKeyResult> companyKeyResults = new HashSet<>();
 
     @Column(nullable = false)

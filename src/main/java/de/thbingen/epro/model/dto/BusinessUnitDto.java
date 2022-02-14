@@ -1,5 +1,7 @@
 package de.thbingen.epro.model.dto;
 
+import de.thbingen.epro.model.business.BusinessUnit;
+
 import javax.validation.constraints.NotBlank;
 
 public class BusinessUnitDto {
@@ -30,5 +32,9 @@ public class BusinessUnitDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    static BusinessUnitDto from(BusinessUnit businessUnit) {
+        return new BusinessUnitDto(businessUnit.getId(), businessUnit.getName());
     }
 }
