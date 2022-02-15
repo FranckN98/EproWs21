@@ -1,33 +1,46 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.thbingen.epro.controller.assembler.BusinessUnitAssembler;
+import de.thbingen.epro.model.business.BusinessUnit;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.mapper.BusinessUnitMapper;
+import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = BusinessUnitController.class)
-@Import(BusinessUnitController.class)
 public class BusinessUnitControllerTest {
 
     @Autowired
@@ -36,24 +49,39 @@ public class BusinessUnitControllerTest {
     @MockBean
     private BusinessUnitService businessUnitService;
 
+    @MockBean
+    private BusinessUnitObjectiveService businessUnitObjectiveService;
+
+    private final BusinessUnitMapper mapper = Mappers.getMapper(BusinessUnitMapper.class);
+    private final BusinessUnitAssembler assembler = new BusinessUnitAssembler(mapper);
+
     // region GET ALL
 
-    /*@Test
+    @Test
     @DisplayName("Get All should return all Business Units with 200 - OK")
-    public void getAllshouldReturnAllBusinessUnits() throws Exception {
-        List<BusinessUnitDto> businessUnits = List.of(
-                new BusinessUnitDto(1L, "Personal"),
-                new BusinessUnitDto(2L, "IT")
-        );
-        when(businessUnitService.findAll(0, 10, "id")).thenReturn(PageImpl(businessUnits));
-        mockMvc.perform(get("/businessUnits"))
+    public void getAllShouldReturnAllBusinessUnits() throws Exception {
+        List<BusinessUnitDto> businessUnits = Stream.of(
+                new BusinessUnit(1L, "Personal"),
+                new BusinessUnit(2L, "IT")
+        ).map(assembler::toModel).collect(Collectors.toList());
+        when(businessUnitService.findAll(Pageable.ofSize(10))).thenReturn(new PageImpl<>(businessUnits));
+        mockMvc.perform(get("/businessUnits").accept(MediaTypes.HAL_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("Personal"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("IT"));
-    }*/
+                .andExpect(jsonPath("$.*", hasSize(3)))
+                .andExpect(jsonPath("$.page").exists())
+                .andExpect(jsonPath("$._embedded").exists())
+                .andExpect(jsonPath("$._embedded.businessUnits").exists())
+                .andExpect(jsonPath("$._embedded.businessUnits", hasSize(2)))
+                .andExpect(jsonPath("$._embedded.businessUnits[*]._links").exists())
+                .andExpect(jsonPath("$._embedded.businessUnits[0]._links.self.href", endsWith("/businessUnits/1")))
+                .andExpect(jsonPath("$._embedded.businessUnits[0].name", is("Personal")))
+                .andExpect(jsonPath("$._embedded.businessUnits[1]._links.self.href", endsWith("/businessUnits/2")))
+                .andExpect(jsonPath("$._embedded.businessUnits[1].name", is("IT")))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits")))
+                .andReturn();
+    }
 
     // endregion
 
@@ -62,12 +90,14 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single BusinessUnit with 200 - OK")
     public void getWithIdShouldReturnSingleBusinessUnit() throws Exception {
-        when(businessUnitService.findById(1L)).thenReturn(Optional.of(new BusinessUnitDto(1L, "Personal")));
+        when(businessUnitService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new BusinessUnit(1L, "Personal"))));
 
         mockMvc.perform(get("/businessUnits/1"))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Personal"));
+                .andExpect(jsonPath("$.name").value("Personal"))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
     }
 
     // endregion
@@ -78,32 +108,36 @@ public class BusinessUnitControllerTest {
     @DisplayName("Post with valid body should return 201 - Created with location header")
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        BusinessUnitDto toPost = new BusinessUnitDto(null, "TEST");
+        BusinessUnit businessUnit = new BusinessUnit(1L, "TEST");
+        BusinessUnitDto toPost = assembler.toModel(businessUnit);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(businessUnitService.saveBusinessUnit(ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(new BusinessUnitDto(1L, "TEST"));
+        when(businessUnitService.saveBusinessUnit(ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(toPost);
 
         mockMvc.perform(
-                post("/businessUnits")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonToPost)
-        )
+                        post("/businessUnits")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonToPost)
+                )
+                .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost:8080/api/v1/businessUnits/1"))
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("TEST"));
+                .andExpect(header().string("location", "http://localhost/businessUnits/1"))
+                .andExpect(jsonPath("$.name").value("TEST"))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
     }
 
     @Test
     @DisplayName("Post with invalid body should return 400 - Bad Request")
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        BusinessUnitDto toPost = new BusinessUnitDto(null, "");
+        BusinessUnitDto toPost = assembler.toModel(new BusinessUnit(1L, ""));
         String invalidJson = objectMapper.writeValueAsString(toPost);
 
         mockMvc.perform(post("/businessUnits")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(invalidJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
@@ -122,8 +156,8 @@ public class BusinessUnitControllerTest {
         String malformattedJson = "{";
 
         mockMvc.perform(post("/businessUnits")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(malformattedJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(malformattedJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
@@ -146,7 +180,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
-        BusinessUnitDto businessUnitDto = new BusinessUnitDto(1L, "Test");
+        BusinessUnitDto businessUnitDto = assembler.toModel(new BusinessUnit(1L, "Test"));
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
@@ -154,15 +188,17 @@ public class BusinessUnitControllerTest {
         when(businessUnitService.saveBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test"));
+                .andExpect(jsonPath("$.name").value("Test"))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
     }
 
     @Test
     @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
-        BusinessUnitDto businessUnitDto = new BusinessUnitDto(1L, "Test");
+        BusinessUnitDto businessUnitDto = assembler.toModel(new BusinessUnit(1L, "Test"));
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
@@ -170,40 +206,12 @@ public class BusinessUnitControllerTest {
         when(businessUnitService.saveBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
+                .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test"));
-    }
-
-    @Test
-    @DisplayName("Valid put should return 400 - Bad Request when Id in path and object do not match")
-    public void validPutShouldReturnBadRequestWhenIdInPathAndObjectDoNotMatch() throws Exception {
-        BusinessUnitDto businessUnitDto = new BusinessUnitDto(100L, "Test");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
-
-        mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
-                .andExpect(jsonPath("$.message").value("Ids in path and jsonObject do not match"))
-                .andExpect(jsonPath("$.errors").isEmpty());
-    }
-
-    @Test
-    @DisplayName("Valid put should return 200 - OK when Id in Object is null and an update is being done")
-    public void validPutShouldReturnOkWhenIdInObjectIsNullAndAnUpdateIsBeingDone() throws Exception {
-        BusinessUnitDto businessUnitDto = new BusinessUnitDto(null, "Test");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
-
-        when(businessUnitService.existsById(1L)).thenReturn(true);
-        when(businessUnitService.saveBusinessUnit(any(BusinessUnitDto.class))).thenReturn(new BusinessUnitDto(1L, "Test"));
-
-        mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Test"));
+                .andExpect(header().string("location", "http://localhost/businessUnits/1"))
+                .andExpect(jsonPath("$.name").value("Test"))
+                .andExpect(jsonPath("$._links").exists())
+                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
     }
 
     // endregion

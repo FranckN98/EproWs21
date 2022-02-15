@@ -18,10 +18,6 @@ public class BusinessUnitObjective {
     @Column(nullable = false)
     private String name;
 
-    private OffsetDateTime startDate;
-
-    private OffsetDateTime endDate;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "business_unit_id")
     private BusinessUnit businessUnit;
@@ -38,12 +34,18 @@ public class BusinessUnitObjective {
     @JoinColumn(name = "company_key_result_ref")
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
 
-    public BusinessUnitObjective(Integer achievement, String name) {
-        this.achievement = achievement;
-        this.name = name;
+    public BusinessUnitObjective() {
     }
 
-    public BusinessUnitObjective() {
+    public BusinessUnitObjective(Long id, Integer achievement, String name, BusinessUnit businessUnit, CompanyKeyResult companyKeyResult, OffsetDateTime startDate, OffsetDateTime endDate, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+        this.id = id;
+        this.achievement = achievement;
+        this.name = name;
+        this.businessUnit = businessUnit;
+        this.companyKeyResult = companyKeyResult;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.businessUnitKeyResults = businessUnitKeyResults;
     }
 
     public Long getId() {
@@ -78,36 +80,8 @@ public class BusinessUnitObjective {
         this.businessUnit = businessUnit;
     }
 
-    public void setCompanyKeyResult(CompanyKeyResult companyKeyResult) {
-        this.companyKeyResult = companyKeyResult;
-    }
-
-    public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResult> businessUnitKeyResults) {
-        this.businessUnitKeyResults = businessUnitKeyResults;
-    }
-
-    public OffsetDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(OffsetDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public OffsetDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(OffsetDateTime endDate) {
-        this.endDate = endDate;
-    }
-
     public CompanyKeyResult getCompanyKeyResult() {
         return companyKeyResult;
-    }
-
-    public void setBusinessUnit(BusinessUnit businessUnit) {
-        this.businessUnit = businessUnit;
     }
 
     public void setCompanyKeyResult(CompanyKeyResult companyKeyResult) {
@@ -132,5 +106,9 @@ public class BusinessUnitObjective {
 
     public Set<BusinessUnitKeyResult> getBusinessUnitKeyResults() {
         return businessUnitKeyResults;
+    }
+
+    public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+        this.businessUnitKeyResults = businessUnitKeyResults;
     }
 }

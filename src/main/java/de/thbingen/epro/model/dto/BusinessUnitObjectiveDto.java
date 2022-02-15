@@ -38,17 +38,6 @@ public class BusinessUnitObjectiveDto {
         this.achievement = achievement;
         this.name = name;
         this.businessUnit = businessUnit;
-public class BusinessUnitObjectiveDto {
-
-    private Long id;
-
-    private Integer achievement;
-    private String name;
-
-    public BusinessUnitObjectiveDto(Long id, Integer achievement, String name) {
-        this.id = id;
-        this.achievement = achievement;
-        this.name = name;
     }
 
     public Long getId() {
@@ -107,6 +96,5 @@ public class BusinessUnitObjectiveDto {
     public void setEndDate(OffsetDateTime endDate) {
         this.endDate = endDate;
     }
-
 
 }

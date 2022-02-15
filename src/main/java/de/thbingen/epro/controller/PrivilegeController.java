@@ -4,7 +4,6 @@ import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.service.PrivilegeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,7 +16,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/privileges")
-@PreAuthorize("hasAuthority('access_privileges')")
 public class PrivilegeController {
 
     private final PrivilegeService privilegeService;

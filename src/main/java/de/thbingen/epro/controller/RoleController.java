@@ -5,7 +5,6 @@ import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.RoleService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/roles")
-@PreAuthorize("hasAuthority('access_roles')")
 public class RoleController {
 
     private final RoleService roleService;

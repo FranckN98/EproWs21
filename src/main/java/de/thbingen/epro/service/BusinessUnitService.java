@@ -33,13 +33,8 @@ public class BusinessUnitService {
         this.businessUnitObjectiveMapper = businessUnitObjectiveMapper;
     }
 
-    public Page<BusinessUnitDto> findAll(
-            int pageNo,
-            int pageSize,
-            String sortBy
-    ) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<BusinessUnit> pagedResult = businessUnitRepository.findAll(paging);
+    public Page<BusinessUnitDto> findAll(Pageable pageable) {
+        Page<BusinessUnit> pagedResult = businessUnitRepository.findAll(pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(businessUnitAssembler::toModel);
@@ -67,6 +62,6 @@ public class BusinessUnitService {
     }
 
     public BusinessUnitObjectiveDto saveBusinessUnitObjective(BusinessUnitObjectiveDto newBusinessUnitObj, BusinessUnitDto businessUnit) {
-        return businessUnitObjectiveMapper.toDto(businessUnitObjectiveRepository.save(businessUnitObjectiveMapper.businessUnitToDto(newBusinessUnitObj, businessUnit)));
+        return businessUnitObjectiveMapper.businessUnitObjectiveToDto(businessUnitObjectiveRepository.save(businessUnitObjectiveMapper.dtoToBusinessUnitObjective(newBusinessUnitObj, businessUnit)));
     }
 }

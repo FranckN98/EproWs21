@@ -6,7 +6,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -25,7 +24,6 @@ public class BusinessUnitKeyResultHistoryController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultHistoryDto>> getAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
@@ -35,7 +33,6 @@ public class BusinessUnitKeyResultHistoryController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitKeyResultHistoryDto getById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultHistoryDto> result = businessUnitKeyResultHistoryService.findById(id);
         if (result.isPresent())
