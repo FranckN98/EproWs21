@@ -3,6 +3,8 @@ package de.thbingen.epro.repository;
 import de.thbingen.epro.model.business.OkrUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface OkrUserRepository extends JpaRepository<OkrUser, Long> {
-    OkrUser findByUsername(String username);
+    Optional<OkrUser> findByUsername(String username);
 }
