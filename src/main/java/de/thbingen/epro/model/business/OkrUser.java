@@ -16,6 +16,9 @@ public class OkrUser
     private String surname;
 
     @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -51,6 +54,10 @@ public class OkrUser
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    public String getUsername(String username) { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     public String getPassword() {
         return password;

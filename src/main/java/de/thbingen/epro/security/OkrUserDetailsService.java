@@ -29,7 +29,7 @@ public class OkrUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) {
-        OkrUser okrUser = userRepository.findBySurname(username);
+        OkrUser okrUser = userRepository.findByUsername(username);
         if (okrUser == null) {
             //handle issue
             throw new EntityNotFoundException("No User with this surname exists");
