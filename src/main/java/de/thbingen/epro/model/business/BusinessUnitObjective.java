@@ -47,6 +47,15 @@ public class BusinessUnitObjective {
         this.businessUnitKeyResults = businessUnitKeyResults;
     }
 
+
+    public BusinessUnitObjective(Long id, Integer achievement, String name, OffsetDateTime startDate, OffsetDateTime endDate) {
+        this.id = id;
+        this.achievement = achievement;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public Long getId() {
         return id;
     }

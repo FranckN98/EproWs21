@@ -1,17 +1,21 @@
 package de.thbingen.epro.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import de.thbingen.epro.model.business.BusinessUnitKeyResult;
+import de.thbingen.epro.model.business.BusinessUnitObjective;
+import de.thbingen.epro.model.business.CompanyObjective;
 import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Relation(collectionRelation = "businessUnitObjectives", itemRelation = "businessUnitObjective")
 public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitObjectiveDto> {
-
+    private Long id;
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     private Integer achievement;
@@ -22,14 +26,27 @@ public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitOb
 
     private OffsetDateTime endDate = OffsetDateTime.now();
 
+    private BusinessUnitDto businessUnit;
+
+
+    private Set<BusinessUnitKeyResultDto> businessUnitKeyResults = new HashSet<>();
+
     public BusinessUnitObjectiveDto() {
     }
 
-    public BusinessUnitObjectiveDto(Integer achievement, String name, OffsetDateTime startDate, OffsetDateTime endDate) {
+    public BusinessUnitObjectiveDto(Long id, Integer achievement, String name, BusinessUnitDto businessUnit) {
+        this.id = id;
         this.achievement = achievement;
         this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.businessUnit = businessUnit;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getAchievement() {
@@ -46,6 +63,23 @@ public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitOb
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public BusinessUnitDto getBusinessUnit() {
+        return businessUnit;
+    }
+
+    public void setBusinessUnit(BusinessUnitDto businessUnit) {
+        this.businessUnit = businessUnit;
+    }
+
+
+    public Set<BusinessUnitKeyResultDto> getBusinessUnitKeyResults() {
+        return businessUnitKeyResults;
+    }
+
+    public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResultDto> businessUnitKeyResults) {
+        this.businessUnitKeyResults = businessUnitKeyResults;
     }
 
     public OffsetDateTime getStartDate() {
