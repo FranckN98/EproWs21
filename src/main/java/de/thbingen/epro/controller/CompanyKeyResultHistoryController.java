@@ -2,6 +2,8 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -25,11 +27,9 @@ public class CompanyKeyResultHistoryController {
 
     @GetMapping
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "id") String sortBy
+            @PageableDefault Pageable pageable
     ) {
-        return pagedResourcesAssembler.toModel(companyKeyResultHistoryService.findAll(page, size, sortBy));
+        return pagedResourcesAssembler.toModel(companyKeyResultHistoryService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

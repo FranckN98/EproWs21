@@ -1,5 +1,6 @@
 package de.thbingen.epro.service;
 
+import de.thbingen.epro.controller.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.model.business.BusinessUnitKeyResult;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
@@ -20,28 +21,45 @@ public class BusinessUnitKeyResultService {
 
     private final BusinessUnitKeyResultRepository businessUnitKeyResultRepository;
     private final BusinessUnitKeyResultMapper businessUnitKeyResultMapper;
+    private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler;
 
-    public BusinessUnitKeyResultService(BusinessUnitKeyResultRepository businessUnitKeyResultRepository, BusinessUnitKeyResultMapper businessUnitKeyResultMapper) {
+    public BusinessUnitKeyResultService(BusinessUnitKeyResultRepository businessUnitKeyResultRepository, BusinessUnitKeyResultMapper businessUnitKeyResultMapper, BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler) {
         this.businessUnitKeyResultRepository = businessUnitKeyResultRepository;
         this.businessUnitKeyResultMapper = businessUnitKeyResultMapper;
+        this.businessUnitKeyResultAssembler = businessUnitKeyResultAssembler;
     }
-    public Set<BusinessUnitKeyResultDto> getAllBusinessUnitKeyResults(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<BusinessUnitKeyResult> pagedResult = businessUnitKeyResultRepository.findAll(paging);
+
+    public Page<BusinessUnitKeyResultDto> getAllBusinessUnitKeyResults(Pageable pageable) {
+        Page<BusinessUnitKeyResult> pagedResult = businessUnitKeyResultRepository.findAll(pageable);
 
         if (pagedResult.hasContent()) {
-            return businessUnitKeyResultMapper.businessUnitKeyResultSetToDto(pagedResult.toSet());
+            return pagedResult.map(businessUnitKeyResultAssembler::toModel);
         } else {
-            return Collections.emptySet();
+            return Page.empty();
         }
     }
+
+    public Page<BusinessUnitKeyResultDto> getAllByBusinessUnitObjectiveId(Long businesUnitObjectiveId, Pageable pageable) {
+        Page<BusinessUnitKeyResult> pagedResult =
+                businessUnitKeyResultRepository.findAllByBusinessUnitObjectiveId(businesUnitObjectiveId, pageable);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.map(businessUnitKeyResultAssembler::toModel);
+        } else {
+            return Page.empty();
+        }
+    }
+
     public BusinessUnitKeyResultDto saveBusinessUnitKeyResultWithObjective(BusinessUnitKeyResultDto businessUnitKeyResultDto, BusinessUnitObjectiveDto businessUnitObjectiveDto) {
         BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultMapper.dtoToBusinessUnitKeyResult(businessUnitKeyResultDto, businessUnitObjectiveDto);
-        return businessUnitKeyResultMapper.businessUnitKeyResultToDtoWithoutObjective(businessUnitKeyResultRepository.save(businessUnitKeyResult));
+        BusinessUnitKeyResultDto test =  businessUnitKeyResultAssembler.toModel(businessUnitKeyResultRepository.save(businessUnitKeyResult));
+        return test;
     }
+
     public BusinessUnitKeyResultDto saveBusinessUnitKeyResult(BusinessUnitKeyResultDto businessUnitKeyResultDto) {
-      return  null;
+        return null;
     }
+
     public void deleteById(Long id) {
         businessUnitKeyResultRepository.deleteById(id);
     }
@@ -52,7 +70,7 @@ public class BusinessUnitKeyResultService {
 
     public Optional<BusinessUnitKeyResultDto> findById(Long id) {
         Optional<BusinessUnitKeyResult> optional = businessUnitKeyResultRepository.findById(id);
-        return optional.map(businessUnitKeyResultMapper::businessUnitKeyResultToDtoWithoutObjective);
+        return optional.map(businessUnitKeyResultAssembler::toModel);
     }
 
 }

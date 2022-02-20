@@ -12,46 +12,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mapper(componentModel ="spring")
-public abstract class BusinessUnitObjectiveMapper {
+public interface BusinessUnitObjectiveMapper {
 
-    BusinessUnitKeyResultMapper businessUnitKeyResultMapper = Mappers.getMapper(BusinessUnitKeyResultMapper.class);
+    BusinessUnitObjectiveDto businessUnitObjectiveToDto(BusinessUnitObjective businessUnitObjective);
 
-    @Mapping(target = "businessUnitKeyResults", ignore = true)
-    public abstract BusinessUnitObjectiveDto businessUnitObjectiveToDto(BusinessUnitObjective businessUnitObjective);
-
+    @Mapping(target = "companyKeyResult", ignore = true)
     @Mapping(target = "businessUnitKeyResults", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)
-    public abstract BusinessUnitObjective dtoToBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto);
-    public abstract Set<BusinessUnitObjective> dtoSetToBusinessUnitObjectiveSet(Set<BusinessUnitObjectiveDto> businessUnitObjectiveDtos);
-    public abstract Set<BusinessUnitObjectiveDto> businessUnitObjectiveSetToDtoSet(Set<BusinessUnitObjective> businessUnitObjectives);
+    BusinessUnitObjective dtoToBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto);
 
     @Named("withBusinessUnit")
-    @Mapping(target = "id", source = "businessUnitObjectiveDto.id")
     @Mapping(target = "achievement", source = "businessUnitObjectiveDto.achievement")
     @Mapping(target = "name", source = "businessUnitObjectiveDto.name")
-    @Mapping(target = "businessUnit", source = "businessUnitDto")
+    @Mapping(target = "companyKeyResult", ignore = true)
     @Mapping(target = "businessUnitKeyResults", ignore = true)
-    public abstract BusinessUnitObjective dtoToBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto, BusinessUnitDto businessUnitDto);
-
-
-
-    @Named("withKeyResults")
-    public BusinessUnitObjectiveDto businessUnitObjectiveToDtoIncludeKeyResults(BusinessUnitObjective businessUnitObjective){
-
-        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveToDto(businessUnitObjective);
-        businessUnitObjectiveDto.setBusinessUnitKeyResults(businessUnitKeyResultMapper.businessUnitKeyResultSetToDto(businessUnitObjective.getBusinessUnitKeyResults()));
-        return businessUnitObjectiveDto;
-    }
-    @Named("withKeyResults")
-    public Set<BusinessUnitObjectiveDto> businessUnitObjectiveSetToDtoIncludeKeyResults(Set<BusinessUnitObjective> businessUnitObjectives)
-    {
-        if(businessUnitObjectives == null)
-            return null;
-        Set<BusinessUnitObjectiveDto> set = new HashSet<>(businessUnitObjectives.size());
-        for (BusinessUnitObjective businessUnitObjective: businessUnitObjectives) {
-            set.add(businessUnitObjectiveToDtoIncludeKeyResults(businessUnitObjective));
-        }
-        return set;
-    }
-
+    @Mapping(target = "businessUnit", ignore = true)
+    BusinessUnitObjective dtoToBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto, BusinessUnitDto businessUnitDto);
 }

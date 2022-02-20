@@ -3,6 +3,12 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.service.OkrUserService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -10,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,14 +24,16 @@ import java.util.Optional;
 public class OkrUserController {
 
     private final OkrUserService okrUserService;
+    private final PagedResourcesAssembler<OkrUserDto> pagedResourcesAssembler;
 
-    public OkrUserController(OkrUserService okrUserService) {
+    public OkrUserController(OkrUserService okrUserService, PagedResourcesAssembler<OkrUserDto> pagedResourcesAssembler) {
         this.okrUserService = okrUserService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
-    public List<OkrUserDto> findAll() {
-        return okrUserService.findAll();
+    public PagedModel<EntityModel<OkrUserDto>> findAll(@PageableDefault Pageable pageable) {
+        return pagedResourcesAssembler.toModel(okrUserService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
@@ -40,21 +47,11 @@ public class OkrUserController {
     @PostMapping
     public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
         OkrUserDto okrUserDto = okrUserService.saveOkrUser(newUser);
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(8080)
-                .path("/api/v1/users/{id}")
-                .buildAndExpand(okrUserDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(okrUserDto);
+        return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserDto okrUserDto) {
-        if (okrUserDto.getId() == null)
-            okrUserDto.setId(id);
-        if (!Objects.equals(okrUserDto.getId(), id))
-            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         if (!okrUserService.existsById(id))
             return this.addNew(okrUserDto);
 

@@ -1,17 +1,33 @@
 package de.thbingen.epro.controller.assembler;
 
-import de.thbingen.epro.controller.businessunit.BusinessUnitController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitObjectiveByBusinessUnitController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitOkrUserController;
-import de.thbingen.epro.model.business.BusinessUnit;
-import de.thbingen.epro.model.dto.BusinessUnitDto;
-import de.thbingen.epro.model.mapper.BusinessUnitMapper;
+import de.thbingen.epro.controller.CompanyKeyResultController;
+import de.thbingen.epro.model.business.CompanyKeyResult;
+import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Component
+public class CompanyKeyResultAssembler implements RepresentationModelAssembler<CompanyKeyResult, CompanyKeyResultDto> {
+
+    private final CompanyKeyResultMapper companyKeyResultMapper;
+
+    public CompanyKeyResultAssembler(CompanyKeyResultMapper companyKeyResultMapper) {
+        this.companyKeyResultMapper = companyKeyResultMapper;
+    }
+
+    @Override
+    public CompanyKeyResultDto toModel(CompanyKeyResult entity) {
+        CompanyKeyResultDto companyKeyResultDto = companyKeyResultMapper.companyKeyResultToDto(entity)
+                .add(linkTo(methodOn(CompanyKeyResultController.class).findById(entity.getId())).withSelfRel());
+        return companyKeyResultDto;
+    }
+}
+
+/*
 @Component
 public class BusinessUnitAssembler implements RepresentationModelAssembler<BusinessUnit, BusinessUnitDto> {
 
@@ -36,3 +52,4 @@ public class BusinessUnitAssembler implements RepresentationModelAssembler<Busin
         return businessUnitDto;
     }
 }
+ */

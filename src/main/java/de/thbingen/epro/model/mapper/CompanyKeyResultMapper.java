@@ -13,24 +13,17 @@ import java.util.Set;
 public interface CompanyKeyResultMapper {
 
 
-    @Mapping(target = "businessUnitObjectives", ignore = true)
     CompanyKeyResultDto companyKeyResultToDto(CompanyKeyResult companyKeyResult);
 
-    @Mapping(target = "businessUnitObjectives", ignore = true)
     CompanyKeyResult dtoToCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto);
 
-    @Mapping(target = "companyObjective", ignore = true)
     List<CompanyKeyResultDto> companyKeyResultListToDto(List<CompanyKeyResult> companyKeyResults);
 
-    @Mapping(target = "companyObjective", ignore = true)
-    @Mapping(target = "businessUnitObjectives", ignore = true)
     Set<CompanyKeyResultDto> companyKeyResultSetToDto(Set<CompanyKeyResult> companyKeyResultSet);
 
-    @Mapping(target = "companyObjective", ignore = true)
     Set<CompanyKeyResult> dtoSetToCompanyKeyResultSet(Set<CompanyKeyResultDto> companyKeyResultSet);
 
     @Mapping(target = "companyObjective", source = "companyObjectiveDto")
-    @Mapping(target = "id", source = "companyKeyResultDto.id")
     @Mapping(target = "name", source = "companyKeyResultDto.name")
     @Mapping(target = "achievement", source = "companyKeyResultDto.achievement")
     CompanyKeyResult dtoToCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto);

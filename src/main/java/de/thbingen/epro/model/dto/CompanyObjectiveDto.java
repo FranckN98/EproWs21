@@ -1,8 +1,5 @@
 package de.thbingen.epro.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.thbingen.epro.model.business.CompanyObjective;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -14,8 +11,6 @@ import java.time.LocalDate;
 @Relation(collectionRelation = "companyObjectives", itemRelation = "companyObjective")
 public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto> {
 
-    @JsonIgnore
-    private Long id;
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     private Integer achievement;
@@ -27,20 +22,11 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     public CompanyObjectiveDto() {
     }
 
-    public CompanyObjectiveDto(Long id, Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
-        this.id = id;
+    public CompanyObjectiveDto(Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.achievement = achievement;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Integer getAchievement() {

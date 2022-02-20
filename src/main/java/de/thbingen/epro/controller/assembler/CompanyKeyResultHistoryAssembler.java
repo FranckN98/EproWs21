@@ -1,5 +1,6 @@
 package de.thbingen.epro.controller.assembler;
 
+import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.controller.CompanyKeyResultHistoryController;
 import de.thbingen.epro.controller.CompanyObjectiveController;
 import de.thbingen.epro.model.business.CompanyKeyResultHistory;
@@ -27,6 +28,7 @@ public class CompanyKeyResultHistoryAssembler
     public CompanyKeyResultHistoryDto toModel(CompanyKeyResultHistory entity) {
         return companyKeyResultHistoryMapper.companyKeyResultHistoryToDto(entity)
                 .add(linkTo(methodOn(controllerClass).getById(entity.getId())).withSelfRel())
+                .add(linkTo(methodOn(CompanyKeyResultController.class).findById(entity.getCompanyKeyResult().getId())).withRel("currentBusinessUnit"))
                 .add(linkTo(methodOn(CompanyObjectiveController.class).findById(entity.getHistoricalCompanyKeyResult().getCompanyObjectiveId())).withRel("companyObjective"));
     }
 }

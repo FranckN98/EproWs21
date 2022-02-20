@@ -1,32 +1,30 @@
 package de.thbingen.epro.model.dto;
 
 
-public class OkrUserDto {
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-    private Long id;
+import javax.validation.constraints.NotBlank;
 
+@Relation(collectionRelation = "users", itemRelation = "user")
+public class OkrUserDto extends RepresentationModel<OkrUserDto> {
+
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String surname;
 
+    @NotBlank
     private String password;
 
     public OkrUserDto() {
     }
 
-    public OkrUserDto(Long id, String name, String surname, String password) {
-        this.id = id;
+    public OkrUserDto(String name, String surname, String password) {
         this.name = name;
         this.surname = surname;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

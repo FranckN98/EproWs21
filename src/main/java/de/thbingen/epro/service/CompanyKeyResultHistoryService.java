@@ -16,23 +16,18 @@ import java.util.Optional;
 public class CompanyKeyResultHistoryService {
 
     private final CompanyKeyResultHistoryRepository companyKeyResultHistoryRepository;
-    private final CompanyKeyResultHistoryAssembler companyKeyResultHistoryAssembler;
+    private final CompanyKeyResultHistoryAssembler assembler;
 
-    public CompanyKeyResultHistoryService(CompanyKeyResultHistoryRepository companyKeyResultHistoryRepository, CompanyKeyResultHistoryAssembler companyKeyResultHistoryAssembler) {
+    public CompanyKeyResultHistoryService(CompanyKeyResultHistoryRepository companyKeyResultHistoryRepository, CompanyKeyResultHistoryAssembler assembler) {
         this.companyKeyResultHistoryRepository = companyKeyResultHistoryRepository;
-        this.companyKeyResultHistoryAssembler = companyKeyResultHistoryAssembler;
+        this.assembler = assembler;
     }
 
-    public Page<CompanyKeyResultHistoryDto> findAll(
-            int pageNo,
-            int pageSize,
-            String sortBy
-    ) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<CompanyKeyResultHistory> pagedResult = companyKeyResultHistoryRepository.findAll(paging);
+    public Page<CompanyKeyResultHistoryDto> findAll(Pageable pageable) {
+        Page<CompanyKeyResultHistory> pagedResult = companyKeyResultHistoryRepository.findAll(pageable);
 
         if (pagedResult.hasContent()) {
-            return pagedResult.map(companyKeyResultHistoryAssembler::toModel);
+            return pagedResult.map(assembler::toModel);
         } else {
             return Page.empty();
         }
@@ -40,6 +35,15 @@ public class CompanyKeyResultHistoryService {
 
     public Optional<CompanyKeyResultHistoryDto> findById(Long id) {
         Optional<CompanyKeyResultHistory> businessUnitKeyResultHistory = companyKeyResultHistoryRepository.findById(id);
-        return businessUnitKeyResultHistory.map(companyKeyResultHistoryAssembler::toModel);
+        return businessUnitKeyResultHistory.map(assembler::toModel);
+    }
+
+    public Page<CompanyKeyResultHistoryDto> getAllByCompanyKeyResultId(Long id, Pageable pageable) {
+        Page<CompanyKeyResultHistory> pagedResult = companyKeyResultHistoryRepository.findAllByCompanyKeyResultIdOrderByChangeTimeStampDesc(id, pageable);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.map(assembler::toModel);
+        }
+        return Page.empty();
     }
 }

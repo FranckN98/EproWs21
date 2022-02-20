@@ -29,7 +29,6 @@ public class BusinessUnitObjective {
     private OffsetDateTime startDate = OffsetDateTime.now();
     private OffsetDateTime endDate = OffsetDateTime.now();
 
-
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "company_key_result_ref")
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();

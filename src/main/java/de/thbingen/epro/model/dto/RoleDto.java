@@ -1,24 +1,21 @@
 package de.thbingen.epro.model.dto;
 
-public class RoleDto {
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-    private Long id;
+import javax.validation.constraints.NotBlank;
+
+@Relation(collectionRelation = "roles", itemRelation = "role")
+public class RoleDto extends RepresentationModel<RoleDto> {
+
+    @NotBlank
     private String name;
 
     public RoleDto() {
     }
 
-    public RoleDto(Long id, String name) {
-        this.id = id;
+    public RoleDto(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

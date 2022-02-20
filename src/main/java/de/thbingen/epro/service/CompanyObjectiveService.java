@@ -26,9 +26,8 @@ public class CompanyObjectiveService {
         this.companyObjectiveAssembler = companyObjectiveAssembler;
     }
 
-    public Page<CompanyObjectiveDto> getAllCompanyObjectives(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<CompanyObjective> pagedResult = companyObjectiveRepository.findAll(paging);
+    public Page<CompanyObjectiveDto> getAllCompanyObjectives(Pageable pageable) {
+        Page<CompanyObjective> pagedResult = companyObjectiveRepository.findAll(pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(companyObjectiveAssembler::toModel);

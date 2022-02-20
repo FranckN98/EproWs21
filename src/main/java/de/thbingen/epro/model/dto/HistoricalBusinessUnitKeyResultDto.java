@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HistoricalBusinessUnitKeyResultDto {
 
-    private Long id;
+    // Currently no validation needed, as users can't POST history
     private String name;
     private float currentValue;
     private float goalValue;
@@ -16,16 +16,10 @@ public class HistoricalBusinessUnitKeyResultDto {
     private String comment;
     private OffsetDateTime timestamp;
 
-    // TODO: change to businessUnitObjectiveDto
-    private Long businessUnitObjectiveId;
-    // TODO: change to CompanyKeyResultDto
-    private Long companyKeyResultRef;
-
     public HistoricalBusinessUnitKeyResultDto() {
     }
 
-    public HistoricalBusinessUnitKeyResultDto(Long id, String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, Long businessUnitObjectiveId, Long companyKeyResultRef) {
-        this.id = id;
+    public HistoricalBusinessUnitKeyResultDto(String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp) {
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
@@ -33,16 +27,6 @@ public class HistoricalBusinessUnitKeyResultDto {
         this.achievement = achievement;
         this.comment = comment;
         this.timestamp = timestamp;
-        this.businessUnitObjectiveId = businessUnitObjectiveId;
-        this.companyKeyResultRef = companyKeyResultRef;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -101,19 +85,4 @@ public class HistoricalBusinessUnitKeyResultDto {
         this.timestamp = timestamp;
     }
 
-    public Long getBusinessUnitObjectiveId() {
-        return businessUnitObjectiveId;
-    }
-
-    public void setBusinessUnitObjectiveId(Long businessUnitObjectiveId) {
-        this.businessUnitObjectiveId = businessUnitObjectiveId;
-    }
-
-    public Long getCompanyKeyResultRef() {
-        return companyKeyResultRef;
-    }
-
-    public void setCompanyKeyResultRef(Long companyKeyResultRef) {
-        this.companyKeyResultRef = companyKeyResultRef;
-    }
 }

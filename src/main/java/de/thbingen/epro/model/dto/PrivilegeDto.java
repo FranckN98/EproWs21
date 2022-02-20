@@ -1,24 +1,21 @@
 package de.thbingen.epro.model.dto;
 
-public class PrivilegeDto {
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
-    private Long id;
+import javax.validation.constraints.NotBlank;
+
+@Relation(collectionRelation = "privileges", itemRelation = "privilege")
+public class PrivilegeDto extends RepresentationModel<PrivilegeDto> {
+
+    @NotBlank
     private String name;
 
     public PrivilegeDto() {
     }
 
-    public PrivilegeDto(Long id, String name) {
-        this.id = id;
+    public PrivilegeDto(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

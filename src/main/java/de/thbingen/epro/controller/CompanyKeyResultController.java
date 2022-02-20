@@ -1,48 +1,50 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
+import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/companyKeyResults")
 public class CompanyKeyResultController {
 
     private final CompanyKeyResultService companyKeyResultService;
+    private final PagedResourcesAssembler<CompanyKeyResultDto> pagedResourcesAssembler;
+    private final PagedResourcesAssembler<CompanyKeyResultHistoryDto> companyKeyResultHistoryDtoPagedResourcesAssembler;
+    private final CompanyKeyResultHistoryService companyKeyResultHistoryService;
 
-    public CompanyKeyResultController(CompanyKeyResultService companyKeyResultService) {
+    public CompanyKeyResultController(CompanyKeyResultService companyKeyResultService, PagedResourcesAssembler<CompanyKeyResultDto> pagedResourcesAssembler, PagedResourcesAssembler<CompanyKeyResultHistoryDto> companyKeyResultHistoryDtoPagedResourcesAssembler, CompanyKeyResultHistoryService companyKeyResultHistoryService) {
         this.companyKeyResultService = companyKeyResultService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.companyKeyResultHistoryDtoPagedResourcesAssembler = companyKeyResultHistoryDtoPagedResourcesAssembler;
+        this.companyKeyResultHistoryService = companyKeyResultHistoryService;
     }
 
     @GetMapping
-    public Set<CompanyKeyResultDto> findAll(
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy
+    public PagedModel<EntityModel<CompanyKeyResultDto>> findAll(
+            @PageableDefault Pageable pageable
     ) {
-        return companyKeyResultService.getAllCompanyKeyResults(pageNo, pageSize, sortBy);
+        return pagedResourcesAssembler.toModel(companyKeyResultService.getAllCompanyKeyResults(pageable));
     }
 
     @PostMapping
     public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
-        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResult(newCompanyKeyResultDto);
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(8080)
-                .path("/api/v1/companyKeyResults/{id}")
-                .buildAndExpand(companyKeyResultDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(companyKeyResultDto);
+        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResult(newCompanyKeyResultDto);;
+        return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
     }
 
     @GetMapping("/{id}")
@@ -55,13 +57,10 @@ public class CompanyKeyResultController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyKeyResultDto> updateById(@PathVariable Long id, @RequestBody CompanyKeyResultDto companyKeyResultDto) {
-        if (companyKeyResultDto.getId() == null) {
-            companyKeyResultDto.setId(id);
-        }
-        if (!Objects.equals(companyKeyResultDto.getId(), id)) {
-            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
-        }
+    public ResponseEntity<CompanyKeyResultDto> updateById(
+            @PathVariable Long id,
+            @RequestBody @Valid CompanyKeyResultDto companyKeyResultDto
+    ) {
         if (!companyKeyResultService.existsById(id)) {
             return this.addNew(companyKeyResultDto);
         }
@@ -75,5 +74,15 @@ public class CompanyKeyResultController {
         }
         companyKeyResultService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}/history", produces = MediaTypes.HAL_JSON_VALUE)
+    public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getHistory(
+            @PageableDefault Pageable pageable,
+            @PathVariable Long id
+    ) {
+        return companyKeyResultHistoryDtoPagedResourcesAssembler.toModel(
+                companyKeyResultHistoryService.getAllByCompanyKeyResultId(id, pageable)
+        );
     }
 }

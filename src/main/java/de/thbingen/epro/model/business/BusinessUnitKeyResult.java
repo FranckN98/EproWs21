@@ -26,7 +26,7 @@ public class BusinessUnitKeyResult {
     private float confidenceLevel;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    private Integer achievement = 0;
+    private Float achievement;
 
     @Column
     private String comment;
@@ -34,7 +34,7 @@ public class BusinessUnitKeyResult {
     @Column
     private OffsetDateTime timestamp;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "business_unit_objective_id")
     private BusinessUnitObjective businessUnitObjective;
 
@@ -101,11 +101,11 @@ public class BusinessUnitKeyResult {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

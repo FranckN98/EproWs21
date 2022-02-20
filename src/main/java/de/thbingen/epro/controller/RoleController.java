@@ -4,6 +4,12 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.RoleService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -11,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,14 +25,16 @@ import java.util.Optional;
 public class RoleController {
 
     private final RoleService roleService;
+    private final PagedResourcesAssembler<RoleDto> pagedResourcesAssembler;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, PagedResourcesAssembler<RoleDto> pagedResourcesAssembler) {
         this.roleService = roleService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
-    public List<RoleDto> findAll() {
-        return roleService.findAll();
+    public PagedModel<EntityModel<RoleDto>> findAll(@PageableDefault Pageable pageable) {
+        return pagedResourcesAssembler.toModel(roleService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
@@ -41,21 +48,11 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<RoleDto> addNew(@RequestBody @Valid RoleDto newRole) {
         RoleDto roleDto = roleService.saveRole(newRole);
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(8080)
-                .path("/api/v1/users/{id}")
-                .buildAndExpand(roleDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(roleDto);
+        return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RoleDto> updateById(@PathVariable Long id, @RequestBody @Valid RoleDto roleDto) {
-        if (roleDto.getId() == null)
-            roleDto.setId(id);
-        if (!Objects.equals(roleDto.getId(), id))
-            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         if (!roleService.existsById(id))
             return this.addNew(roleDto);
 

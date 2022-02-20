@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.business;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class BusinessUnit {
@@ -12,12 +12,25 @@ public class BusinessUnit {
     @Column(nullable = false)
     private String name;
 
+    @OneToMany(targetEntity = BusinessUnitObjective.class, mappedBy = "businessUnit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<BusinessUnitObjective> businessUnitObjectives;
+
+    @OneToMany(targetEntity = OkrUser.class, mappedBy = "businessUnit", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<OkrUser> okrUsers;
+
     public BusinessUnit() {
     }
 
     public BusinessUnit(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public BusinessUnit(Long id, String name, Set<BusinessUnitObjective> businessUnitObjectives, Set<OkrUser> okrUsers) {
+        this.id = id;
+        this.name = name;
+        this.businessUnitObjectives = businessUnitObjectives;
+        this.okrUsers = okrUsers;
     }
 
     public Long getId() {
@@ -36,23 +49,19 @@ public class BusinessUnit {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BusinessUnit that = (BusinessUnit) o;
-        return id.equals(that.id) && name.equals(that.name);
+    public Set<BusinessUnitObjective> getBusinessUnitObjectives() {
+        return businessUnitObjectives;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+    public void setBusinessUnitObjectives(Set<BusinessUnitObjective> businessUnitObjectives) {
+        this.businessUnitObjectives = businessUnitObjectives;
     }
 
-    @Override
-    public String toString() {
-        return "BusinessUnit{" + "id=" + id + ", name='" + name + '\'' + '}';
+    public Set<OkrUser> getOkrUsers() {
+        return okrUsers;
     }
 
-
+    public void setOkrUsers(Set<OkrUser> okrUsers) {
+        this.okrUsers = okrUsers;
+    }
 }

@@ -11,25 +11,20 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface BusinessUnitKeyResultMapper {
-    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
-    @Mapping(target = "businessUnitObjective", ignore = true)
-    BusinessUnitKeyResultDto businessUnitKeyResultToDtoWithoutObjective(BusinessUnitKeyResult businessUnitKeyResult);
 
     @Named("WithObjective")
-    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     BusinessUnitKeyResultDto businessUnitKeyResultToDto (BusinessUnitKeyResult businessUnitKeyResult);
 
-    @Mapping(target = "id", source = "businessUnitKeyResultDto.id")
+    @Mapping(target = "companyKeyResult", ignore = true)
+    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
+    @Mapping(target = "businessUnitObjective", source = "businessUnitObjectiveDto")
     @Mapping(target = "name", source = "businessUnitKeyResultDto.name")
     @Mapping(target = "currentValue", source = "businessUnitKeyResultDto.currentValue")
     @Mapping(target = "goalValue", source = "businessUnitKeyResultDto.goalValue")
     @Mapping(target = "achievement", source = "businessUnitKeyResultDto.achievement")
-    @Mapping(target = "businessUnitObjective", source = "businessUnitObjectiveDto")
-    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     BusinessUnitKeyResult dtoToBusinessUnitKeyResult(BusinessUnitKeyResultDto businessUnitKeyResultDto, BusinessUnitObjectiveDto businessUnitObjectiveDto);
 
 
-    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     Set<BusinessUnitKeyResultDto> businessUnitKeyResultSetToDto(Set<BusinessUnitKeyResult> businessUnitKeyResultSet);
 
 }

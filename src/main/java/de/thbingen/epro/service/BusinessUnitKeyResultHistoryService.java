@@ -17,25 +17,18 @@ import java.util.Optional;
 public class BusinessUnitKeyResultHistoryService {
 
     private final BusinessUnitKeyResultHistoryRepository businessUnitKeyResultHistoryRepository;
-    private final BusinessUnitKeyResultHistoryMapper businessUnitKeyResultHistoryMapper;
-    private final BusinessUnitKeyResultHistoryAssembler businessUnitKeyResultHistoryAssembler;
+    private final BusinessUnitKeyResultHistoryAssembler assembler;
 
-    public BusinessUnitKeyResultHistoryService(BusinessUnitKeyResultHistoryRepository businessUnitKeyResultHistoryRepository, BusinessUnitKeyResultHistoryMapper businessUnitKeyResultHistoryMapper, BusinessUnitKeyResultHistoryAssembler businessUnitKeyResultHistoryAssembler) {
+    public BusinessUnitKeyResultHistoryService(BusinessUnitKeyResultHistoryRepository businessUnitKeyResultHistoryRepository, BusinessUnitKeyResultHistoryMapper businessUnitKeyResultHistoryMapper, BusinessUnitKeyResultHistoryAssembler assembler) {
         this.businessUnitKeyResultHistoryRepository = businessUnitKeyResultHistoryRepository;
-        this.businessUnitKeyResultHistoryMapper = businessUnitKeyResultHistoryMapper;
-        this.businessUnitKeyResultHistoryAssembler = businessUnitKeyResultHistoryAssembler;
+        this.assembler = assembler;
     }
 
-    public Page<BusinessUnitKeyResultHistoryDto> findAll(
-            int pageNo,
-            int pageSize,
-            String sortBy
-    ) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<BusinessUnitKeyResultHistory> pagedResult = businessUnitKeyResultHistoryRepository.findAll(paging);
+    public Page<BusinessUnitKeyResultHistoryDto> findAll(Pageable pageable) {
+        Page<BusinessUnitKeyResultHistory> pagedResult = businessUnitKeyResultHistoryRepository.findAll(pageable);
 
         if (pagedResult.hasContent()) {
-            return pagedResult.map(businessUnitKeyResultHistoryAssembler::toModel);
+            return pagedResult.map(assembler::toModel);
         } else {
             return Page.empty();
         }
@@ -43,6 +36,16 @@ public class BusinessUnitKeyResultHistoryService {
 
     public Optional<BusinessUnitKeyResultHistoryDto> findById(Long id) {
         Optional<BusinessUnitKeyResultHistory> businessUnitKeyResultHistory = businessUnitKeyResultHistoryRepository.findById(id);
-        return businessUnitKeyResultHistory.map(businessUnitKeyResultHistoryAssembler::toModel);
+        return businessUnitKeyResultHistory.map(assembler::toModel);
+    }
+
+    public Page<BusinessUnitKeyResultHistoryDto> getAllByBusinessUnitKeyResultId(Long id, Pageable pageable) {
+        Page<BusinessUnitKeyResultHistory> pagedResult = businessUnitKeyResultHistoryRepository.findAllByCurrentBusinessUnitKeyResultIdOrderByChangeTimeStampDesc(id, pageable);
+
+        if(pagedResult.hasContent()) {
+            return pagedResult.map(assembler::toModel);
+        } else {
+            return Page.empty();
+        }
     }
 }

@@ -3,6 +3,12 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.service.PrivilegeService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -10,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,14 +24,16 @@ import java.util.Optional;
 public class PrivilegeController {
 
     private final PrivilegeService privilegeService;
+    private final PagedResourcesAssembler<PrivilegeDto> pagedResourcesAssembler;
 
-    public PrivilegeController(PrivilegeService privilegeService) {
+    public PrivilegeController(PrivilegeService privilegeService, PagedResourcesAssembler<PrivilegeDto> pagedResourcesAssembler) {
         this.privilegeService = privilegeService;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @GetMapping
-    public List<PrivilegeDto> findAll() {
-        return privilegeService.findAll();
+    public PagedModel<EntityModel<PrivilegeDto>> findAll(@PageableDefault Pageable pageable) {
+        return pagedResourcesAssembler.toModel(privilegeService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
@@ -40,21 +47,11 @@ public class PrivilegeController {
     @PostMapping
     public ResponseEntity<PrivilegeDto> addNew(@RequestBody @Valid PrivilegeDto newPrivilege) {
         PrivilegeDto privilegeDto = privilegeService.savePrivilege(newPrivilege);
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port("8080")
-                .path("/api/v1/users/{id}")
-                .buildAndExpand(privilegeDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(privilegeDto);
+        return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PrivilegeDto> updateById(@PathVariable Long id, @RequestBody @Valid PrivilegeDto privilegeDto) {
-        if (privilegeDto.getId() == null)
-            privilegeDto.setId(id);
-        if (!Objects.equals(privilegeDto.getId(), id))
-            throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         if (!privilegeService.existsById(id))
             return this.addNew(privilegeDto);
 

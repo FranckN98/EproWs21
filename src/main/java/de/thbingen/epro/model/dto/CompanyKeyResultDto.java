@@ -1,46 +1,39 @@
 package de.thbingen.epro.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.thbingen.epro.model.business.BusinessUnitObjective;
-import de.thbingen.epro.model.business.CompanyKeyResult;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
-import java.util.Set;
 
-public class CompanyKeyResultDto {
+@Relation(collectionRelation = "companyKeyResults", itemRelation = "companyKeyResult")
+public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto> {
 
-    private Long id;
+    @NotBlank
     private String name;
     private Integer currentValue;
+    @Min(value = 0, message = "Negative goal Values are not allowed")
     private Integer goalValue;
+    @Min(value = 0, message = "You shouldn't be negatively confident")
+    @Max(value = 100, message = "Don't bee too overconfident")
     private Integer confidenceLevel;
+    @Min(value = 0, message = "Achievement must be 0 when creating a new Company Key Result")
+    @Max(value = 0, message = "Achievement must be 0 when creating a new Company Key Result")
     private Integer achievement;
+    @NotBlank
     private String comment;
     private OffsetDateTime timestamp;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private CompanyObjectiveDto companyObjective;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Set<BusinessUnitObjectiveDto> businessUnitObjectives;
 
-    public CompanyKeyResultDto(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, CompanyObjectiveDto companyObjective, Set<BusinessUnitObjectiveDto> businessUnitObjectives) {
-        this.id = id;
+    public CompanyKeyResultDto(String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp) {
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
         this.achievement = achievement;
         this.comment = comment;
-        this.timestamp = timestamp;
-        this.companyObjective = companyObjective;
-        this.businessUnitObjectives = businessUnitObjectives;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.timestamp = OffsetDateTime.now();
     }
 
     public String getName() {
@@ -97,21 +90,5 @@ public class CompanyKeyResultDto {
 
     public void setTimestamp(OffsetDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public CompanyObjectiveDto getCompanyObjective() {
-        return companyObjective;
-    }
-
-    public void setCompanyObjective(CompanyObjectiveDto companyObjective) {
-        this.companyObjective = companyObjective;
-    }
-
-    public Set<BusinessUnitObjectiveDto> getBusinessUnitObjectives() {
-        return businessUnitObjectives;
-    }
-
-    public void setBusinessUnitObjectives(Set<BusinessUnitObjectiveDto> businessUnitObjectives) {
-        this.businessUnitObjectives = businessUnitObjectives;
     }
 }
