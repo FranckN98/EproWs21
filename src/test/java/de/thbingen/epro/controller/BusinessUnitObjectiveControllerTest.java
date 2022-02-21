@@ -54,7 +54,7 @@ public class BusinessUnitObjectiveControllerTest {
 
     private final BusinessUnitObjectiveMapper mapper = Mappers.getMapper(BusinessUnitObjectiveMapper.class);
 
-   private final BusinessUnitObjectiveAssembler assembler = new BusinessUnitObjectiveAssembler(mapper);
+    private final BusinessUnitObjectiveAssembler assembler = new BusinessUnitObjectiveAssembler(mapper);
 
     // region GET ALL
 
