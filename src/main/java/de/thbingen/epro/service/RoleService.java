@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * The Service
+ * This Service represents the interface between presentation logic and the data layer for everything related to
+ * {@link de.thbingen.epro.model.entity.Role}
  */
 @Service
 public class RoleService {
