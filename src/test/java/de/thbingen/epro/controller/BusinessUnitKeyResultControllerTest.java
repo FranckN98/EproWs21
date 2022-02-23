@@ -1,18 +1,15 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.controller.businessunitkeyresult.BusinessUnitKeyResultController;
-import de.thbingen.epro.model.business.BusinessUnitKeyResult;
-import de.thbingen.epro.model.business.BusinessUnitObjective;
-import de.thbingen.epro.model.business.CompanyKeyResult;
+import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
-import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
-import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
+import de.thbingen.epro.service.CompanyKeyResultService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,17 +26,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,9 +51,7 @@ public class BusinessUnitKeyResultControllerTest {
     @MockBean
     private BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService;
     @MockBean
-    private PagedResourcesAssembler<BusinessUnitKeyResultDto> pagedResourcesAssembler;
-    @MockBean
-    private PagedResourcesAssembler<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtoPagedResourcesAssembler;
+    private CompanyKeyResultService companyKeyResultService;
 
     private final BusinessUnitKeyResultMapper businessUnitKeyResultMapper = Mappers.getMapper(BusinessUnitKeyResultMapper.class);
     private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler = new BusinessUnitKeyResultAssembler(businessUnitKeyResultMapper);
@@ -67,12 +63,12 @@ public class BusinessUnitKeyResultControllerTest {
     @DisplayName("Get All should return all Business Unit Objectives with 200 - OK")
     public void getAllShouldReturnAllBusinessUnitObjectives() throws Exception {
         Set<BusinessUnitKeyResultDto> businessUnitObjectiveDtos = Stream.of(
-                new BusinessUnitKeyResult(1L,  "BKR1",10, 100, 50, "a comment" , OffsetDateTime.now()),
-                new BusinessUnitKeyResult(2L,  "BKR2",10, 100, 50, "no comment" , OffsetDateTime.now())
+                new BusinessUnitKeyResult(1L, "BKR1", 10, 100, 50, "a comment", OffsetDateTime.now()),
+                new BusinessUnitKeyResult(2L, "BKR2", 10, 100, 50, "no comment", OffsetDateTime.now())
         ).map(businessUnitKeyResultAssembler::toModel).collect(Collectors.toSet());
 
 
-        when(businessUnitKeyResultService.getAllBusinessUnitKeyResults(Pageable.ofSize(10))).thenReturn(new PageImpl<>(new ArrayList<>(businessUnitObjectiveDtos)) );
+        when(businessUnitKeyResultService.getAllBusinessUnitKeyResults(Pageable.ofSize(10))).thenReturn(new PageImpl<>(new ArrayList<>(businessUnitObjectiveDtos)));
 
         mockMvc.perform(get("/businessUnitKeyResults").accept(MediaTypes.HAL_JSON))
                 .andDo(print())
@@ -80,13 +76,13 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$._embedded").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult[0]._links.self.href", endsWith("/businessUnitKeyResults/1")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult[0].name", is("BKR1")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult[1]._links.self.href", endsWith("/businessUnitKeyResults/2")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResult[1].name", is("BKR2")))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults").exists())
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults", hasSize(2)))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[*]._links").exists())
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[0]._links.self.href", endsWith("/businessUnitKeyResults/1")))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[0].name", is("BKR1")))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[1]._links.self.href", endsWith("/businessUnitKeyResults/2")))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[1].name", is("BKR2")))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults")))
                 .andReturn();
@@ -100,7 +96,7 @@ public class BusinessUnitKeyResultControllerTest {
     @DisplayName("Get With ID should Return a single Business Unit Key result with 200 - OK")
     public void getWithIdShouldReturnSingleBusinessUnitkeyResult() throws Exception {
 
-        when(businessUnitKeyResultService.findById(1L)).thenReturn(Optional.of(businessUnitKeyResultAssembler.toModel(new BusinessUnitKeyResult(1L,  "BKR1",10, 100, 50, "a comment" , OffsetDateTime.now()))));
+        when(businessUnitKeyResultService.findById(1L)).thenReturn(Optional.of(businessUnitKeyResultAssembler.toModel(new BusinessUnitKeyResult(1L, "BKR1", 10, 100, 50, "a comment", OffsetDateTime.now()))));
 
         mockMvc.perform(get("/businessUnitKeyResults/1"))
                 .andDo(print())
@@ -119,7 +115,7 @@ public class BusinessUnitKeyResultControllerTest {
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L,  "BKR1",10, 100, 50, "a comment" , OffsetDateTime.now());
+        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "BKR1", 10, 100, 50, "a comment", OffsetDateTime.now());
         BusinessUnitKeyResultDto toPost = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
@@ -137,12 +133,13 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
     }
+
     @Test
     @DisplayName("Post with invalid body should return 400 - Bad Request")
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L,  "",10, 100, 50, "a comment" , OffsetDateTime.now());
+        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "", 10, 100, 50, "a comment", OffsetDateTime.now());
         BusinessUnitKeyResultDto toPost = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
         String invalidJson = objectMapper.writeValueAsString(toPost);
 
@@ -194,12 +191,12 @@ public class BusinessUnitKeyResultControllerTest {
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L,  "changedName",10, 100, 50, "a comment" , OffsetDateTime.now());
+        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "changedName", 10, 100, 50, "a comment", OffsetDateTime.now());
         BusinessUnitKeyResultDto toPut = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
         when(businessUnitKeyResultService.existsById(1L)).thenReturn(true);
-        when(businessUnitKeyResultService.saveBusinessUnitKeyResult(any(BusinessUnitKeyResultDto.class))).thenReturn(toPut);
+        when(businessUnitKeyResultService.updateBusinessUnitKeyResult(anyLong(), any(BusinessUnitKeyResultDto.class))).thenReturn(toPut);
 
         mockMvc.perform(put("/businessUnitKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -214,7 +211,7 @@ public class BusinessUnitKeyResultControllerTest {
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L,  "changedName",10, 100, 50, "a comment" , OffsetDateTime.now());
+        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "changedName", 10, 100, 50, "a comment", OffsetDateTime.now());
         BusinessUnitKeyResultDto toPut = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 

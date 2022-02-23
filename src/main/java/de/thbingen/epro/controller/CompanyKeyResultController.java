@@ -4,6 +4,7 @@ import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -38,13 +39,13 @@ public class CompanyKeyResultController {
     public PagedModel<EntityModel<CompanyKeyResultDto>> findAll(
             @PageableDefault Pageable pageable
     ) {
-        return pagedResourcesAssembler.toModel(companyKeyResultService.getAllCompanyKeyResults(pageable));
+        Page<CompanyKeyResultDto> allCompanyKeyResults = companyKeyResultService.getAllCompanyKeyResults(pageable);
+        return pagedResourcesAssembler.toModel(allCompanyKeyResults);
     }
 
     @PostMapping
     public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
         CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResult(newCompanyKeyResultDto);
-        ;
         return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
     }
 

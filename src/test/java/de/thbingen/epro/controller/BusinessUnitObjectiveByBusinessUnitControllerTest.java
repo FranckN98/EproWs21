@@ -1,20 +1,17 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.assembler.BusinessUnitAssembler;
-import de.thbingen.epro.controller.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.controller.businessunit.BusinessUnitController;
 import de.thbingen.epro.controller.businessunit.BusinessUnitObjectiveByBusinessUnitController;
-import de.thbingen.epro.controller.businessunitobjective.BusinessUnitObjectiveController;
-import de.thbingen.epro.model.business.BusinessUnit;
-import de.thbingen.epro.model.business.BusinessUnitObjective;
-import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
+import de.thbingen.epro.model.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.model.entity.BusinessUnit;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -22,24 +19,20 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.OffsetDateTime;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.matchesPattern;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@WebMvcTest(controllers ={ BusinessUnitObjectiveByBusinessUnitController.class, BusinessUnitController.class})
+@WebMvcTest(controllers = {BusinessUnitObjectiveByBusinessUnitController.class, BusinessUnitController.class})
 public class BusinessUnitObjectiveByBusinessUnitControllerTest {
 
     @Autowired
@@ -48,8 +41,6 @@ public class BusinessUnitObjectiveByBusinessUnitControllerTest {
     private BusinessUnitService businessUnitService;
     @MockBean
     private BusinessUnitObjectiveService businessUnitObjectiveService;
-    @MockBean
-    private PagedResourcesAssembler<BusinessUnitObjectiveDto> pagedResourcesAssembler;
 
     private final BusinessUnitMapper businessUnitMapper = Mappers.getMapper(BusinessUnitMapper.class);
     private final BusinessUnitAssembler businessUnitAssembler = new BusinessUnitAssembler(businessUnitMapper);
@@ -63,12 +54,14 @@ public class BusinessUnitObjectiveByBusinessUnitControllerTest {
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L,0, "Test1", OffsetDateTime.now(),OffsetDateTime.now());
+        BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", OffsetDateTime.now(), OffsetDateTime.now());
+        businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(ArgumentMatchers.any(BusinessUnitObjectiveDto.class),ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(toPost);
-        when(businessUnitService.findById(1L)).thenReturn(Optional.of(businessUnitAssembler.toModel(new BusinessUnit(1L, "Personal"))));
+        when(businessUnitService.existsById(anyLong())).thenReturn(true);
+        when(businessUnitObjectiveService.insertBusinessUnitObjectiveWithBusinessUnit(ArgumentMatchers.any(BusinessUnitObjectiveDto.class), ArgumentMatchers.any(Long.class))).thenReturn(toPost);
 
         mockMvc.perform(
                         post("/businessUnits/1/objectives")
@@ -91,11 +84,13 @@ public class BusinessUnitObjectiveByBusinessUnitControllerTest {
     public void postWithInvalidBusinessUnitIdShouldReturnNoFound() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L,0, "Test1", OffsetDateTime.now(),OffsetDateTime.now());
+        BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", OffsetDateTime.now(), OffsetDateTime.now());
+        businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(ArgumentMatchers.any(BusinessUnitObjectiveDto.class),ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(toPost);
+        when(businessUnitObjectiveService.insertBusinessUnitObjectiveWithBusinessUnit(ArgumentMatchers.any(BusinessUnitObjectiveDto.class), ArgumentMatchers.any(Long.class))).thenReturn(toPost);
 
         mockMvc.perform(
                         post("/businessUnits/1/objectives")

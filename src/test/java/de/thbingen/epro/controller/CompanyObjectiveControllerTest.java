@@ -1,11 +1,9 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.assembler.CompanyObjectiveAssembler;
-import de.thbingen.epro.model.business.BusinessUnit;
-import de.thbingen.epro.model.business.CompanyObjective;
-import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.assembler.CompanyObjectiveAssembler;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyObjective;
 import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
@@ -33,6 +31,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -116,7 +115,7 @@ public class CompanyObjectiveControllerTest {
         CompanyObjectiveDto toPost = assembler.toModel(companyObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(companyObjectiveService.saveCompanyObjective(ArgumentMatchers.any(CompanyObjectiveDto.class))).thenReturn(toPost);
+        when(companyObjectiveService.insertCompanyObjective(ArgumentMatchers.any(CompanyObjectiveDto.class))).thenReturn(toPost);
 
         mockMvc.perform(
                         post("/companyobjectives")
@@ -194,7 +193,7 @@ public class CompanyObjectiveControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(companyObjectiveDto);
 
         when(companyObjectiveService.existsById(1L)).thenReturn(true);
-        when(companyObjectiveService.saveCompanyObjective(any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
+        when(companyObjectiveService.updateCompanyObjective(anyLong(), any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
 
         mockMvc.perform(put("/companyobjectives/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -213,7 +212,7 @@ public class CompanyObjectiveControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(companyObjectiveDto);
 
         when(companyObjectiveService.existsById(1L)).thenReturn(false);
-        when(companyObjectiveService.saveCompanyObjective(any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
+        when(companyObjectiveService.insertCompanyObjective(any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
 
         mockMvc.perform(put("/companyobjectives/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())

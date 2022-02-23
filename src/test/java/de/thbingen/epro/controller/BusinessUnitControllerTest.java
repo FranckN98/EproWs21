@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -180,7 +181,7 @@ public class BusinessUnitControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
         when(businessUnitService.existsById(1L)).thenReturn(true);
-        when(businessUnitService.updateBusinessUnit(null, any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
+        when(businessUnitService.updateBusinessUnit(anyLong(), any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -198,12 +199,12 @@ public class BusinessUnitControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
         when(businessUnitService.existsById(1L)).thenReturn(false);
-        when(businessUnitService.updateBusinessUnit(null, any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
+        when(businessUnitService.insertBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost/businessUnits/1"))
+                .andExpect(header().string("location", "/businessUnits/1"))
                 .andExpect(jsonPath("$.name").value("Test"))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));

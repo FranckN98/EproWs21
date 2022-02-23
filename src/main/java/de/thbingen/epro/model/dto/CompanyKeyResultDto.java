@@ -26,6 +26,9 @@ public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto
     private String comment;
     private OffsetDateTime timestamp;
 
+    public CompanyKeyResultDto() {
+    }
+
     public CompanyKeyResultDto(String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp) {
         this.name = name;
         this.currentValue = currentValue;
@@ -33,7 +36,7 @@ public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto
         this.confidenceLevel = confidenceLevel;
         this.achievement = achievement;
         this.comment = comment;
-        this.timestamp = OffsetDateTime.now();
+        this.timestamp = timestamp;
     }
 
     public String getName() {

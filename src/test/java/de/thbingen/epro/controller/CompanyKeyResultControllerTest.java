@@ -1,14 +1,11 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.assembler.CompanyKeyResultAssembler;
-import de.thbingen.epro.controller.assembler.CompanyKeyResultHistoryAssembler;
-import de.thbingen.epro.model.business.CompanyKeyResult;
-import de.thbingen.epro.model.business.CompanyKeyResultHistory;
-import de.thbingen.epro.model.business.CompanyObjective;
+import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
+import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
-import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
@@ -28,7 +25,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +33,10 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,17 +48,10 @@ public class CompanyKeyResultControllerTest {
     @MockBean
     private CompanyKeyResultService companyKeyResultService;
     @MockBean
-    private PagedResourcesAssembler<CompanyKeyResultDto> pagedResourcesAssembler;
-    @MockBean
-    private PagedResourcesAssembler<CompanyKeyResultHistoryDto> companyKeyResultHistoryDtoPagedResourcesAssembler;
-    @MockBean
     private CompanyKeyResultHistoryService companyKeyResultHistoryService;
 
     private final CompanyKeyResultMapper companyKeyResultMapper = Mappers.getMapper(CompanyKeyResultMapper.class);
     private final CompanyKeyResultAssembler companyKeyResultAssembler = new CompanyKeyResultAssembler(companyKeyResultMapper);
-
-    private final CompanyKeyResultHistoryMapper companyKeyResultHistoryMapper = Mappers.getMapper(CompanyKeyResultHistoryMapper.class);
-    private final CompanyKeyResultHistoryAssembler companyKeyResultHistoryAssembler = new CompanyKeyResultHistoryAssembler(companyKeyResultHistoryMapper);
 
 
     // region GET ALL
@@ -71,17 +60,21 @@ public class CompanyKeyResultControllerTest {
     @DisplayName("Get All should return all Company Key Result with 200 - OK")
     public void getAllshouldReturnAllCompanyKeyresults() throws Exception {
         List<CompanyKeyResultDto> companyKeyResultDtos = Stream.of(
-                new CompanyKeyResult(1L,  "CK1",10, 100, 50, "a comment" , OffsetDateTime.now()),
-                new CompanyKeyResult(2L,  "CK2",30, 150, 30, "no comment" , OffsetDateTime.now())
+                new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now()),
+                new CompanyKeyResult(2L, "CK2", 30, 150, 0, 30, "no comment", OffsetDateTime.now())
         ).map(companyKeyResultAssembler::toModel).collect(Collectors.toList());
 
+        when(companyKeyResultService.getAllCompanyKeyResults(ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(companyKeyResultDtos));
 
-        when(companyKeyResultService.getAllCompanyKeyResults(Pageable.ofSize(10))).thenReturn(new PageImpl<CompanyKeyResultDto>(companyKeyResultDtos));
 
-        mockMvc.perform(get("/companyKeyResults").accept(MediaTypes.HAL_JSON))
+        when(companyKeyResultService.getAllCompanyKeyResults(Pageable.ofSize(10)))
+                .thenReturn(new PageImpl<>(companyKeyResultDtos));
+
+        mockMvc.perform(get("/companyKeyResults"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andExpect(jsonPath("$.*", hasSize(3)));
         //TODO: fix Problem
 
     }
@@ -93,7 +86,7 @@ public class CompanyKeyResultControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single Company Key result with 200 - OK")
     public void getWithIdShouldReturnSingleCompanykeyResult() throws Exception {
-        when(companyKeyResultService.findById(1L)).thenReturn(Optional.of(companyKeyResultAssembler.toModel(new CompanyKeyResult(1L,  "CK1",10, 100, 50, "a comment" , OffsetDateTime.now()))));
+        when(companyKeyResultService.findById(1L)).thenReturn(Optional.of(companyKeyResultAssembler.toModel(new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now()))));
 
         mockMvc.perform(get("/companyKeyResults/1"))
                 .andDo(print())
@@ -111,11 +104,11 @@ public class CompanyKeyResultControllerTest {
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L,  "CK1",10, 100, 50, "a comment" , OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
         CompanyKeyResultDto toPost = companyKeyResultAssembler.toModel(companyKeyResult);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(companyKeyResultService.saveCompanyKeyResult(ArgumentMatchers.any(CompanyKeyResultDto.class))).thenReturn(toPost);
+        when(companyKeyResultService.insertCompanyKeyResult(ArgumentMatchers.any(CompanyKeyResultDto.class))).thenReturn(toPost);
 
         mockMvc.perform(
                         post("/companyKeyResults")
@@ -136,7 +129,7 @@ public class CompanyKeyResultControllerTest {
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L,  "",10, 100, 50, "a comment" , OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
         CompanyKeyResultDto toPost = companyKeyResultAssembler.toModel(companyKeyResult);
         String invalidJson = objectMapper.writeValueAsString(toPost);
 
@@ -189,12 +182,12 @@ public class CompanyKeyResultControllerTest {
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L,  "changedName",10, 100, 50, "a comment" , OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
         CompanyKeyResultDto toPut = companyKeyResultAssembler.toModel(companyKeyResult);
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
         when(companyKeyResultService.existsById(1L)).thenReturn(true);
-        when(companyKeyResultService.saveCompanyKeyResult(any(CompanyKeyResultDto.class))).thenReturn(toPut);
+        when(companyKeyResultService.updateCompanyKeyResult(anyLong(), any(CompanyKeyResultDto.class))).thenReturn(toPut);
 
         mockMvc.perform(put("/companyKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -209,12 +202,12 @@ public class CompanyKeyResultControllerTest {
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L,  "changedName",10, 100, 50, "a comment" , OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
         CompanyKeyResultDto toPut = companyKeyResultAssembler.toModel(companyKeyResult);
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
         when(companyKeyResultService.existsById(1L)).thenReturn(false);
-        when(companyKeyResultService.saveCompanyKeyResult(any(CompanyKeyResultDto.class))).thenReturn(toPut);
+        when(companyKeyResultService.insertCompanyKeyResult(any(CompanyKeyResultDto.class))).thenReturn(toPut);
 
         mockMvc.perform(put("/companyKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -250,10 +243,6 @@ public class CompanyKeyResultControllerTest {
     }
 
     // endregion
-
-
-
-
 
 
 }
