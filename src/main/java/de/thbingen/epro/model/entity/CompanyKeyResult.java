@@ -60,20 +60,18 @@ public class CompanyKeyResult {
         this.timestamp = timestamp;
     }
 
-    /*public CompanyKeyResult(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, Date timestamp, CompanyObjective companyObjective, Set<BusinessUnitObjective> businessUnitObjectives, Set<CompanyKeyResultHistory> companyKeyResultHistories, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+
+    public CompanyKeyResult(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, String comment, OffsetDateTime timestamp) {
         this.id = id;
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
-        this.achievement = achievement;
         this.comment = comment;
         this.timestamp = timestamp;
-        this.companyObjective = companyObjective;
-        this.businessUnitObjectives = businessUnitObjectives;
-        this.companyKeyResultHistories = companyKeyResultHistories;
-        this.businessUnitKeyResults = businessUnitKeyResults;
-    }*/
+    }
+
+
 
     public Long getId() {
         return id;

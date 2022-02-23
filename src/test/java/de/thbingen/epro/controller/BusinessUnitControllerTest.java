@@ -116,7 +116,7 @@ public class BusinessUnitControllerTest {
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost/businessUnits/1"))
+                .andExpect(header().string("location", "/businessUnits/1"))
                 .andExpect(jsonPath("$.name").value("TEST"))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));

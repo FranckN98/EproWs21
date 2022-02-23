@@ -49,6 +49,16 @@ public class BusinessUnitKeyResult {
     public BusinessUnitKeyResult() {
     }
 
+    public BusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, String comment, OffsetDateTime timestamp) {
+        this.id = id;
+        this.name = name;
+        this.currentValue = currentValue;
+        this.goalValue = goalValue;
+        this.confidenceLevel = confidenceLevel;
+        this.comment = comment;
+        this.timestamp = timestamp;
+    }
+
     public BusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, String comment, OffsetDateTime timestamp, BusinessUnitObjective businessUnitObjective, CompanyKeyResult companyKeyResult, Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories) {
         this.id = id;
         this.name = name;
