@@ -1,25 +1,27 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.time.OffsetDateTime;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class HistoricalCompanyKeyResult {
+public class HistoricalBusinessUnitKeyResult {
     private Long id;
     private String name;
-    private Integer currentValue;
-    private Integer goalValue;
-    private Integer confidenceLevel;
+    private float currentValue;
+    private float goalValue;
+    private float confidenceLevel;
     private Integer achievement;
     private String comment;
     private OffsetDateTime timestamp;
-    private Long companyObjectiveId;
+    private Long businessUnitObjectiveId;
+    private Long companyKeyResultRef;
 
-    public HistoricalCompanyKeyResult() {
+    public HistoricalBusinessUnitKeyResult() {
     }
 
-    public HistoricalCompanyKeyResult(Long id, String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, Long companyObjectiveId) {
+    public HistoricalBusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, Long businessUnitObjectiveId, Long companyKeyResultRef) {
         this.id = id;
         this.name = name;
         this.currentValue = currentValue;
@@ -28,7 +30,8 @@ public class HistoricalCompanyKeyResult {
         this.achievement = achievement;
         this.comment = comment;
         this.timestamp = timestamp;
-        this.companyObjectiveId = companyObjectiveId;
+        this.businessUnitObjectiveId = businessUnitObjectiveId;
+        this.companyKeyResultRef = companyKeyResultRef;
     }
 
     public Long getId() {
@@ -47,27 +50,27 @@ public class HistoricalCompanyKeyResult {
         this.name = name;
     }
 
-    public Integer getCurrentValue() {
+    public float getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(Integer currentValue) {
+    public void setCurrentValue(float currentValue) {
         this.currentValue = currentValue;
     }
 
-    public Integer getGoalValue() {
+    public float getGoalValue() {
         return goalValue;
     }
 
-    public void setGoalValue(Integer goalValue) {
+    public void setGoalValue(float goalValue) {
         this.goalValue = goalValue;
     }
 
-    public Integer getConfidenceLevel() {
+    public float getConfidenceLevel() {
         return confidenceLevel;
     }
 
-    public void setConfidenceLevel(Integer confidenceLevel) {
+    public void setConfidenceLevel(float confidenceLevel) {
         this.confidenceLevel = confidenceLevel;
     }
 
@@ -95,11 +98,19 @@ public class HistoricalCompanyKeyResult {
         this.timestamp = timestamp;
     }
 
-    public Long getCompanyObjectiveId() {
-        return companyObjectiveId;
+    public Long getBusinessUnitObjectiveId() {
+        return businessUnitObjectiveId;
     }
 
-    public void setCompanyObjectiveId(Long companyObjectiveId) {
-        this.companyObjectiveId = companyObjectiveId;
+    public void setBusinessUnitObjectiveId(Long businessUnitObjectiveId) {
+        this.businessUnitObjectiveId = businessUnitObjectiveId;
+    }
+
+    public Long getCompanyKeyResultRef() {
+        return companyKeyResultRef;
+    }
+
+    public void setCompanyKeyResultRef(Long companyKeyResultRef) {
+        this.companyKeyResultRef = companyKeyResultRef;
     }
 }

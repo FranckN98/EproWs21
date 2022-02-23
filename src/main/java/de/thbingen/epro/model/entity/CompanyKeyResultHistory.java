@@ -1,4 +1,4 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.Type;

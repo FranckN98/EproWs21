@@ -41,7 +41,7 @@ public class CompanyObjectiveController {
 
     @PostMapping
     public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
-        CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.saveCompanyObjective(newCompanyObjective);
+        CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.insertCompanyObjective(newCompanyObjective);
         return ResponseEntity.created(companyObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyObjectiveDto);
     }
 
@@ -63,7 +63,7 @@ public class CompanyObjectiveController {
             return this.addNew(companyObjectiveDto);
         }
 
-        return ResponseEntity.ok(companyObjectiveService.saveCompanyObjective(companyObjectiveDto));
+        return ResponseEntity.ok(companyObjectiveService.updateCompanyObjective(id, companyObjectiveDto));
     }
 
     @DeleteMapping("/{id}")
@@ -89,8 +89,8 @@ public class CompanyObjectiveController {
             @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto
     ) {
         Optional<CompanyObjectiveDto> companyObjectiveDto = companyObjectiveService.findById(id);
-        if(companyObjectiveDto.isPresent()) {
-            CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResultWithObjective(newCompanyKeyResultDto, companyObjectiveDto.get());
+        if (companyObjectiveDto.isPresent()) {
+            CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResultWithObjective(newCompanyKeyResultDto, companyObjectiveDto.get());
             return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
         }
         throw new EntityNotFoundException("No CompanyObjective with this id exists");

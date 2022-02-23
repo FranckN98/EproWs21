@@ -43,7 +43,8 @@ public class CompanyKeyResultController {
 
     @PostMapping
     public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
-        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.saveCompanyKeyResult(newCompanyKeyResultDto);;
+        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResult(newCompanyKeyResultDto);
+        ;
         return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
     }
 
@@ -64,7 +65,7 @@ public class CompanyKeyResultController {
         if (!companyKeyResultService.existsById(id)) {
             return this.addNew(companyKeyResultDto);
         }
-        return ResponseEntity.ok(companyKeyResultService.saveCompanyKeyResult(companyKeyResultDto));
+        return ResponseEntity.ok(companyKeyResultService.updateCompanyKeyResult(id, companyKeyResultDto));
     }
 
     @DeleteMapping("/{id}")

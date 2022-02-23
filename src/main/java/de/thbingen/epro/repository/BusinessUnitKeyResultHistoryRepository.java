@@ -1,6 +1,6 @@
 package de.thbingen.epro.repository;
 
-import de.thbingen.epro.model.business.BusinessUnitKeyResultHistory;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

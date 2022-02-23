@@ -1,10 +1,7 @@
 package de.thbingen.epro.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
-
-import de.thbingen.epro.model.business.BusinessUnitKeyResultHistory;
 
 import java.time.OffsetDateTime;
 

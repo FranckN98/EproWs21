@@ -1,11 +1,7 @@
 package de.thbingen.epro.repository;
 
-import de.thbingen.epro.model.business.BusinessUnit;
+import de.thbingen.epro.model.entity.BusinessUnit;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface BusinessUnitRepository extends JpaRepository<BusinessUnit, Long> {
 

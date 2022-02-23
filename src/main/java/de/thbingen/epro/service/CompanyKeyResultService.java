@@ -1,9 +1,9 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.CompanyKeyResultAssembler;
-import de.thbingen.epro.model.business.CompanyKeyResult;
+import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.repository.CompanyKeyResultRepository;
 import org.springframework.data.domain.Page;
@@ -34,14 +34,19 @@ public class CompanyKeyResultService {
         }
     }
 
-    public CompanyKeyResultDto saveCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto) {
+    public CompanyKeyResultDto insertCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto) {
         CompanyKeyResult companyKeyResult = companyKeyResultMapper.dtoToCompanyKeyResultWithObjective(companyKeyResultDto, companyObjectiveDto);
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
     }
 
-    public CompanyKeyResultDto saveCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto) {
+    public CompanyKeyResultDto updateCompanyKeyResult(Long id, CompanyKeyResultDto companyKeyResultDto) {
         CompanyKeyResult companyKeyResult = companyKeyResultMapper.dtoToCompanyKeyResult(companyKeyResultDto);
+        companyKeyResult.setId(id);
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
+    }
+
+    public CompanyKeyResultDto insertCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto) {
+        return updateCompanyKeyResult(null, companyKeyResultDto);
     }
 
     public void deleteById(Long id) {
@@ -60,7 +65,7 @@ public class CompanyKeyResultService {
     public Page<CompanyKeyResultDto> getAllByCompanyObjectiveId(Long id, Pageable pageable) {
         Page<CompanyKeyResult> pagedResult = companyKeyResultRepository.findAllByCompanyObjectiveId(id, pageable);
 
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
         }
         return Page.empty();

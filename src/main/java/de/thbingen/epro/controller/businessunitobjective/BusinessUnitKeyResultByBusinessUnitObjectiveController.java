@@ -1,7 +1,6 @@
 package de.thbingen.epro.controller.businessunitobjective;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
-import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/businessUnitObjectives/{id}/keyResults")
@@ -53,18 +51,16 @@ public class BusinessUnitKeyResultByBusinessUnitObjectiveController {
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto
     ) {
-        Optional<BusinessUnitObjectiveDto> businessUnitObjective = businessUnitObjectiveService.findById(id);
-        if (businessUnitObjective.isEmpty()) {
+        if (!businessUnitObjectiveService.existsById(id))
             throw new EntityNotFoundException("No BusinessUnitObjective with this ID exists.");
-        } else {
-            BusinessUnitKeyResultDto businessUnitKeyResultDto =
-                    businessUnitKeyResultService.saveBusinessUnitKeyResultWithObjective(
-                            newBusinessUnitKeyResultDto,
-                            businessUnitObjective.get()
-                    );
 
-            return ResponseEntity.created(businessUnitKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                    .body(businessUnitKeyResultDto);
-        }
+        BusinessUnitKeyResultDto businessUnitKeyResultDto =
+                businessUnitKeyResultService.insertBusinessUnitKeyResultWithObjective(
+                        newBusinessUnitKeyResultDto,
+                        id
+                );
+
+        return ResponseEntity.created(businessUnitKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(businessUnitKeyResultDto);
     }
 }

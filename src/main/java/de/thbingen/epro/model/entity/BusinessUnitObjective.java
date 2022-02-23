@@ -1,7 +1,6 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,8 +28,9 @@ public class BusinessUnitObjective {
     private OffsetDateTime startDate = OffsetDateTime.now();
     private OffsetDateTime endDate = OffsetDateTime.now();
 
-    @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_key_result_ref")
+    /*@OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_key_result_ref")*/
+    @OneToMany(targetEntity = BusinessUnitKeyResult.class, mappedBy = "businessUnitObjective", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
 
     public BusinessUnitObjective() {

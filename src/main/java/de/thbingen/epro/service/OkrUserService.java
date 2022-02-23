@@ -1,15 +1,14 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.OkrUserAssembler;
-import de.thbingen.epro.model.business.OkrUser;
+import de.thbingen.epro.model.assembler.OkrUserAssembler;
 import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.OkrUserMapper;
 import de.thbingen.epro.repository.OkrUserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +27,7 @@ public class OkrUserService {
     public Page<OkrUserDto> findAll(Pageable pageable) {
         Page<OkrUser> pagedResult = okrUserRepository.findAll(pageable);
 
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
         }
         return Page.empty();
@@ -49,8 +48,12 @@ public class OkrUserService {
         }
     }
 
-    public OkrUserDto saveOkrUser(OkrUserDto OkrUserDto) {
-        OkrUser okrUser = okrUserMapper.dtoToOkrUser(OkrUserDto);
+    public OkrUserDto insertOkrUser(OkrUserDto okrUserDto) {
+        return updateOkrUser(null, okrUserDto);
+    }
+
+    public OkrUserDto updateOkrUser(Long id, OkrUserDto okrUserDto) {
+        OkrUser okrUser = okrUserMapper.dtoToOkrUser(okrUserDto);
         return assembler.toModel(okrUserRepository.save(okrUser));
     }
 

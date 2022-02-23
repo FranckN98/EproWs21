@@ -1,11 +1,13 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.BusinessUnitObjectiveAssembler;
-import de.thbingen.epro.model.business.BusinessUnitObjective;
-import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.repository.BusinessUnitObjectiveRepository;
+import de.thbingen.epro.repository.BusinessUnitRepository;
+import de.thbingen.epro.repository.CompanyKeyResultRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,18 @@ import java.util.Optional;
 public class BusinessUnitObjectiveService {
 
     private final BusinessUnitObjectiveRepository businessUnitObjectiveRepository;
+    private final CompanyKeyResultRepository companyKeyResultRepository;
     private final BusinessUnitObjectiveMapper businessUnitObjectiveMapper;
     private final BusinessUnitObjectiveAssembler assembler;
 
-    public BusinessUnitObjectiveService(BusinessUnitObjectiveRepository businessUnitObjectiveRepository, BusinessUnitObjectiveMapper businessUnitObjectiveMapper, BusinessUnitObjectiveAssembler assembler) {
+    private final BusinessUnitRepository businessUnitRepository;
+
+    public BusinessUnitObjectiveService(BusinessUnitObjectiveRepository businessUnitObjectiveRepository, CompanyKeyResultRepository companyKeyResultRepository, BusinessUnitObjectiveMapper businessUnitObjectiveMapper, BusinessUnitObjectiveAssembler assembler, BusinessUnitRepository businessUnitRepository) {
         this.businessUnitObjectiveRepository = businessUnitObjectiveRepository;
+        this.companyKeyResultRepository = companyKeyResultRepository;
         this.businessUnitObjectiveMapper = businessUnitObjectiveMapper;
         this.assembler = assembler;
+        this.businessUnitRepository = businessUnitRepository;
     }
 
     public Page<BusinessUnitObjectiveDto> getAllByBusinessUnitId(Long businessUnitId, Pageable pageable) {
@@ -45,13 +52,19 @@ public class BusinessUnitObjectiveService {
         }
     }
 
-    public BusinessUnitObjectiveDto saveBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto) {
+    public BusinessUnitObjectiveDto insertBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto) {
+        return updateBusinessUnitObjective(null, businessUnitObjectiveDto);
+    }
+
+    public BusinessUnitObjectiveDto updateBusinessUnitObjective(Long id, BusinessUnitObjectiveDto businessUnitObjectiveDto) {
         BusinessUnitObjective businessUnitObjective = businessUnitObjectiveMapper.dtoToBusinessUnitObjective(businessUnitObjectiveDto);
+        businessUnitObjective.setId(id);
         return assembler.toModel(businessUnitObjectiveRepository.save(businessUnitObjective));
     }
 
-    public BusinessUnitObjectiveDto saveBusinessUnitObjectiveWithBusinessUnit(BusinessUnitObjectiveDto businessUnitObjectiveDto, BusinessUnitDto businessUnitDto) {
-        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveMapper.dtoToBusinessUnitObjective(businessUnitObjectiveDto, businessUnitDto);
+    public BusinessUnitObjectiveDto insertBusinessUnitObjectiveWithBusinessUnit(BusinessUnitObjectiveDto businessUnitObjectiveDto, Long businessUnitDto) {
+        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveMapper.dtoToBusinessUnitObjective(businessUnitObjectiveDto);
+        businessUnitObjective.setBusinessUnit(businessUnitRepository.getById(businessUnitDto));
         return assembler.toModel(businessUnitObjectiveRepository.save(businessUnitObjective));
     }
 
@@ -68,4 +81,26 @@ public class BusinessUnitObjectiveService {
         return businessUnitObjectiveRepository.existsById(id);
     }
 
+    public boolean referenceCompanyKeyResult(Long businessUnitObjectiveId, Long companyKeyResultId) {
+        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveRepository.findById(businessUnitObjectiveId).orElse(null);
+        CompanyKeyResult companyKeyResult = companyKeyResultRepository.findById(companyKeyResultId).orElse(null);
+
+        if (businessUnitObjective == null || companyKeyResult == null)
+            return false;
+
+        businessUnitObjective.setCompanyKeyResult(companyKeyResult);
+        businessUnitObjectiveRepository.save(businessUnitObjective);
+        return true;
+    }
+
+    public boolean deleteCompanyKeyResultReference(Long businessUnitObjectiveId) {
+        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveRepository.findById(businessUnitObjectiveId).orElse(null);
+
+        if (businessUnitObjective == null)
+            return false;
+
+        businessUnitObjective.setCompanyKeyResult(null);
+        businessUnitObjectiveRepository.save(businessUnitObjective);
+        return true;
+    }
 }

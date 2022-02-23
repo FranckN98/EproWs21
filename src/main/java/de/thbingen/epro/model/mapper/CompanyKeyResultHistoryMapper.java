@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.business.CompanyKeyResultHistory;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import org.mapstruct.Mapper;
 
 import java.util.List;

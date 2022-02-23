@@ -1,4 +1,4 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;

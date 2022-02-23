@@ -1,9 +1,9 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.assembler.BusinessUnitAssembler;
+import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
 import de.thbingen.epro.controller.businessunit.BusinessUnitController;
-import de.thbingen.epro.model.business.BusinessUnit;
+import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
@@ -107,7 +107,7 @@ public class BusinessUnitControllerTest {
         BusinessUnitDto toPost = assembler.toModel(businessUnit);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
-        when(businessUnitService.saveBusinessUnit(ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(toPost);
+        when(businessUnitService.insertBusinessUnit(ArgumentMatchers.any(BusinessUnitDto.class))).thenReturn(toPost);
 
         mockMvc.perform(
                         post("/businessUnits")
@@ -180,7 +180,7 @@ public class BusinessUnitControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
         when(businessUnitService.existsById(1L)).thenReturn(true);
-        when(businessUnitService.saveBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
+        when(businessUnitService.updateBusinessUnit(null, any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
@@ -198,7 +198,7 @@ public class BusinessUnitControllerTest {
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
 
         when(businessUnitService.existsById(1L)).thenReturn(false);
-        when(businessUnitService.saveBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
+        when(businessUnitService.updateBusinessUnit(null, any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
 
         mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())

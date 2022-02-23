@@ -1,4 +1,4 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -41,14 +41,13 @@ public class CompanyKeyResult {
     @JoinColumn(name = "company_key_result_ref")
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
 
-    /*
     @OneToMany(mappedBy = "companyKeyResult", targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
     private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();
 
     @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
-    @JoinColumn(name="company_key_result_id")
+    @JoinColumn(name = "company_key_result_id")
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
-    */
+
     public CompanyKeyResult() {
     }
 
@@ -155,7 +154,7 @@ public class CompanyKeyResult {
     public void setBusinessUnitObjectives(Set<BusinessUnitObjective> businessUnitObjectives) {
         this.businessUnitObjectives = businessUnitObjectives;
     }
-    /*
+
     public Set<CompanyKeyResultHistory> getCompanyKeyResultHistories() {
         return companyKeyResultHistories;
     }
@@ -170,6 +169,6 @@ public class CompanyKeyResult {
 
     public void setBusinessUnitKeyResults(Set<BusinessUnitKeyResult> businessUnitKeyResults) {
         this.businessUnitKeyResults = businessUnitKeyResults;
-    }*/
+    }
 
 }

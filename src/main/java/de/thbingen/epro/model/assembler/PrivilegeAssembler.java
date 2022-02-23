@@ -1,11 +1,14 @@
-package de.thbingen.epro.controller.assembler;
+package de.thbingen.epro.model.assembler;
 
 import de.thbingen.epro.controller.PrivilegeController;
-import de.thbingen.epro.model.business.Privilege;
+import de.thbingen.epro.controller.RoleController;
 import de.thbingen.epro.model.dto.PrivilegeDto;
+import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.mapper.PrivilegeMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,7 +24,13 @@ public class PrivilegeAssembler implements RepresentationModelAssembler<Privileg
 
     @Override
     public PrivilegeDto toModel(Privilege entity) {
-        return privilegeMapper.privilegeToDto(entity)
+        PrivilegeDto privilegeDto = privilegeMapper.privilegeToDto(entity)
                 .add(linkTo(methodOn(PrivilegeController.class).findById(entity.getId())).withSelfRel());
+        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
+            privilegeDto.add(
+                    entity.getRoles().stream().map(role -> linkTo(methodOn(RoleController.class).findById(role.getId())).withRel("roles")).collect(Collectors.toList())
+            );
+        }
+        return privilegeDto;
     }
 }

@@ -2,6 +2,7 @@ package de.thbingen.epro.controller.businessunitobjective;
 
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
+import de.thbingen.epro.service.CompanyKeyResultService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -21,10 +22,12 @@ import java.util.Optional;
 public class BusinessUnitObjectiveController {
 
     private final BusinessUnitObjectiveService businessUnitObjectiveService;
+    private final CompanyKeyResultService companyKeyResultService;
     private final PagedResourcesAssembler<BusinessUnitObjectiveDto> pagedResourcesAssembler;
 
-    public BusinessUnitObjectiveController(BusinessUnitObjectiveService businessUnitObjectiveService, PagedResourcesAssembler<BusinessUnitObjectiveDto> pagedResourcesAssembler) {
+    public BusinessUnitObjectiveController(BusinessUnitObjectiveService businessUnitObjectiveService, CompanyKeyResultService companyKeyResultService, PagedResourcesAssembler<BusinessUnitObjectiveDto> pagedResourcesAssembler) {
         this.businessUnitObjectiveService = businessUnitObjectiveService;
+        this.companyKeyResultService = companyKeyResultService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
@@ -44,7 +47,7 @@ public class BusinessUnitObjectiveController {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<BusinessUnitObjectiveDto> addNew(@RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
-        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjective(newBusinessUnitObjectiveDto);
+        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.insertBusinessUnitObjective(newBusinessUnitObjectiveDto);
         return ResponseEntity.created(businessUnitObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(businessUnitObjectiveDto);
     }
@@ -58,7 +61,7 @@ public class BusinessUnitObjectiveController {
             return this.addNew(businessUnitObjectiveDto);
         }
 
-        return ResponseEntity.ok(businessUnitObjectiveService.saveBusinessUnitObjective(businessUnitObjectiveDto));
+        return ResponseEntity.ok(businessUnitObjectiveService.updateBusinessUnitObjective(id, businessUnitObjectiveDto));
     }
 
     @DeleteMapping("/{id}")
@@ -68,5 +71,40 @@ public class BusinessUnitObjectiveController {
         }
         businessUnitObjectiveService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(
+            value = "/{businessUnitObjectiveId}/companyKeyResultReference/{companyKeyResultId}",
+            method = {RequestMethod.PUT, RequestMethod.POST}
+    )
+    public ResponseEntity<Void> referenceCompanyKeyResult(
+            @PathVariable Long businessUnitObjectiveId,
+            @PathVariable Long companyKeyResultId
+    ) {
+        if (!businessUnitObjectiveService.existsById(businessUnitObjectiveId)) {
+            throw new EntityNotFoundException("No BusinessUnitObjective with this id exists");
+        }
+        if (!companyKeyResultService.existsById(companyKeyResultId)) {
+            throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
+        }
+        if (businessUnitObjectiveService.referenceCompanyKeyResult(businessUnitObjectiveId, companyKeyResultId)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/{businessUnitObjectiveId}/companyKeyResultReference/{companyKeyResultId}")
+    public ResponseEntity<Void> deleteCompanyKeyResultReference(
+            @PathVariable Long businessUnitObjectiveId
+    ) {
+        if (!businessUnitObjectiveService.existsById(businessUnitObjectiveId)) {
+            throw new EntityNotFoundException("No BusinessUnitObjective with this id exists");
+        }
+        if (businessUnitObjectiveService.deleteCompanyKeyResultReference(businessUnitObjectiveId)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

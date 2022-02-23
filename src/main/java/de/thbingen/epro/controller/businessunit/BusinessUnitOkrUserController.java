@@ -1,14 +1,12 @@
 package de.thbingen.epro.controller.businessunit;
 
-import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.*;
 

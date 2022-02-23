@@ -1,14 +1,12 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.CompanyObjectiveAssembler;
-import de.thbingen.epro.model.business.CompanyObjective;
+import de.thbingen.epro.model.assembler.CompanyObjectiveAssembler;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyObjective;
 import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import de.thbingen.epro.repository.CompanyObjectiveRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,8 +34,14 @@ public class CompanyObjectiveService {
         }
     }
 
-    public CompanyObjectiveDto saveCompanyObjective(CompanyObjectiveDto companyObjectiveDto) {
+    public CompanyObjectiveDto insertCompanyObjective(CompanyObjectiveDto companyObjectiveDto) {
         CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
+        return companyObjectiveAssembler.toModel(companyObjectiveRepository.save(companyObjective));
+    }
+
+    public CompanyObjectiveDto updateCompanyObjective(Long id, CompanyObjectiveDto companyObjectiveDto) {
+        CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
+        companyObjective.setId(id);
         return companyObjectiveAssembler.toModel(companyObjectiveRepository.save(companyObjective));
     }
 

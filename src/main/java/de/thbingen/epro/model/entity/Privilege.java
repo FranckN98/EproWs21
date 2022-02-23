@@ -1,4 +1,4 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -22,7 +22,8 @@ public class Privilege {
     )
     private Set<Role> roles;
 
-    public Privilege() {}
+    public Privilege() {
+    }
 
     public Privilege(String name) {
         this.name = name;
@@ -51,8 +52,6 @@ public class Privilege {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-
 
 
 }

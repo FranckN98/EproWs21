@@ -46,7 +46,7 @@ public class BusinessUnitController {
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
-        BusinessUnitDto businessUnitDto = businessUnitService.saveBusinessUnit(newBusinessUnit);
+        BusinessUnitDto businessUnitDto = businessUnitService.insertBusinessUnit(newBusinessUnit);
         return ResponseEntity
                 .created(businessUnitDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(businessUnitDto);
@@ -58,7 +58,7 @@ public class BusinessUnitController {
             return this.addNew(businessUnitDto);
         }
 
-        return ResponseEntity.ok(businessUnitService.saveBusinessUnit(businessUnitDto));
+        return ResponseEntity.ok(businessUnitService.updateBusinessUnit(id, businessUnitDto));
     }
 
     @DeleteMapping("/{id}")

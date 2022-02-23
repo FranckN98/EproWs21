@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.business.CompanyObjective;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyObjective;
 import org.mapstruct.Mapper;
 
 import java.util.List;

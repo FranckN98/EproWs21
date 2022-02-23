@@ -1,7 +1,6 @@
 package de.thbingen.epro.controller;
 
 
-import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.RoleService;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +11,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -47,7 +43,7 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<RoleDto> addNew(@RequestBody @Valid RoleDto newRole) {
-        RoleDto roleDto = roleService.saveRole(newRole);
+        RoleDto roleDto = roleService.insertRole(newRole);
         return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
     }
 
@@ -56,7 +52,7 @@ public class RoleController {
         if (!roleService.existsById(id))
             return this.addNew(roleDto);
 
-        return ResponseEntity.ok(roleService.saveRole(roleDto));
+        return ResponseEntity.ok(roleService.updateRole(id, roleDto));
     }
 
     @DeleteMapping("/{id}")

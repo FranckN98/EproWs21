@@ -1,14 +1,12 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.BusinessUnitKeyResultHistoryAssembler;
-import de.thbingen.epro.model.business.BusinessUnitKeyResultHistory;
+import de.thbingen.epro.model.assembler.BusinessUnitKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
 import de.thbingen.epro.repository.BusinessUnitKeyResultHistoryRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -42,7 +40,7 @@ public class BusinessUnitKeyResultHistoryService {
     public Page<BusinessUnitKeyResultHistoryDto> getAllByBusinessUnitKeyResultId(Long id, Pageable pageable) {
         Page<BusinessUnitKeyResultHistory> pagedResult = businessUnitKeyResultHistoryRepository.findAllByCurrentBusinessUnitKeyResultIdOrderByChangeTimeStampDesc(id, pageable);
 
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
         } else {
             return Page.empty();

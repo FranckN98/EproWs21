@@ -1,8 +1,8 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.business.CompanyKeyResult;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

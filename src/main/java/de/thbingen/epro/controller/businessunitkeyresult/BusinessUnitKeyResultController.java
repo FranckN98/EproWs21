@@ -4,6 +4,7 @@ import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
+import de.thbingen.epro.service.CompanyKeyResultService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -18,8 +19,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @RestController
 @RequestMapping("/businessUnitKeyResults")
 public class BusinessUnitKeyResultController {
@@ -28,12 +27,14 @@ public class BusinessUnitKeyResultController {
     private final BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService;
     private final PagedResourcesAssembler<BusinessUnitKeyResultDto> pagedResourcesAssembler;
     private final PagedResourcesAssembler<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtoPagedResourcesAssembler;
+    private final CompanyKeyResultService companyKeyResultService;
 
-    public BusinessUnitKeyResultController(BusinessUnitKeyResultService businessUnitKeyResultService, BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService, PagedResourcesAssembler<BusinessUnitKeyResultDto> pagedResourcesAssembler, PagedResourcesAssembler<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtoPagedResourcesAssembler) {
+    public BusinessUnitKeyResultController(BusinessUnitKeyResultService businessUnitKeyResultService, BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService, PagedResourcesAssembler<BusinessUnitKeyResultDto> pagedResourcesAssembler, PagedResourcesAssembler<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtoPagedResourcesAssembler, CompanyKeyResultService companyKeyResultService) {
         this.businessUnitKeyResultService = businessUnitKeyResultService;
         this.businessUnitKeyResultHistoryService = businessUnitKeyResultHistoryService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
         this.businessUnitKeyResultHistoryDtoPagedResourcesAssembler = businessUnitKeyResultHistoryDtoPagedResourcesAssembler;
+        this.companyKeyResultService = companyKeyResultService;
     }
 
     @GetMapping
@@ -67,7 +68,7 @@ public class BusinessUnitKeyResultController {
             return this.addNew(businessUnitKeyResultDto);
 
         }
-        return ResponseEntity.ok(businessUnitKeyResultService.saveBusinessUnitKeyResult(businessUnitKeyResultDto));
+        return ResponseEntity.ok(businessUnitKeyResultService.updateBusinessUnitKeyResult(id, businessUnitKeyResultDto));
     }
 
     @DeleteMapping("/{id}")
@@ -87,5 +88,40 @@ public class BusinessUnitKeyResultController {
         return businessUnitKeyResultHistoryDtoPagedResourcesAssembler.toModel(
                 businessUnitKeyResultHistoryService.getAllByBusinessUnitKeyResultId(id, pageable)
         );
+    }
+
+    @RequestMapping(
+            value = "/{businessUnitKeyResultId}/companyKeyResultReference/{companyKeyResultId}",
+            method = {RequestMethod.PUT, RequestMethod.POST}
+    )
+    public ResponseEntity<Void> referenceCompanyKeyResult(
+            @PathVariable Long businessUnitKeyResultId,
+            @PathVariable Long companyKeyResultId
+    ) {
+        if (!businessUnitKeyResultService.existsById(businessUnitKeyResultId)) {
+            throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
+        }
+        if (!companyKeyResultService.existsById(companyKeyResultId)) {
+            throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
+        }
+        if (businessUnitKeyResultService.referenceCompanyKeyResult(businessUnitKeyResultId, companyKeyResultId)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/{businessUnitKeyResultId}/companyKeyResultReference")
+    public ResponseEntity<Void> deleteCompanyKeyResultReference(
+            @PathVariable Long businessUnitKeyResultId
+    ) {
+        if (!businessUnitKeyResultService.existsById(businessUnitKeyResultId)) {
+            throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
+        }
+        if (businessUnitKeyResultService.deleteCompanyKeyResultReference(businessUnitKeyResultId)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

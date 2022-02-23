@@ -1,8 +1,9 @@
-package de.thbingen.epro.controller.assembler;
+package de.thbingen.epro.model.assembler;
 
 import de.thbingen.epro.controller.BusinessUnitKeyResultHistoryController;
-import de.thbingen.epro.model.business.BusinessUnitKeyResultHistory;
+import de.thbingen.epro.controller.businessunitkeyresult.BusinessUnitKeyResultController;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,9 @@ public class BusinessUnitKeyResultHistoryAssembler
 
     @Override
     public BusinessUnitKeyResultHistoryDto toModel(BusinessUnitKeyResultHistory entity) {
-        return businessUnitKeyResultHistoryMapper.businessUnitKeyResultHistoryToDto(entity)
+        BusinessUnitKeyResultHistoryDto businessUnitKeyResultHistory = businessUnitKeyResultHistoryMapper.businessUnitKeyResultHistoryToDto(entity)
                 .add(linkTo(methodOn(controllerClass).getById(entity.getId())).withSelfRel());
-        //TODO: .add(linkTo(methodOn(BusinessUnitKeyResultController.class).getById(entity.getCurrentBusinessUnitKeyResult().getId())).withRel("Test"));
+        businessUnitKeyResultHistory.add(linkTo(methodOn(BusinessUnitKeyResultController.class).findById(entity.getCurrentBusinessUnitKeyResult().getId())).withRel("currentBusinessUnitKeyResult"));
+        return businessUnitKeyResultHistory;
     }
 }

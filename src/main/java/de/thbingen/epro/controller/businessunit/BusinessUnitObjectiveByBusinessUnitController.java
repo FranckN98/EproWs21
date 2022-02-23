@@ -1,6 +1,5 @@
 package de.thbingen.epro.controller.businessunit;
 
-import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/businessUnits/{id}/objectives")
@@ -46,10 +44,8 @@ public class BusinessUnitObjectiveByBusinessUnitController {
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto
     ) {
-        Optional<BusinessUnitDto> businessUnit = businessUnitService.findById(id);
-
-        if(businessUnit.isPresent()) {
-            BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto, businessUnit.get());
+        if (businessUnitService.existsById(id)) {
+            BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.insertBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto, id);
             return ResponseEntity.created(businessUnitObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
                     .body(businessUnitObjectiveDto);
         }

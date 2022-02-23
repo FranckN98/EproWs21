@@ -1,11 +1,9 @@
 package de.thbingen.epro.exception;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class ApiError {
@@ -78,7 +76,7 @@ public class ApiError {
     }
 
     public void addErrors(List<ApiSubError> errors) {
-        if(this.errors == null) {
+        if (this.errors == null) {
             setErrors(errors);
             return;
         }

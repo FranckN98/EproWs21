@@ -1,17 +1,15 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.BusinessUnitAssembler;
-import de.thbingen.epro.model.business.BusinessUnit;
+import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.repository.BusinessUnitObjectiveRepository;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,9 +46,14 @@ public class BusinessUnitService {
         return businessUnit.map(businessUnitAssembler::toModel);
     }
 
-    public BusinessUnitDto saveBusinessUnit(BusinessUnitDto businessUnitDto) {
+    public BusinessUnitDto updateBusinessUnit(Long id, BusinessUnitDto businessUnitDto) {
         BusinessUnit businessUnit = businessUnitMapper.dtoToBusinessUnit(businessUnitDto);
+        businessUnit.setId(id);
         return businessUnitAssembler.toModel(businessUnitRepository.save(businessUnit));
+    }
+
+    public BusinessUnitDto insertBusinessUnit(BusinessUnitDto businessUnitDto) {
+        return updateBusinessUnit(null, businessUnitDto);
     }
 
     public boolean existsById(Long id) {
@@ -61,7 +64,7 @@ public class BusinessUnitService {
         businessUnitRepository.deleteById(id);
     }
 
-    public BusinessUnitObjectiveDto saveBusinessUnitObjective(BusinessUnitObjectiveDto newBusinessUnitObj, BusinessUnitDto businessUnit) {
+    public BusinessUnitObjectiveDto insertBusinessUnitObjective(BusinessUnitObjectiveDto newBusinessUnitObj, BusinessUnitDto businessUnit) {
         return businessUnitObjectiveMapper.businessUnitObjectiveToDto(businessUnitObjectiveRepository.save(businessUnitObjectiveMapper.dtoToBusinessUnitObjective(newBusinessUnitObj, businessUnit)));
     }
 }

@@ -1,13 +1,11 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.controller.assembler.CompanyKeyResultHistoryAssembler;
-import de.thbingen.epro.model.business.CompanyKeyResultHistory;
+import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import de.thbingen.epro.repository.CompanyKeyResultHistoryRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -41,7 +39,7 @@ public class CompanyKeyResultHistoryService {
     public Page<CompanyKeyResultHistoryDto> getAllByCompanyKeyResultId(Long id, Pageable pageable) {
         Page<CompanyKeyResultHistory> pagedResult = companyKeyResultHistoryRepository.findAllByCompanyKeyResultIdOrderByChangeTimeStampDesc(id, pageable);
 
-        if(pagedResult.hasContent()) {
+        if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
         }
         return Page.empty();

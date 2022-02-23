@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.business.Privilege;
 import de.thbingen.epro.model.dto.PrivilegeDto;
+import de.thbingen.epro.model.entity.Privilege;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,5 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.service.PrivilegeService;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +10,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -46,7 +42,7 @@ public class PrivilegeController {
 
     @PostMapping
     public ResponseEntity<PrivilegeDto> addNew(@RequestBody @Valid PrivilegeDto newPrivilege) {
-        PrivilegeDto privilegeDto = privilegeService.savePrivilege(newPrivilege);
+        PrivilegeDto privilegeDto = privilegeService.insertPrivilege(newPrivilege);
         return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);
     }
 
@@ -55,7 +51,7 @@ public class PrivilegeController {
         if (!privilegeService.existsById(id))
             return this.addNew(privilegeDto);
 
-        return ResponseEntity.ok(privilegeService.savePrivilege(privilegeDto));
+        return ResponseEntity.ok(privilegeService.updatePrivilege(id, privilegeDto));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,7 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.business.OkrUser;
 import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.entity.OkrUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

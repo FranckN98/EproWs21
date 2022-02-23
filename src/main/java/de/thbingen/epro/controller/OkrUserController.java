@@ -1,6 +1,5 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +10,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -46,7 +42,7 @@ public class OkrUserController {
 
     @PostMapping
     public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
-        OkrUserDto okrUserDto = okrUserService.saveOkrUser(newUser);
+        OkrUserDto okrUserDto = okrUserService.insertOkrUser(newUser);
         return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
@@ -55,7 +51,7 @@ public class OkrUserController {
         if (!okrUserService.existsById(id))
             return this.addNew(okrUserDto);
 
-        return ResponseEntity.ok(okrUserService.saveOkrUser(okrUserDto));
+        return ResponseEntity.ok(okrUserService.updateOkrUser(id, okrUserDto));
     }
 
     @DeleteMapping("/{id}")

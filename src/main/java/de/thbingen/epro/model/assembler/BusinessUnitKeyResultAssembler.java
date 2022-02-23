@@ -1,9 +1,11 @@
-package de.thbingen.epro.controller.assembler;
+package de.thbingen.epro.model.assembler;
 
+import de.thbingen.epro.controller.BusinessUnitKeyResultHistoryController;
+import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.controller.businessunitkeyresult.BusinessUnitKeyResultController;
 import de.thbingen.epro.controller.businessunitobjective.BusinessUnitObjectiveController;
-import de.thbingen.epro.model.business.BusinessUnitKeyResult;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -33,8 +35,11 @@ public class BusinessUnitKeyResultAssembler implements RepresentationModelAssemb
                             .withRel("businessUnitObjective")
             );
         }
+        if (entity.getCompanyKeyResult() != null) {
+            businessUnitKeyResultDto.add(linkTo(methodOn(CompanyKeyResultController.class).findById(entity.getCompanyKeyResult().getId())).withRel("companyKeyResult"));
+        }
         if (entity.getBusinessUnitKeyResultHistories() != null && !entity.getBusinessUnitKeyResultHistories().isEmpty()) {
-            //TODO
+            businessUnitKeyResultDto.add(linkTo(methodOn(BusinessUnitKeyResultHistoryController.class).getAll(null)).withRel("history"));
         }
         return businessUnitKeyResultDto;
     }

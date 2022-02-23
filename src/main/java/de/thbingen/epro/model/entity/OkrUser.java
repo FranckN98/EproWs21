@@ -1,10 +1,9 @@
-package de.thbingen.epro.model.business;
+package de.thbingen.epro.model.entity;
 
 import javax.persistence.*;
 
 @Entity
-public class OkrUser
-{
+public class OkrUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +25,8 @@ public class OkrUser
     @JoinColumn(name = "business_unit_id")
     private BusinessUnit businessUnit;
 
-    public OkrUser() {}
+    public OkrUser() {
+    }
 
     public Long getId() {
         return id;

@@ -1,10 +1,10 @@
-package de.thbingen.epro.controller.assembler;
+package de.thbingen.epro.model.assembler;
 
 import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.controller.CompanyKeyResultHistoryController;
 import de.thbingen.epro.controller.CompanyObjectiveController;
-import de.thbingen.epro.model.business.CompanyKeyResultHistory;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
