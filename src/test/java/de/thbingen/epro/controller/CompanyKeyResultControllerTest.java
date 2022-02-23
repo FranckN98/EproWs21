@@ -2,11 +2,8 @@ package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
-import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
-import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
-import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -20,8 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 

@@ -22,14 +22,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.endsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -92,7 +90,7 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single Company Objective with 200 - OK")
     public void getWithIdShouldReturnSingleCompanyObjective() throws Exception {
-        when(companyObjectiveService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new CompanyObjective(1L,0, "name",LocalDate.now(),LocalDate.now()))));
+        when(companyObjectiveService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now()))));
 
         mockMvc.perform(get("/companyobjectives/1"))
                 .andDo(print())
@@ -111,7 +109,7 @@ public class CompanyObjectiveControllerTest {
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyObjective companyObjective = new CompanyObjective(1L,0, "name",LocalDate.now(),LocalDate.now());
+        CompanyObjective companyObjective = new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now());
         CompanyObjectiveDto toPost = assembler.toModel(companyObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
@@ -136,7 +134,7 @@ public class CompanyObjectiveControllerTest {
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyObjective companyObjective = new CompanyObjective(1L,0, "",LocalDate.now(),LocalDate.now());
+        CompanyObjective companyObjective = new CompanyObjective(1L, 0, "", LocalDate.now(), LocalDate.now());
         CompanyObjectiveDto toPost = assembler.toModel(companyObjective);
         String invalidJson = objectMapper.writeValueAsString(toPost);
 
@@ -187,7 +185,7 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
-        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L,0, "changedName",LocalDate.now(),LocalDate.now()));
+        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L, 0, "changedName", LocalDate.now(), LocalDate.now()));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         String jsonToPut = objectMapper.writeValueAsString(companyObjectiveDto);
@@ -206,7 +204,7 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
-        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L,0, "changedName",LocalDate.now(),LocalDate.now()));
+        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L, 0, "changedName", LocalDate.now(), LocalDate.now()));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         String jsonToPut = objectMapper.writeValueAsString(companyObjectiveDto);

@@ -9,29 +9,29 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class Epro21ApplicationTests {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Autowired
-	private BusinessUnitRepository businessUnitRepository;
+    @Autowired
+    private BusinessUnitRepository businessUnitRepository;
 
-	@Test
-	void contextLoads() {
-		assertThat(businessUnitRepository).isNotNull();
-	}
+    @Test
+    void contextLoads() {
+        assertThat(businessUnitRepository).isNotNull();
+    }
 
-	@Test
-	void test() throws Exception{
-		mockMvc.perform(get("/businessUnits"))
-				.andExpect(jsonPath("$.*").isArray())
-				.andExpect(jsonPath("$.*", hasSize(1)));
-	}
+    @Test
+    void test() throws Exception {
+        mockMvc.perform(get("/businessUnits"))
+                .andExpect(jsonPath("$.*").isArray())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
 
 }
