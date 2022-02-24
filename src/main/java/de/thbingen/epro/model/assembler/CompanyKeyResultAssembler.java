@@ -1,10 +1,6 @@
 package de.thbingen.epro.model.assembler;
 
-import de.thbingen.epro.controller.CompanyKeyResultController;
-import de.thbingen.epro.controller.CompanyKeyResultHistoryController;
-import de.thbingen.epro.controller.CompanyObjectiveController;
-import de.thbingen.epro.controller.businessunitkeyresult.BusinessUnitKeyResultController;
-import de.thbingen.epro.controller.businessunitobjective.BusinessUnitObjectiveController;
+import de.thbingen.epro.controller.*;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;

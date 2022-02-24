@@ -37,15 +37,13 @@ public class CompanyKeyResult {
     @JoinColumn(name = "company_objective_id")
     private CompanyObjective companyObjective;
 
-    @OneToMany(targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_key_result_ref")
+    @OneToMany(mappedBy = "companyKeyResult", targetEntity = BusinessUnitObjective.class, cascade = CascadeType.ALL)
     private Set<BusinessUnitObjective> businessUnitObjectives = new HashSet<>();
 
     @OneToMany(mappedBy = "companyKeyResult", targetEntity = CompanyKeyResultHistory.class, cascade = CascadeType.ALL)
     private Set<CompanyKeyResultHistory> companyKeyResultHistories = new HashSet<>();
 
-    @OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_key_result_id")
+    @OneToMany(mappedBy = "companyKeyResult", targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
 
     public CompanyKeyResult() {

@@ -2,19 +2,19 @@ package de.thbingen.epro.model.mapper;
 
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.model.entity.CompanyObjective;
-import org.mapstruct.Mapper;
-
-import java.util.List;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface CompanyObjectiveMapper {
 
     CompanyObjectiveDto companyObjectiveToDto(CompanyObjective companyObjective);
 
-    List<CompanyObjectiveDto> companyObjectiveListToDto(List<CompanyObjective> companyObjectives);
-
+    @Mapping(target = "id", ignore = true)
     CompanyObjective dtoToCompanyObjective(CompanyObjectiveDto companyObjectiveDto);
 
 
-    List<CompanyObjectiveDto> companyObjectiveListToDtoIncludeKeyResults(List<CompanyObjective> content);
+    @Mapping(target = "id", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateCompanyObjectiveFromDto(CompanyObjectiveDto companyObjectiveDto, @MappingTarget CompanyObjective companyObjective);
+
 }

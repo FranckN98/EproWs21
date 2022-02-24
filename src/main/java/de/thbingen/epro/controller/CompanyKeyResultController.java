@@ -44,6 +44,7 @@ public class CompanyKeyResultController {
     }
 
     @PostMapping
+    // TODO: I should be removed
     public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
         CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResult(newCompanyKeyResultDto);
         return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
@@ -64,7 +65,7 @@ public class CompanyKeyResultController {
             @RequestBody @Valid CompanyKeyResultDto companyKeyResultDto
     ) {
         if (!companyKeyResultService.existsById(id)) {
-            return this.addNew(companyKeyResultDto);
+            throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
         }
         return ResponseEntity.ok(companyKeyResultService.updateCompanyKeyResult(id, companyKeyResultDto));
     }
@@ -83,6 +84,9 @@ public class CompanyKeyResultController {
             @PageableDefault Pageable pageable,
             @PathVariable Long id
     ) {
+        if (!companyKeyResultService.existsById(id)) {
+            throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
+        }
         return companyKeyResultHistoryDtoPagedResourcesAssembler.toModel(
                 companyKeyResultHistoryService.getAllByCompanyKeyResultId(id, pageable)
         );

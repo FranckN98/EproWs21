@@ -7,8 +7,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -37,35 +39,4 @@ public class BusinessUnitKeyResultHistoryController {
             return result.get();
         throw new EntityNotFoundException("No BusinessUnitKeyResultHistory with this id exists");
     }
-
-    // region Forbidden Methods
-
-    /**
-     * Historization is handled using DB-triggers, so Posting BusinessUnitKeyResultHistories is not allowed.
-     * This method has only been added for documentation purposes.
-     */
-    @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public void addNew() {
-    }
-
-    /**
-     * History should not be updated.
-     * This method has only been added for documentation purposes.
-     */
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public void update() {
-    }
-
-    /**
-     * History should not be deleted, delete history by deleting the BusinessUnitKeyResult.
-     * This method has only been added for documentation purposes.
-     */
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public void delete() {
-    }
-
-    // endregion
 }

@@ -17,20 +17,24 @@ public class BusinessUnitObjective {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "business_unit_id")
     private BusinessUnit businessUnit;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "company_key_result_ref")
     private CompanyKeyResult companyKeyResult;
 
     private OffsetDateTime startDate = OffsetDateTime.now();
     private OffsetDateTime endDate = OffsetDateTime.now();
 
-    /*@OneToMany(targetEntity = BusinessUnitKeyResult.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_key_result_ref")*/
-    @OneToMany(targetEntity = BusinessUnitKeyResult.class, mappedBy = "businessUnitObjective", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(
+            targetEntity = BusinessUnitKeyResult.class,
+            mappedBy = "businessUnitObjective",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+    )
     private Set<BusinessUnitKeyResult> businessUnitKeyResults = new HashSet<>();
 
     public BusinessUnitObjective() {

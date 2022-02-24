@@ -1,9 +1,9 @@
 package de.thbingen.epro.model.assembler;
 
+import de.thbingen.epro.controller.BusinessUnitController;
+import de.thbingen.epro.controller.BusinessUnitKeyResultController;
+import de.thbingen.epro.controller.BusinessUnitObjectiveController;
 import de.thbingen.epro.controller.CompanyKeyResultController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitController;
-import de.thbingen.epro.controller.businessunitkeyresult.BusinessUnitKeyResultController;
-import de.thbingen.epro.controller.businessunitobjective.BusinessUnitObjectiveController;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;

@@ -49,11 +49,13 @@ public class OkrUserService {
     }
 
     public OkrUserDto insertOkrUser(OkrUserDto okrUserDto) {
-        return updateOkrUser(null, okrUserDto);
+        OkrUser okrUser = okrUserMapper.dtoToOkrUser(okrUserDto);
+        return assembler.toModel(okrUserRepository.save(okrUser));
     }
 
     public OkrUserDto updateOkrUser(Long id, OkrUserDto okrUserDto) {
-        OkrUser okrUser = okrUserMapper.dtoToOkrUser(okrUserDto);
+        OkrUser okrUser = okrUserRepository.getById(id);
+        okrUserMapper.updateOkrUserFromDto(okrUserDto, okrUser);
         return assembler.toModel(okrUserRepository.save(okrUser));
     }
 

@@ -2,11 +2,7 @@ package de.thbingen.epro.model.mapper;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
-import java.util.Set;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface BusinessUnitKeyResultMapper {
@@ -14,6 +10,8 @@ public interface BusinessUnitKeyResultMapper {
     @Named("WithObjective")
     BusinessUnitKeyResultDto businessUnitKeyResultToDto(BusinessUnitKeyResult businessUnitKeyResult);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "businessUnitObjective", ignore = true)
     @Mapping(target = "companyKeyResult", ignore = true)
     @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     @Mapping(target = "name", source = "businessUnitKeyResultDto.name")
@@ -22,7 +20,11 @@ public interface BusinessUnitKeyResultMapper {
     @Mapping(target = "achievement", source = "businessUnitKeyResultDto.achievement")
     BusinessUnitKeyResult dtoToBusinessUnitKeyResult(BusinessUnitKeyResultDto businessUnitKeyResultDto);
 
-
-    Set<BusinessUnitKeyResultDto> businessUnitKeyResultSetToDto(Set<BusinessUnitKeyResult> businessUnitKeyResultSet);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "companyKeyResult", ignore = true)
+    @Mapping(target = "businessUnitObjective", ignore = true)
+    @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateBusinessUnitKeyResultFromDto(BusinessUnitKeyResultDto businessUnitKeyResultDto, @MappingTarget BusinessUnitKeyResult businessUnitKeyResult);
 
 }

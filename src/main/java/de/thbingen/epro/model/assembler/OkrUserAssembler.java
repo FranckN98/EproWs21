@@ -1,8 +1,8 @@
 package de.thbingen.epro.model.assembler;
 
+import de.thbingen.epro.controller.BusinessUnitController;
 import de.thbingen.epro.controller.OkrUserController;
 import de.thbingen.epro.controller.RoleController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitController;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.OkrUserMapper;

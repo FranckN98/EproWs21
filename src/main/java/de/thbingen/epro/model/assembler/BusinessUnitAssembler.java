@@ -1,8 +1,6 @@
 package de.thbingen.epro.model.assembler;
 
-import de.thbingen.epro.controller.businessunit.BusinessUnitController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitObjectiveByBusinessUnitController;
-import de.thbingen.epro.controller.businessunit.BusinessUnitOkrUserController;
+import de.thbingen.epro.controller.BusinessUnitController;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
@@ -26,11 +24,11 @@ public class BusinessUnitAssembler implements RepresentationModelAssembler<Busin
         BusinessUnitDto businessUnitDto = businessUnitMapper.businessUnitToDto(entity)
                 .add(linkTo(methodOn(BusinessUnitController.class).findById(entity.getId())).withSelfRel());
         if (entity.getBusinessUnitObjectives() != null && !entity.getBusinessUnitObjectives().isEmpty()) {
-            businessUnitDto.add(linkTo(methodOn(BusinessUnitObjectiveByBusinessUnitController.class)
+            businessUnitDto.add(linkTo(methodOn(BusinessUnitController.class)
                     .getAllBusinessUnitObjectives(null, entity.getId())).withRel("businessUnitObjectives"));
         }
         if (entity.getOkrUsers() != null && !entity.getOkrUsers().isEmpty()) {
-            businessUnitDto.add(linkTo(methodOn(BusinessUnitOkrUserController.class)
+            businessUnitDto.add(linkTo(methodOn(BusinessUnitController.class)
                     .getAllOkrUsers(null, entity.getId())).withRel("users"));
         }
         return businessUnitDto;

@@ -57,8 +57,8 @@ public class BusinessUnitObjectiveService {
     }
 
     public BusinessUnitObjectiveDto updateBusinessUnitObjective(Long id, BusinessUnitObjectiveDto businessUnitObjectiveDto) {
-        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveMapper.dtoToBusinessUnitObjective(businessUnitObjectiveDto);
-        businessUnitObjective.setId(id);
+        BusinessUnitObjective businessUnitObjective = businessUnitObjectiveRepository.getById(id);
+        businessUnitObjectiveMapper.updateBusinessUnitObjectiveFromDto(businessUnitObjectiveDto, businessUnitObjective);
         return assembler.toModel(businessUnitObjectiveRepository.save(businessUnitObjective));
     }
 

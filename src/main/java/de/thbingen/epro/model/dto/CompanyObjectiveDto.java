@@ -13,7 +13,7 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
 
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
-    private Integer achievement;
+    private Float achievement = 0f;
     @NotBlank
     private String name;
     private LocalDate startDate;
@@ -22,18 +22,18 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     public CompanyObjectiveDto() {
     }
 
-    public CompanyObjectiveDto(Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
+    public CompanyObjectiveDto(Float achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.achievement = achievement;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

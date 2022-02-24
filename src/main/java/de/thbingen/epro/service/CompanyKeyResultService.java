@@ -40,8 +40,8 @@ public class CompanyKeyResultService {
     }
 
     public CompanyKeyResultDto updateCompanyKeyResult(Long id, CompanyKeyResultDto companyKeyResultDto) {
-        CompanyKeyResult companyKeyResult = companyKeyResultMapper.dtoToCompanyKeyResult(companyKeyResultDto);
-        companyKeyResult.setId(id);
+        CompanyKeyResult companyKeyResult = companyKeyResultRepository.getById(id);
+        companyKeyResultMapper.updateCompanyKeyResultFromDto(companyKeyResultDto, companyKeyResult);
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
     }
 

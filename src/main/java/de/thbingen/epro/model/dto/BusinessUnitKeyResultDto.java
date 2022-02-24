@@ -11,17 +11,16 @@ import java.time.OffsetDateTime;
 @Relation(collectionRelation = "businessUnitKeyResults", itemRelation = "businessUnitKeyResult")
 public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKeyResultDto> {
 
-    @NotBlank
     private String name;
-    private float currentValue;
+    private Float currentValue;
     @Min(value = 0, message = "Goal Value can't be negative")
-    private float goalValue;
+    private Float goalValue;
     @Min(value = 0, message = "You shouldn't be negatively confident")
     @Max(value = 100, message = "Don't be too overconfident")
-    private float confidenceLevel;
+    private Float confidenceLevel;
     @Min(value = 0, message = "Achievement must be 0 when creating a new Bussines Unit KeyResult")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Bussines Unit KeyResult")
-    private float achievement;
+    private Float achievement = 0f;
     @NotBlank
     private String comment;
     private OffsetDateTime timestamp = OffsetDateTime.now();
@@ -48,35 +47,35 @@ public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKe
         this.name = name;
     }
 
-    public float getCurrentValue() {
+    public Float getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(float currentValue) {
+    public void setCurrentValue(Float currentValue) {
         this.currentValue = currentValue;
     }
 
-    public float getGoalValue() {
+    public Float getGoalValue() {
         return goalValue;
     }
 
-    public void setGoalValue(float goalValue) {
+    public void setGoalValue(Float goalValue) {
         this.goalValue = goalValue;
     }
 
-    public float getConfidenceLevel() {
+    public Float getConfidenceLevel() {
         return confidenceLevel;
     }
 
-    public void setConfidenceLevel(float confidenceLevel) {
+    public void setConfidenceLevel(Float confidenceLevel) {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public float getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(float achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

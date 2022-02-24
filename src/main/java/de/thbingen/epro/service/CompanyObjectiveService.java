@@ -40,8 +40,8 @@ public class CompanyObjectiveService {
     }
 
     public CompanyObjectiveDto updateCompanyObjective(Long id, CompanyObjectiveDto companyObjectiveDto) {
-        CompanyObjective companyObjective = companyObjectiveMapper.dtoToCompanyObjective(companyObjectiveDto);
-        companyObjective.setId(id);
+        CompanyObjective companyObjective = companyObjectiveRepository.getById(id);
+        companyObjectiveMapper.updateCompanyObjectiveFromDto(companyObjectiveDto, companyObjective);
         return companyObjectiveAssembler.toModel(companyObjectiveRepository.save(companyObjective));
     }
 

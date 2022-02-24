@@ -2,20 +2,22 @@ package de.thbingen.epro.model.mapper;
 
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.entity.OkrUser;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-import java.util.List;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface OkrUserMapper {
 
     OkrUserDto okrUserToDto(OkrUser OkrUser);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)
     OkrUser dtoToOkrUser(OkrUserDto OkrUserDto);
 
-    List<OkrUserDto> okrUserListToOkrUserDtoList(List<OkrUser> OkrUserList);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "businessUnit", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateOkrUserFromDto(OkrUserDto okrUserDto, @MappingTarget OkrUser okrUser);
 
 }

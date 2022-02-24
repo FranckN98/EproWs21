@@ -13,7 +13,7 @@ import java.util.Optional;
 
 /**
  * This Service represents the interface between presentation logic and the data layer for everything related to
- * {@link de.thbingen.epro.model.entity.Role}
+ * {@link Role} and {@link RoleDto}.
  */
 @Service
 public class RoleService {
@@ -36,10 +36,10 @@ public class RoleService {
     }
 
     /**
-     * Returns all Roles present in the DB in the form of RoleDtos
+     * Returns all {@link Role}s present in the DB in the form of {@link RoleDto}s
      *
      * @param pageable Pagination information, may be null
-     * @return a Page of RoleDtos
+     * @return a Page of {@link RoleDto}s
      */
     public Page<RoleDto> findAll(Pageable pageable) {
         Page<Role> pagedResult = roleRepository.findAll(pageable);
@@ -51,11 +51,11 @@ public class RoleService {
     }
 
     /**
-     * Returns the Role with the corresponding {@code id}.
-     * If there is no Role with the given id, an empty {@code Optional} will be returned
+     * Returns the {@link Role} with the corresponding {@code id}.
+     * If there is no {@link Role} with the given {@code id}, an empty {@link Optional} will be returned
      *
-     * @param id the requested id
-     * @return the role with the given id
+     * @param id the requested {@code id}
+     * @return the {@link Role} with the given {@code id}
      */
     public Optional<RoleDto> findById(Long id) {
         Optional<Role> role = roleRepository.findById(id);
@@ -63,12 +63,12 @@ public class RoleService {
     }
 
     /**
-     * Updates the role in the database with the given {@code id}, using the values from the {@code roleDto}
-     * If the {@code id} is null a new Role is inserted using the values from the {@code roleDto}
+     * Updates the {@link Role} in the database with the given {@code id}, using the values from the given {@link RoleDto}
+     * If the {@code id} is null a new {@link Role} is inserted using the values from the {@link RoleDto}
      *
-     * @param id      The id of the role, which is to be updated. If null, a new role is inserted
-     * @param roleDto The new data, with which a role is to be updated or inserted
-     * @return A RoleDto of the new Role
+     * @param id      The {@code id} of the role, which is to be updated. If null, a new {@link Role} is inserted
+     * @param roleDto The new data, with which a {@link Role} is to be updated or inserted
+     * @return A {@link RoleDto} of the new {@link Role}
      */
     public RoleDto updateRole(Long id, RoleDto roleDto) {
         Role role = roleMapper.dtoToRole(roleDto);
@@ -77,29 +77,29 @@ public class RoleService {
     }
 
     /**
-     * Creates a new Role in the DB using the data from the {@code RoleDto}
+     * Creates a new {@link Role} in the DB using the data from the {@link RoleDto}
      *
-     * @param roleDto The new data, with which a role is to be inserted
-     * @return A RoleDto of the new Role
+     * @param roleDto The new data, with which a {@link Role} is to be inserted
+     * @return A {@link RoleDto} of the new {@link Role}
      */
     public RoleDto insertRole(RoleDto roleDto) {
         return updateRole(null, roleDto);
     }
 
     /**
-     * Checks whether a role with the given {@code id} exists in the DB
+     * Checks whether a {@link Role} with the given {@code id} exists in the DB
      *
-     * @param id The id for which the existence check in the DB will be executed
-     * @return true if a role for the given {@code id} exists, false if there is no Role for the given {@code id}
+     * @param id The {@code id} for which the existence check in the DB will be executed
+     * @return true if a {@link Role} for the given {@code id} exists, false if there is no {@link Role} for the given {@code id}
      */
     public boolean existsById(Long id) {
         return roleRepository.existsById(id);
     }
 
     /**
-     * Delete the Role with the given id from the DB
+     * Delete the {@link Role} with the given {@code id} from the DB
      *
-     * @param id the id for which a role shall be deleted
+     * @param id the {@code id} for which a role shall be deleted
      */
     public void deleteById(Long id) {
         roleRepository.deleteById(id);

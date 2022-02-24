@@ -49,7 +49,7 @@ public class OkrUserController {
     @PutMapping("/{id}")
     public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserDto okrUserDto) {
         if (!okrUserService.existsById(id))
-            return this.addNew(okrUserDto);
+            throw new EntityNotFoundException("No OkrUser with this id exists");
 
         return ResponseEntity.ok(okrUserService.updateOkrUser(id, okrUserDto));
     }

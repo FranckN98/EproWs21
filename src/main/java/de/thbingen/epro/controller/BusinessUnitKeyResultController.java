@@ -1,4 +1,4 @@
-package de.thbingen.epro.controller.businessunitkeyresult;
+package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
@@ -42,14 +42,6 @@ public class BusinessUnitKeyResultController {
         return pagedResourcesAssembler.toModel(businessUnitKeyResultService.getAllBusinessUnitKeyResults(pageable));
     }
 
-    @PostMapping
-    public ResponseEntity<BusinessUnitKeyResultDto> addNew(@RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto) {
-        BusinessUnitKeyResultDto businessUnitKeyResultDto = businessUnitKeyResultService.saveBusinessUnitKeyResult(newBusinessUnitKeyResultDto);
-        return ResponseEntity
-                .created(businessUnitKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(businessUnitKeyResultDto);
-    }
-
     @GetMapping("/{id}")
     public BusinessUnitKeyResultDto findById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultDto> result = businessUnitKeyResultService.findById(id);
@@ -59,14 +51,22 @@ public class BusinessUnitKeyResultController {
         throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
     }
 
+    // TODO: I should be removed as there is no way i can work in integration
+    @PostMapping
+    public ResponseEntity<BusinessUnitKeyResultDto> addNew(@RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto) {
+        BusinessUnitKeyResultDto businessUnitKeyResultDto = businessUnitKeyResultService.saveBusinessUnitKeyResult(newBusinessUnitKeyResultDto);
+        return ResponseEntity
+                .created(businessUnitKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(businessUnitKeyResultDto);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitKeyResultDto businessUnitKeyResultDto
     ) {
         if (!businessUnitKeyResultService.existsById(id)) {
-            return this.addNew(businessUnitKeyResultDto);
-
+            throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
         }
         return ResponseEntity.ok(businessUnitKeyResultService.updateBusinessUnitKeyResult(id, businessUnitKeyResultDto));
     }
@@ -85,6 +85,9 @@ public class BusinessUnitKeyResultController {
             @PageableDefault Pageable pageable,
             @PathVariable Long id
     ) {
+        if (!businessUnitKeyResultService.existsById(id)) {
+            throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
+        }
         return businessUnitKeyResultHistoryDtoPagedResourcesAssembler.toModel(
                 businessUnitKeyResultHistoryService.getAllByBusinessUnitKeyResultId(id, pageable)
         );

@@ -1,5 +1,8 @@
 package de.thbingen.epro.model.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -34,16 +37,16 @@ public class BusinessUnitKeyResult {
     @Column
     private OffsetDateTime timestamp;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "business_unit_objective_id")
     private BusinessUnitObjective businessUnitObjective;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "company_key_result_ref")
     private CompanyKeyResult companyKeyResult;
 
-    @OneToMany(targetEntity = BusinessUnitKeyResultHistory.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "ref_id")
+    @OneToMany(mappedBy = "currentBusinessUnitKeyResult", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<BusinessUnitKeyResultHistory> businessUnitKeyResultHistories = new HashSet<>();
 
     public BusinessUnitKeyResult() {

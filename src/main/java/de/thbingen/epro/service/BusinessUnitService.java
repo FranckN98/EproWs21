@@ -47,13 +47,14 @@ public class BusinessUnitService {
     }
 
     public BusinessUnitDto updateBusinessUnit(Long id, BusinessUnitDto businessUnitDto) {
-        BusinessUnit businessUnit = businessUnitMapper.dtoToBusinessUnit(businessUnitDto);
-        businessUnit.setId(id);
+        BusinessUnit businessUnit = businessUnitRepository.getById(id);
+        businessUnitMapper.updateBusinessUnitFromDto(businessUnitDto, businessUnit);
         return businessUnitAssembler.toModel(businessUnitRepository.save(businessUnit));
     }
 
     public BusinessUnitDto insertBusinessUnit(BusinessUnitDto businessUnitDto) {
-        return updateBusinessUnit(null, businessUnitDto);
+        BusinessUnit businessUnit = businessUnitMapper.dtoToBusinessUnit(businessUnitDto);
+        return businessUnitAssembler.toModel(businessUnitRepository.save(businessUnit));
     }
 
     public boolean existsById(Long id) {
@@ -65,6 +66,6 @@ public class BusinessUnitService {
     }
 
     public BusinessUnitObjectiveDto insertBusinessUnitObjective(BusinessUnitObjectiveDto newBusinessUnitObj, BusinessUnitDto businessUnit) {
-        return businessUnitObjectiveMapper.businessUnitObjectiveToDto(businessUnitObjectiveRepository.save(businessUnitObjectiveMapper.dtoToBusinessUnitObjective(newBusinessUnitObj, businessUnit)));
+        return businessUnitObjectiveMapper.businessUnitObjectiveToDto(businessUnitObjectiveRepository.save(businessUnitObjectiveMapper.dtoToBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObj, businessUnit)));
     }
 }

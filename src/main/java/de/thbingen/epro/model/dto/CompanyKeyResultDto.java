@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 @Relation(collectionRelation = "companyKeyResults", itemRelation = "companyKeyResult")
 public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto> {
 
-    @NotBlank
     private String name;
     private Integer currentValue;
     @Min(value = 0, message = "Negative goal Values are not allowed")

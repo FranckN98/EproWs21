@@ -60,7 +60,7 @@ public class CompanyObjectiveController {
             @RequestBody @Valid CompanyObjectiveDto companyObjectiveDto
     ) {
         if (!companyObjectiveService.existsById(id)) {
-            return this.addNew(companyObjectiveDto);
+            throw new EntityNotFoundException("No CompanyObjective with this id exists");
         }
 
         return ResponseEntity.ok(companyObjectiveService.updateCompanyObjective(id, companyObjectiveDto));

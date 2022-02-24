@@ -5,7 +5,6 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
 
 @Relation(collectionRelation = "businessUnitObjectives", itemRelation = "businessUnitObjective")
@@ -13,8 +12,7 @@ public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitOb
 
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
-    private Integer achievement;
-    @NotBlank
+    private Integer achievement = 0;
     private String name;
 
     private OffsetDateTime startDate = OffsetDateTime.now();
