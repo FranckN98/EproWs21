@@ -51,15 +51,6 @@ public class BusinessUnitKeyResultController {
         throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
     }
 
-    // TODO: I should be removed as there is no way i can work in integration
-    @PostMapping
-    public ResponseEntity<BusinessUnitKeyResultDto> addNew(@RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto) {
-        BusinessUnitKeyResultDto businessUnitKeyResultDto = businessUnitKeyResultService.saveBusinessUnitKeyResult(newBusinessUnitKeyResultDto);
-        return ResponseEntity
-                .created(businessUnitKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(businessUnitKeyResultDto);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,

@@ -58,10 +58,6 @@ public class BusinessUnitKeyResultService {
         return businessUnitKeyResultAssembler.toModel(businessUnitKeyResultRepository.save(businessUnitKeyResult));
     }
 
-    public BusinessUnitKeyResultDto saveBusinessUnitKeyResult(BusinessUnitKeyResultDto businessUnitKeyResultDto) {
-        return updateBusinessUnitKeyResult(null, businessUnitKeyResultDto);
-    }
-
     public BusinessUnitKeyResultDto updateBusinessUnitKeyResult(Long id, BusinessUnitKeyResultDto businessUnitKeyResultDto) {
         BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultRepository.getById(id);
         businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromDto(businessUnitKeyResultDto, businessUnitKeyResult);

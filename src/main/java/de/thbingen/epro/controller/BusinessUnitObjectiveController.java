@@ -52,14 +52,6 @@ public class BusinessUnitObjectiveController {
         throw new EntityNotFoundException("No BusinessUnitObjective with this businessUnitObjectiveId exists");
     }
 
-    // TODO: I should be deleted as I cant possibly work anymore
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<BusinessUnitObjectiveDto> addNew(@RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
-        BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.insertBusinessUnitObjective(newBusinessUnitObjectiveDto);
-        return ResponseEntity.created(businessUnitObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(businessUnitObjectiveDto);
-    }
-
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<BusinessUnitObjectiveDto> updateById(
             @PathVariable Long id,

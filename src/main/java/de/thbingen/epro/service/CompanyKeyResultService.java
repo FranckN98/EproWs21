@@ -45,10 +45,6 @@ public class CompanyKeyResultService {
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
     }
 
-    public CompanyKeyResultDto insertCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto) {
-        return updateCompanyKeyResult(null, companyKeyResultDto);
-    }
-
     public void deleteById(Long id) {
         companyKeyResultRepository.deleteById(id);
     }

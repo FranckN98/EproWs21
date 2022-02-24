@@ -52,10 +52,6 @@ public class BusinessUnitObjectiveService {
         }
     }
 
-    public BusinessUnitObjectiveDto insertBusinessUnitObjective(BusinessUnitObjectiveDto businessUnitObjectiveDto) {
-        return updateBusinessUnitObjective(null, businessUnitObjectiveDto);
-    }
-
     public BusinessUnitObjectiveDto updateBusinessUnitObjective(Long id, BusinessUnitObjectiveDto businessUnitObjectiveDto) {
         BusinessUnitObjective businessUnitObjective = businessUnitObjectiveRepository.getById(id);
         businessUnitObjectiveMapper.updateBusinessUnitObjectiveFromDto(businessUnitObjectiveDto, businessUnitObjective);

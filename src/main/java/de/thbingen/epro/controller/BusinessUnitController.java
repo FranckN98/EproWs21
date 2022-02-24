@@ -67,7 +67,7 @@ public class BusinessUnitController {
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (!businessUnitService.existsById(id)) {
-            return this.addNew(businessUnitDto);
+            throw new EntityNotFoundException("No BusinessUnit with this id exists");
         }
 
         return ResponseEntity.ok(businessUnitService.updateBusinessUnit(id, businessUnitDto));

@@ -43,13 +43,6 @@ public class CompanyKeyResultController {
         return pagedResourcesAssembler.toModel(allCompanyKeyResults);
     }
 
-    @PostMapping
-    // TODO: I should be removed
-    public ResponseEntity<CompanyKeyResultDto> addNew(@RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
-        CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResult(newCompanyKeyResultDto);
-        return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
-    }
-
     @GetMapping("/{id}")
     public CompanyKeyResultDto findById(@PathVariable Long id) {
         Optional<CompanyKeyResultDto> result = companyKeyResultService.findById(id);
