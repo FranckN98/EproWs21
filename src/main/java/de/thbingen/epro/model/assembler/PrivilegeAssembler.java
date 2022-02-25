@@ -3,9 +3,11 @@ package de.thbingen.epro.model.assembler;
 import de.thbingen.epro.controller.PrivilegeController;
 import de.thbingen.epro.controller.RoleController;
 import de.thbingen.epro.model.dto.PrivilegeDto;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.mapper.PrivilegeMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -24,9 +26,12 @@ public class PrivilegeAssembler implements RepresentationModelAssembler<Privileg
 
     @Override
     public PrivilegeDto toModel(Privilege entity) {
+        OkrUser okrUser = (OkrUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         PrivilegeDto privilegeDto = privilegeMapper.privilegeToDto(entity)
                 .add(linkTo(methodOn(PrivilegeController.class).findById(entity.getId())).withSelfRel());
-        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
+
+        if (okrUser.hasPrivilege("access_roles") && entity.getRoles() != null && !entity.getRoles().isEmpty()) {
             privilegeDto.add(
                     entity.getRoles().stream().map(role -> linkTo(methodOn(RoleController.class).findById(role.getId())).withRel("roles")).collect(Collectors.toList())
             );

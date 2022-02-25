@@ -36,9 +36,9 @@ public class RoleService {
     }
 
     /**
-     * Returns all {@link Role}s present in the DB in the form of {@link RoleDto}s
+     * Returns all {@link Role}s present in the DB as a Page of {@link RoleDto}s
      *
-     * @param pageable Pagination information, may be null
+     * @param pageable Pagination information to request a specific {@link Page}
      * @return a Page of {@link RoleDto}s
      */
     public Page<RoleDto> findAll(Pageable pageable) {
@@ -55,7 +55,7 @@ public class RoleService {
      * If there is no {@link Role} with the given {@code id}, an empty {@link Optional} will be returned
      *
      * @param id the requested {@code id}
-     * @return the {@link Role} with the given {@code id}
+     * @return an {@link Optional} of the {@link RoleDto}, which corresponds to the {@link Role} with the given {@code id}
      */
     public Optional<RoleDto> findById(Long id) {
         Optional<Role> role = roleRepository.findById(id);
@@ -64,15 +64,14 @@ public class RoleService {
 
     /**
      * Updates the {@link Role} in the database with the given {@code id}, using the values from the given {@link RoleDto}
-     * If the {@code id} is null a new {@link Role} is inserted using the values from the {@link RoleDto}
      *
-     * @param id      The {@code id} of the role, which is to be updated. If null, a new {@link Role} is inserted
-     * @param roleDto The new data, with which a {@link Role} is to be updated or inserted
+     * @param id      The {@code id} of the {@link Role}, which is to be updated
+     * @param roleDto The new data, with which a {@link Role} is to be updated
      * @return A {@link RoleDto} of the new {@link Role}
      */
     public RoleDto updateRole(Long id, RoleDto roleDto) {
-        Role role = roleMapper.dtoToRole(roleDto);
-        role.setId(id);
+        Role role = roleRepository.getById(id);
+        roleMapper.updateRoleFromDto(roleDto, role);
         return assembler.toModel(roleRepository.save(role));
     }
 
@@ -83,7 +82,7 @@ public class RoleService {
      * @return A {@link RoleDto} of the new {@link Role}
      */
     public RoleDto insertRole(RoleDto roleDto) {
-        return updateRole(null, roleDto);
+        return assembler.toModel(roleRepository.save(roleMapper.dtoToRole(roleDto)));
     }
 
     /**

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class BusinessUnitKeyResultController {
 
     @GetMapping
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(@PageableDefault Pageable pageable) {
-        return pagedResourcesAssembler.toModel(businessUnitKeyResultService.getAllBusinessUnitKeyResults(pageable));
+        return pagedResourcesAssembler.toModel(businessUnitKeyResultService.findAllBusinessUnitKeyResults(pageable));
     }
 
     @GetMapping("/{id}")

@@ -6,8 +6,10 @@ import de.thbingen.epro.controller.BusinessUnitObjectiveController;
 import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -26,6 +28,8 @@ public class BusinessUnitKeyResultAssembler implements RepresentationModelAssemb
     public BusinessUnitKeyResultDto toModel(BusinessUnitKeyResult entity) {
         BusinessUnitKeyResultDto businessUnitKeyResultDto = mapper.businessUnitKeyResultToDto(entity)
                 .add(linkTo(methodOn(BusinessUnitKeyResultController.class).findById(entity.getId())).withSelfRel());
+
+
         if (entity.getBusinessUnitObjective() != null) {
             businessUnitKeyResultDto.add(
                     linkTo(

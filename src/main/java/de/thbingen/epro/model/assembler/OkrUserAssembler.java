@@ -7,6 +7,7 @@ import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.OkrUserMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -24,9 +25,12 @@ public class OkrUserAssembler implements RepresentationModelAssembler<OkrUser, O
 
     @Override
     public OkrUserDto toModel(OkrUser entity) {
+        OkrUser okrUser = (OkrUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         OkrUserDto okrUserDto = okrUserMapper.okrUserToDto(entity)
                 .add(linkTo(methodOn(OkrUserController.class).findById(entity.getId())).withSelfRel());
-        if (entity.getRole() != null) {
+
+        if (okrUser.hasPrivilege("access_roles") && entity.getRole() != null) {
             okrUserDto.add(linkTo(methodOn(RoleController.class).findById(entity.getRole().getId())).withRel("role"));
         }
         if (entity.getBusinessUnit() != null) {

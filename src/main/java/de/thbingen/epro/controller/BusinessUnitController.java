@@ -17,6 +17,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -54,11 +55,13 @@ public class BusinessUnitController {
      * @return The requested Page of Business Units
      */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitService.findAll(pageable));
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitDto findById(@PathVariable Long id) {
         Optional<BusinessUnitDto> result = businessUnitService.findById(id);
         if (result.isPresent()) {
@@ -68,6 +71,7 @@ public class BusinessUnitController {
     }
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
         BusinessUnitDto businessUnitDto = businessUnitService.insertBusinessUnit(newBusinessUnit);
         return ResponseEntity
@@ -76,6 +80,7 @@ public class BusinessUnitController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
@@ -85,6 +90,7 @@ public class BusinessUnitController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
@@ -99,6 +105,7 @@ public class BusinessUnitController {
             value = "/{id}/objectives",
             produces = MediaTypes.HAL_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitObjectiveDto>> getAllBusinessUnitObjectives(
             @PageableDefault Pageable pageable,
             @PathVariable Long id,
@@ -111,7 +118,7 @@ public class BusinessUnitController {
             throw new InvalidDateRangeError();
         }
         return pagedResourcesAssemblerObjective.toModel(
-                businessUnitObjectiveService.getAllByBusinessUnitId(
+                businessUnitObjectiveService.findAllByBusinessUnitId(
                         id,
                         pageable,
                         startDate,
@@ -125,6 +132,7 @@ public class BusinessUnitController {
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitObjectiveDto> addNewBusinessUnitObjective(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto

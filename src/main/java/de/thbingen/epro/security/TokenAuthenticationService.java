@@ -1,7 +1,7 @@
 package de.thbingen.epro.security;
 
 import com.google.common.collect.ImmutableMap;
-import de.thbingen.epro.model.business.OkrUser;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.repository.OkrUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

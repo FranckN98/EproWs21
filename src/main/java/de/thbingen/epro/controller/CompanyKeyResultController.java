@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class CompanyKeyResultController {
     public PagedModel<EntityModel<CompanyKeyResultDto>> findAll(
             @PageableDefault Pageable pageable
     ) {
-        Page<CompanyKeyResultDto> allCompanyKeyResults = companyKeyResultService.getAllCompanyKeyResults(pageable);
+        Page<CompanyKeyResultDto> allCompanyKeyResults = companyKeyResultService.findAllCompanyKeyResults(pageable);
         return pagedResourcesAssembler.toModel(allCompanyKeyResults);
     }
 
@@ -81,7 +80,7 @@ public class CompanyKeyResultController {
             throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
         }
         return companyKeyResultHistoryDtoPagedResourcesAssembler.toModel(
-                companyKeyResultHistoryService.getAllByCompanyKeyResultId(id, pageable)
+                companyKeyResultHistoryService.findAllByCompanyKeyResultId(id, pageable)
         );
     }
 }

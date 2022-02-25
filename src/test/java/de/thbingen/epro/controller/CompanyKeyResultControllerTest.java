@@ -7,7 +7,6 @@ import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -59,11 +58,11 @@ public class CompanyKeyResultControllerTest {
                 new CompanyKeyResult(2L, "CK2", 30, 150, 0, 30, "no comment", OffsetDateTime.now())
         ).map(companyKeyResultAssembler::toModel).collect(Collectors.toList());
 
-        when(companyKeyResultService.getAllCompanyKeyResults(ArgumentMatchers.any(Pageable.class)))
+        when(companyKeyResultService.findAllCompanyKeyResults(ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(companyKeyResultDtos));
 
 
-        when(companyKeyResultService.getAllCompanyKeyResults(Pageable.ofSize(10)))
+        when(companyKeyResultService.findAllCompanyKeyResults(Pageable.ofSize(10)))
                 .thenReturn(new PageImpl<>(companyKeyResultDtos));
 
         mockMvc.perform(get("/companyKeyResults"))

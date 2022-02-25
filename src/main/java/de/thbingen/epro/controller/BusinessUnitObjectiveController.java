@@ -143,7 +143,7 @@ public class BusinessUnitObjectiveController {
             @PathVariable Long businessUnitObjectiveId,
             @PageableDefault Pageable pageable
     ) {
-        return pagedResourcesAssemblerKeyResult.toModel(businessUnitKeyResultService.getAllByBusinessUnitObjectiveId(businessUnitObjectiveId, pageable));
+        return pagedResourcesAssemblerKeyResult.toModel(businessUnitKeyResultService.findAllByBusinessUnitObjectiveId(businessUnitObjectiveId, pageable));
     }
 
     @PostMapping(

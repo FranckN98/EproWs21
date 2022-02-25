@@ -101,7 +101,7 @@ public class CompanyObjectiveController {
             @PageableDefault Pageable pageable,
             @PathVariable Long id
     ) {
-        return companyKeyResultDtoPagedResourcesAssembler.toModel(companyKeyResultService.getAllByCompanyObjectiveId(id, pageable));
+        return companyKeyResultDtoPagedResourcesAssembler.toModel(companyKeyResultService.findAllByCompanyObjectiveId(id, pageable));
     }
 
     @PostMapping("/{id}/keyresults")
@@ -109,9 +109,8 @@ public class CompanyObjectiveController {
             @PathVariable Long id,
             @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto
     ) {
-        Optional<CompanyObjectiveDto> companyObjectiveDto = companyObjectiveService.findById(id);
-        if (companyObjectiveDto.isPresent()) {
-            CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResultWithObjective(newCompanyKeyResultDto, companyObjectiveDto.get());
+        if (companyObjectiveService.existsById(id)) {
+            CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResultWithObjective(newCompanyKeyResultDto, id);
             return ResponseEntity.created(companyKeyResultDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyKeyResultDto);
         }
         throw new EntityNotFoundException("No CompanyObjective with this id exists");

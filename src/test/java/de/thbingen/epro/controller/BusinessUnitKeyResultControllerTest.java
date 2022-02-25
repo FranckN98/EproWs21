@@ -8,11 +8,9 @@ import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.CompanyKeyResultService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -65,7 +63,7 @@ public class BusinessUnitKeyResultControllerTest {
         ).map(businessUnitKeyResultAssembler::toModel).collect(Collectors.toSet());
 
 
-        when(businessUnitKeyResultService.getAllBusinessUnitKeyResults(Pageable.ofSize(10))).thenReturn(new PageImpl<>(new ArrayList<>(businessUnitObjectiveDtos)));
+        when(businessUnitKeyResultService.findAllBusinessUnitKeyResults(Pageable.ofSize(10))).thenReturn(new PageImpl<>(new ArrayList<>(businessUnitObjectiveDtos)));
 
         mockMvc.perform(get("/businessUnitKeyResults").accept(MediaTypes.HAL_JSON))
                 .andDo(print())

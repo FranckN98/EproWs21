@@ -9,6 +9,7 @@ import de.thbingen.epro.model.dto.dashboard.BusinessUnitDashboardItem;
 import de.thbingen.epro.model.dto.dashboard.CompanyDashboardItem;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.entity.BusinessUnitObjective;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.entity.CompanyObjective;
 import de.thbingen.epro.repository.BusinessUnitKeyResultRepository;
 import de.thbingen.epro.repository.BusinessUnitObjectiveRepository;
@@ -20,6 +21,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This Service is for creating a List of Dashboard Items which show the User a collection of the current BUKRs and CKRs
+ */
 @Service
 public class DashboardService {
 
@@ -33,7 +37,9 @@ public class DashboardService {
     private final BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler;
     private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler;
 
-
+    /**
+     * Default constructor to be used for Constructor Injection
+     */
     public DashboardService(CompanyObjectiveRepository companyObjectiveRepository, CompanyKeyResultRepository companyKeyResultRepository, BusinessUnitObjectiveRepository businessUnitObjectiveRepository, BusinessUnitKeyResultRepository businessUnitKeyResultRepository, CompanyObjectiveAssembler companyObjectiveAssembler, CompanyKeyResultAssembler companyKeyResultAssembler, BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler, BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler) {
         this.companyObjectiveRepository = companyObjectiveRepository;
         this.companyKeyResultRepository = companyKeyResultRepository;
@@ -45,6 +51,14 @@ public class DashboardService {
         this.businessUnitKeyResultAssembler = businessUnitKeyResultAssembler;
     }
 
+    /**
+     * Returns all {@link CompanyObjective}s with the corresponding {@link CompanyKeyResult}s and all {@link BusinessUnitObjective}s
+     * with the corresponding {@link BusinessUnitKeyResult}s which are active on the current Date.
+     * Those Objects are wrapped in {@link CompanyDashboardItem}s and {@link BusinessUnitDashboardItem}s, which
+     * are then wrapped in a {@link DashboardItem}.
+     *
+     * @return a List of {@link DashboardItem}s
+     */
     public List<DashboardItem> getDashboardItems() {
         LocalDate currentDate = LocalDate.now();
 

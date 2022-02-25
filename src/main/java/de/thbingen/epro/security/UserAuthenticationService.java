@@ -1,6 +1,6 @@
 package de.thbingen.epro.security;
 
-import de.thbingen.epro.model.business.OkrUser;
+import de.thbingen.epro.model.entity.OkrUser;
 
 import java.util.Optional;
 

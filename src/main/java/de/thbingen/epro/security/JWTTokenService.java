@@ -30,7 +30,9 @@ public class JWTTokenService implements Clock, TokenService {
     @Override
     public String newToken(final Map<String, String> attributes) {
         final DateTime now = DateTime.now();
-        final Claims claims = Jwts.claims().setIssuer(issuer).setIssuedAt(now.toDate());
+        final Claims claims = Jwts.claims()
+                .setIssuer(issuer)
+                .setIssuedAt(now.toDate());
         claims.putAll(attributes);
 
         return Jwts.builder().setClaims(claims).signWith(HS256, secretKey).compressWith(COMPRESSION_CODEC)

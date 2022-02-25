@@ -118,4 +118,7 @@ public class OkrUser implements UserDetails {
         return true;
     }
 
+    public boolean hasPrivilege(String privilegeName) {
+        return role.getPrivileges().stream().anyMatch(privilege -> privilege.getName().equals(privilegeName));
+    }
 }
