@@ -1,5 +1,6 @@
 package de.thbingen.epro.model.entity;
 
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,7 @@ public class Role {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "privileges_in_role",
             joinColumns = @JoinColumn(name = "role_id"),

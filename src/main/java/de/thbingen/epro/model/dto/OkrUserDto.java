@@ -15,15 +15,18 @@ public class OkrUserDto extends RepresentationModel<OkrUserDto> {
     @NotBlank
     private String surname;
 
+    private String username;
+
     @NotBlank
     private String password;
 
     public OkrUserDto() {
     }
 
-    public OkrUserDto(String name, String surname, String password) {
+    public OkrUserDto(String name, String surname, String username, String password) {
         this.name = name;
         this.surname = surname;
+        this.username = username;
         this.password = password;
     }
 
@@ -42,6 +45,10 @@ public class OkrUserDto extends RepresentationModel<OkrUserDto> {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     public String getPassword() {
         return password;

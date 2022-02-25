@@ -95,6 +95,7 @@ create table okr_user
     id               int primary key generated always as identity,
     name             varchar(64) NOT NULL,
     surname          varchar(64) NOT NULL,
+    username         varchar(64) NOT NULL,
     password         varchar(64) NOT NULL DEFAULT 'passwort',
     role_id          int         REFERENCES Role (id) ON DELETE SET NULL,
     business_unit_id int REFERENCES business_unit (id) ON DELETE SET DEFAULT
@@ -289,6 +290,10 @@ VALUES(5, 1);
 insert into privileges_in_role (privilege_id, role_id)
 VALUES(6, 1);
 insert into privileges_in_role (privilege_id, role_id)
+VALUES(7, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(8, 1);
+insert into privileges_in_role (privilege_id, role_id)
 VALUES(1, 2);
 insert into privileges_in_role (privilege_id, role_id)
 VALUES(2, 2);
@@ -301,12 +306,12 @@ VALUES(5, 2);
 insert into privileges_in_role (privilege_id, role_id)
 VALUES(1, 3);
 
-insert into okr_user (name, surname, password, role_id, business_unit_id)
-VALUES ('Vorname1', 'Nachname1', 'password1', 1, 1);
-insert into okr_user (name, surname, password, role_id, business_unit_id)
-VALUES ('Vorname2', 'Nachname2', 'password2', 2, 2);
-insert into okr_user (name, surname, password, role_id, business_unit_id)
-VALUES ('Vorname3', 'Nachname3', 'password3', 3, 1);
+insert into okr_user (name, surname, username, password, role_id, business_unit_id)
+VALUES ('Vorname1', 'Nachname1', 'vor.nach1', 'password1', 1, 1);
+insert into okr_user (name, surname, username, password, role_id, business_unit_id)
+VALUES ('Vorname2', 'Nachname2', 'vor.nach2', 'password2', 2, 2);
+insert into okr_user (name, surname, username, password, role_id, business_unit_id)
+VALUES ('Vorname3', 'Nachname3', 'vor.nach3', 'password3', 3, 1);
 
 
 -- endregion

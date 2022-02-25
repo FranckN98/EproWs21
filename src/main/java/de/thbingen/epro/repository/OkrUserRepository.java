@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OkrUserRepository extends JpaRepository<OkrUser, Long> {
-    OkrUser findBySurname(String surname);
-
     Page<OkrUser> findAllByBusinessUnitId(Long businessUnitId, Pageable pageable);
+    Optional<OkrUser> findByUsername(String username);
 }
