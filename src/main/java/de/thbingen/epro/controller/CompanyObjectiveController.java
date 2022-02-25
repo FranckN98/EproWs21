@@ -1,5 +1,6 @@
 package de.thbingen.epro.controller;
 
+import de.thbingen.epro.exception.InvalidDateRangeError;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -7,6 +8,7 @@ import de.thbingen.epro.service.CompanyObjectiveService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Optional;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 @RestController
 @RequestMapping("/companyobjectives")
@@ -35,14 +41,23 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping
-    public PagedModel<EntityModel<CompanyObjectiveDto>> findAll(@PageableDefault Pageable pageable) {
-        return pagedResourcesAssembler.toModel(companyObjectiveService.getAllCompanyObjectives(pageable));
-    }
-
-    @PostMapping
-    public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
-        CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.insertCompanyObjective(newCompanyObjective);
-        return ResponseEntity.created(companyObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyObjectiveDto);
+    public PagedModel<EntityModel<CompanyObjectiveDto>> findAll(
+            @PageableDefault Pageable pageable,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> end
+    ) {
+        LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
+        LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
+        if(startDate.isAfter(endDate)) {
+            throw new InvalidDateRangeError();
+        }
+        return pagedResourcesAssembler.toModel(
+                companyObjectiveService.getAllCompanyObjectives(
+                        pageable,
+                        startDate,
+                        endDate
+                )
+        );
     }
 
     @GetMapping("/{id}")
@@ -52,6 +67,12 @@ public class CompanyObjectiveController {
             return result.get();
         }
         throw new EntityNotFoundException("No CompanyObjective with this id exists");
+    }
+
+    @PostMapping
+    public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
+        CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.insertCompanyObjective(newCompanyObjective);
+        return ResponseEntity.created(companyObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyObjectiveDto);
     }
 
     @PutMapping("/{id}")

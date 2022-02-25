@@ -11,6 +11,7 @@ import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
+import de.thbingen.epro.service.OkrUserService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +54,11 @@ public class BusinessUnitControllerTest {
     @MockBean
     private BusinessUnitObjectiveService businessUnitObjectiveService;
 
-    private final BusinessUnitMapper mapper = Mappers.getMapper(BusinessUnitMapper.class);
-    private final BusinessUnitAssembler assembler = new BusinessUnitAssembler(mapper);
+    @MockBean
+    private OkrUserService okrUserService;
 
+    private BusinessUnitMapper mapper = Mappers.getMapper(BusinessUnitMapper.class);
+    private final BusinessUnitAssembler assembler = new BusinessUnitAssembler(mapper);
 
     private final BusinessUnitObjectiveMapper businessUnitObjectiveMapper = Mappers.getMapper(BusinessUnitObjectiveMapper.class);
     private final BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler = new BusinessUnitObjectiveAssembler(businessUnitObjectiveMapper);
@@ -199,25 +203,6 @@ public class BusinessUnitControllerTest {
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
     }
 
-    @Test
-    @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
-    public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
-        BusinessUnitDto businessUnitDto = assembler.toModel(new BusinessUnit(1L, "Test"));
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
-
-        when(businessUnitService.existsById(1L)).thenReturn(false);
-        when(businessUnitService.insertBusinessUnit(any(BusinessUnitDto.class))).thenReturn(businessUnitDto);
-
-        mockMvc.perform(put("/businessUnits/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/businessUnits/1"))
-                .andExpect(jsonPath("$.name").value("Test"))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
-    }
-
     // endregion
 
     // region DELETE
@@ -254,7 +239,7 @@ public class BusinessUnitControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", OffsetDateTime.now(), OffsetDateTime.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now());
         businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -284,7 +269,7 @@ public class BusinessUnitControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", OffsetDateTime.now(), OffsetDateTime.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now());
         businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);

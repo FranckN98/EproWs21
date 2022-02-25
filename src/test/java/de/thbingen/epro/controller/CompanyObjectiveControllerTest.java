@@ -8,6 +8,7 @@ import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -27,6 +28,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -61,7 +64,7 @@ public class CompanyObjectiveControllerTest {
                 new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now()),
                 new CompanyObjective(2L, 0, "test", LocalDate.now(), LocalDate.now())
         ).map(assembler::toModel).collect(Collectors.toList());
-        when(companyObjectiveService.getAllCompanyObjectives(Pageable.ofSize(10))).thenReturn(new PageImpl<>(companyObjectives));
+        when(companyObjectiveService.getAllCompanyObjectives(Pageable.ofSize(10), LocalDate.now().with(firstDayOfYear()), LocalDate.now().with(lastDayOfYear()))).thenReturn(new PageImpl<>(companyObjectives));
 
         mockMvc.perform(get("/companyobjectives").accept(MediaTypes.HAL_JSON))
                 .andDo(print())
@@ -74,10 +77,10 @@ public class CompanyObjectiveControllerTest {
                 .andExpect(jsonPath("$._embedded.companyObjectives[*]._links").exists())
                 .andExpect(jsonPath("$._embedded.companyObjectives[0]._links.self.href", endsWith("/companyobjectives/1")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[0].name", is("name")))
-                .andExpect(jsonPath("$._embedded.companyObjectives[0].achievement", is(0)))
+                .andExpect(jsonPath("$._embedded.companyObjectives[0].achievement", is(0.0f)))
                 .andExpect(jsonPath("$._embedded.companyObjectives[1]._links.self.href", endsWith("/companyobjectives/2")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[1].name", is("test")))
-                .andExpect(jsonPath("$._embedded.companyObjectives[1].achievement", is(0)))
+                .andExpect(jsonPath("$._embedded.companyObjectives[1].achievement", is(0.0f)))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/companyobjectives")))
                 .andReturn();
@@ -202,6 +205,7 @@ public class CompanyObjectiveControllerTest {
     }
 
     @Test
+    @Disabled("This behaviour is no longer desired") // TODO: remove
     @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
         CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L, 0, "changedName", LocalDate.now(), LocalDate.now()));

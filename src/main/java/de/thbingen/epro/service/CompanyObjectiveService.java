@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -24,8 +25,8 @@ public class CompanyObjectiveService {
         this.companyObjectiveAssembler = companyObjectiveAssembler;
     }
 
-    public Page<CompanyObjectiveDto> getAllCompanyObjectives(Pageable pageable) {
-        Page<CompanyObjective> pagedResult = companyObjectiveRepository.findAll(pageable);
+    public Page<CompanyObjectiveDto> getAllCompanyObjectives(Pageable pageable, LocalDate startDate, LocalDate endDate) {
+        Page<CompanyObjective> pagedResult = companyObjectiveRepository.findAllByStartDateAfterAndEndDateBefore(startDate, endDate, pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(companyObjectiveAssembler::toModel);

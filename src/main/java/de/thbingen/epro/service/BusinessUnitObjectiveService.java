@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -32,8 +33,8 @@ public class BusinessUnitObjectiveService {
         this.businessUnitRepository = businessUnitRepository;
     }
 
-    public Page<BusinessUnitObjectiveDto> getAllByBusinessUnitId(Long businessUnitId, Pageable pageable) {
-        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAllByBusinessUnitId(businessUnitId, pageable);
+    public Page<BusinessUnitObjectiveDto> getAllByBusinessUnitId(Long businessUnitId, Pageable pageable, LocalDate startDate, LocalDate endDate) {
+        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAllByBusinessUnitIdAndStartDateAfterAndEndDateBefore(businessUnitId, startDate, endDate, pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
@@ -42,8 +43,8 @@ public class BusinessUnitObjectiveService {
         }
     }
 
-    public Page<BusinessUnitObjectiveDto> getAllBusinessUnitObjectives(Pageable pageable) {
-        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAll(pageable);
+    public Page<BusinessUnitObjectiveDto> getAllBusinessUnitObjectives(Pageable pageable, LocalDate startDate, LocalDate endDate) {
+        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAllByStartDateAfterAndEndDateBefore(startDate, endDate, pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);

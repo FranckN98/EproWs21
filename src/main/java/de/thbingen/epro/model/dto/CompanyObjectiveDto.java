@@ -1,11 +1,10 @@
 package de.thbingen.epro.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Relation(collectionRelation = "companyObjectives", itemRelation = "companyObjective")
@@ -14,9 +13,9 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     private Float achievement = 0f;
-    @NotBlank
     private String name;
     private LocalDate startDate;
+    @Future
     private LocalDate endDate;
 
     public CompanyObjectiveDto() {
@@ -59,6 +58,12 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    @AssertTrue(message = "The End date must be after the startDate")
+    @JsonIgnore
+    public boolean isEndAfterBeginning() {
+        return endDate.isAfter(startDate);
     }
 
 }

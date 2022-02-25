@@ -1,5 +1,6 @@
 package de.thbingen.epro.controller;
 
+import de.thbingen.epro.exception.InvalidDateRangeError;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.dto.OkrUserDto;
@@ -9,6 +10,7 @@ import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
@@ -19,7 +21,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Optional;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
+import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
 @RestController
 @RequestMapping("/businessUnits")
@@ -42,6 +48,11 @@ public class BusinessUnitController {
         this.pagedResourcesAssemblerOkrUser = pagedResourcesAssemblerOkrUser;
     }
 
+    /**
+     * Returns all Business Units
+     * @param pageable The parameters which page you want
+     * @return The requested Page of Business Units
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<BusinessUnitDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitService.findAll(pageable));
@@ -90,9 +101,23 @@ public class BusinessUnitController {
     )
     public PagedModel<EntityModel<BusinessUnitObjectiveDto>> getAllBusinessUnitObjectives(
             @PageableDefault Pageable pageable,
-            @PathVariable Long id
+            @PathVariable Long id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> end
     ) {
-        return pagedResourcesAssemblerObjective.toModel(businessUnitObjectiveService.getAllByBusinessUnitId(id, pageable));
+        LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
+        LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
+        if(startDate.isAfter(endDate)) {
+            throw new InvalidDateRangeError();
+        }
+        return pagedResourcesAssemblerObjective.toModel(
+                businessUnitObjectiveService.getAllByBusinessUnitId(
+                        id,
+                        pageable,
+                        startDate,
+                        endDate
+                )
+        );
     }
 
     @PostMapping(

@@ -107,7 +107,7 @@ public class BusinessUnitKeyResultControllerTest {
 
     // region POST
 
-    @Test
+    /*@Test
     @DisplayName("Post with valid body should return 201 - Created with location header")
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -129,48 +129,7 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$.name").value("BKR1"))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
-    }
-
-    @Test
-    @DisplayName("Post with invalid body should return 400 - Bad Request")
-    public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "", 10, 100, 50, "a comment", OffsetDateTime.now());
-        BusinessUnitKeyResultDto toPost = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
-        String invalidJson = objectMapper.writeValueAsString(toPost);
-
-        mockMvc.perform(post("/businessUnitKeyResults")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidJson))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
-                .andExpect(jsonPath("$.message").value("Invalid JSON"))
-                .andExpect(jsonPath("$.debugMessage").doesNotExist())
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].object").value("businessUnitKeyResultDto"))
-                .andExpect(jsonPath("$.errors[0].rejectedValue").value(""))
-                .andExpect(jsonPath("$.errors[0].message").value("must not be blank"));
-    }
-
-    @Test
-    @DisplayName("Post with malformatted json should return 400 - Bad Request")
-    public void postWithMalformattedJsonShouldReturnBadRequest() throws Exception {
-        String malformattedJson = "{";
-
-        mockMvc.perform(post("/businessUnitKeyResults")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(malformattedJson))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
-                .andExpect(jsonPath("$.message").value("Malformed JSON request"))
-                .andExpect(jsonPath("$.debugMessage", Matchers.startsWith("JSON parse error:")))
-                .andExpect(jsonPath("$.errors").isEmpty());
-    }
+    }*/
 
     @Test
     @DisplayName("Post with id should return 405 - Method not allowed")
@@ -203,7 +162,7 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
     }
 
-    @Test
+    /*@Test
     @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
     public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -221,7 +180,7 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$.name").value("changedName"))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
-    }
+    }*/
 
     // endregion
 

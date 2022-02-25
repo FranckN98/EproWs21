@@ -35,6 +35,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getHttpStatus());
     }
 
+    @ExceptionHandler(InvalidDateRangeError.class)
+    ResponseEntity<Object> handleInvalidDateRange(InvalidDateRangeError error) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage("Invalid Date Range. Make sure the Start Date is before the End Date");
+        return new ResponseEntity<>(apiError, apiError.getHttpStatus());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);

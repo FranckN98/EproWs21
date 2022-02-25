@@ -7,6 +7,8 @@ import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -25,7 +27,7 @@ public class BusinessUnitAssembler implements RepresentationModelAssembler<Busin
                 .add(linkTo(methodOn(BusinessUnitController.class).findById(entity.getId())).withSelfRel());
         if (entity.getBusinessUnitObjectives() != null && !entity.getBusinessUnitObjectives().isEmpty()) {
             businessUnitDto.add(linkTo(methodOn(BusinessUnitController.class)
-                    .getAllBusinessUnitObjectives(null, entity.getId())).withRel("businessUnitObjectives"));
+                    .getAllBusinessUnitObjectives(null, entity.getId(), Optional.empty(), Optional.empty())).withRel("businessUnitObjectives"));
         }
         if (entity.getOkrUsers() != null && !entity.getOkrUsers().isEmpty()) {
             businessUnitDto.add(linkTo(methodOn(BusinessUnitController.class)

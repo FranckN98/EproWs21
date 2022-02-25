@@ -1,6 +1,9 @@
 package de.thbingen.epro.model.entity;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +28,8 @@ public class BusinessUnitObjective {
     @JoinColumn(name = "company_key_result_ref")
     private CompanyKeyResult companyKeyResult;
 
-    private OffsetDateTime startDate = OffsetDateTime.now();
-    private OffsetDateTime endDate = OffsetDateTime.now();
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @OneToMany(
             targetEntity = BusinessUnitKeyResult.class,
@@ -40,7 +43,7 @@ public class BusinessUnitObjective {
     public BusinessUnitObjective() {
     }
 
-    public BusinessUnitObjective(Long id, Integer achievement, String name, BusinessUnit businessUnit, CompanyKeyResult companyKeyResult, OffsetDateTime startDate, OffsetDateTime endDate, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+    public BusinessUnitObjective(Long id, Integer achievement, String name, BusinessUnit businessUnit, CompanyKeyResult companyKeyResult, LocalDate startDate, LocalDate endDate, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
@@ -52,7 +55,7 @@ public class BusinessUnitObjective {
     }
 
 
-    public BusinessUnitObjective(Long id, Integer achievement, String name, OffsetDateTime startDate, OffsetDateTime endDate) {
+    public BusinessUnitObjective(Long id, Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
@@ -100,19 +103,19 @@ public class BusinessUnitObjective {
         this.companyKeyResult = companyKeyResult;
     }
 
-    public OffsetDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(OffsetDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public OffsetDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(OffsetDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
