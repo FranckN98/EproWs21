@@ -4,6 +4,7 @@ import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,6 +26,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public Set<BusinessUnitKeyResultDto> findAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -34,6 +36,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> addNew(@RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto) {
         BusinessUnitKeyResultDto businessUnitKeyResultDto = businessUnitKeyResultService.saveBusinessUnitKeyResult(newBusinessUnitKeyResultDto);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -46,6 +49,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitKeyResultDto findById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultDto> result = businessUnitKeyResultService.findById(id);
         if (result.isPresent()) {
@@ -55,6 +59,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(@PathVariable Long id, @RequestBody BusinessUnitKeyResultDto businessUnitKeyResultDto) {
         if (businessUnitKeyResultDto.getId() == null) {
             businessUnitKeyResultDto.setId(id);
@@ -69,6 +74,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");

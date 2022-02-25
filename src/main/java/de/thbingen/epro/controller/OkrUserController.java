@@ -32,7 +32,7 @@ public class OkrUserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('view_users')")
+    @PreAuthorize("hasAuthority('view_users') or (hasAuthority('read') and @customExpressions.isSameUser(#id, principal.username))")
     public OkrUserDto findById(@PathVariable Long id) {
         Optional<OkrUserDto> result = okrUserService.findById(id);
         if (result.isPresent())

@@ -89,6 +89,7 @@ public class CompanyObjectiveController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/{id}/keyresults")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyKeyResultDto> addNew(@PathVariable Long id, @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto) {
 
         CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.findById(id).get();

@@ -45,7 +45,7 @@ public class BusinessUnitController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
         BusinessUnitDto businessUnitDto = businessUnitService.saveBusinessUnit(newBusinessUnit);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -58,7 +58,7 @@ public class BusinessUnitController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or (hasAuthority('change_own_BU_OKRs') and @customExpressions.belongsToBusinessUnit(#id, principal.username))")
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (businessUnitDto.getId() == null) {
             businessUnitDto.setId(id);
@@ -75,7 +75,7 @@ public class BusinessUnitController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
@@ -86,6 +86,7 @@ public class BusinessUnitController {
 
 
     @PostMapping("/{id}/objectives")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or (hasAuthority('change_own_BU_OKRs') and @customExpressions.belongsToBusinessUnit(#id, principal.username))")
     public ResponseEntity<BusinessUnitObjectiveDto> addNewBusinessUnitObjective(@PathVariable Long id, @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
         BusinessUnitDto businessUnit = businessUnitService.findById(id).get();
         BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjectiveWithBusinessUnit(newBusinessUnitObjectiveDto, businessUnit);

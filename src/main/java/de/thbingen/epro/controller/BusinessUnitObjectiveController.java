@@ -6,6 +6,7 @@ import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,6 +30,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public Set<BusinessUnitObjectiveDto> findAll(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -38,6 +40,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitObjectiveDto> addNew(@RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto) {
         BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.saveBusinessUnitObjective(newBusinessUnitObjectiveDto);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
@@ -50,6 +53,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitObjectiveDto findById(@PathVariable Long id) {
         Optional<BusinessUnitObjectiveDto> result = businessUnitObjectiveService.findById(id);
         if (result.isPresent()) {
@@ -59,6 +63,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitObjectiveDto> updateById(@PathVariable Long id, @RequestBody BusinessUnitObjectiveDto businessUnitObjectiveDto) {
         if (businessUnitObjectiveDto.getId() == null) {
             businessUnitObjectiveDto.setId(id);
@@ -75,6 +80,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitObjectiveService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitObjective with this id exists");
@@ -84,6 +90,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @PostMapping("/{id}/keyresults")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> addNewKeyResult(@PathVariable Long id,
                                                                     @RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto) {
         BusinessUnitObjectiveDto businessUnitObjectiveDto = businessUnitObjectiveService.findById(id).get();

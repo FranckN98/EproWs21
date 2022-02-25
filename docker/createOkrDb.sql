@@ -267,7 +267,7 @@ values ('add_users');
 insert into Privilege (name)
 values ('view_users');
 insert into Privilege (name)
-values ('change_BU_OKRs');
+values ('change_own_BU_OKRs');
 insert into Privilege (name)
 values ('change_users');
 insert into Privilege (name)
@@ -276,6 +276,8 @@ insert into Privilege (name)
 values ('access_privileges');
 insert into Privilege (name)
 values ('change_CO_OKRs');
+insert into Privilege (name)
+values ('change_all_BU_OKRs');
 
 insert into privileges_in_role (privilege_id, role_id)
 VALUES (1, 1);
@@ -293,6 +295,8 @@ insert into privileges_in_role (privilege_id, role_id)
 VALUES(7, 1);
 insert into privileges_in_role (privilege_id, role_id)
 VALUES(8, 1);
+insert into privileges_in_role (privilege_id, role_id)
+VALUES(9, 1);
 insert into privileges_in_role (privilege_id, role_id)
 VALUES(1, 2);
 insert into privileges_in_role (privilege_id, role_id)
