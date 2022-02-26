@@ -35,8 +35,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = BusinessUnitKeyResultController.class)
 public class BusinessUnitKeyResultControllerTest {
@@ -49,8 +48,7 @@ public class BusinessUnitKeyResultControllerTest {
     private BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService;
     @MockBean
     private CompanyKeyResultService companyKeyResultService;
-
-    @Autowired
+    @MockBean
     private AnnotationLinkRelationProvider annotationLinkRelationProvider;
 
     private final BusinessUnitKeyResultMapper businessUnitKeyResultMapper = Mappers.getMapper(BusinessUnitKeyResultMapper.class);
