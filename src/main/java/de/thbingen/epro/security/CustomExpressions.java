@@ -3,7 +3,10 @@ package de.thbingen.epro.security;
 
 import de.thbingen.epro.model.business.OkrUser;
 import de.thbingen.epro.repository.OkrUserRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -33,4 +36,10 @@ public class CustomExpressions {
         return targetUserId == okrUser.getId();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
+

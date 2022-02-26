@@ -4,6 +4,7 @@ import de.thbingen.epro.model.business.OkrUser;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.mapper.OkrUserMapper;
 import de.thbingen.epro.repository.OkrUserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,25 +15,28 @@ public class OkrUserService {
 
     private final OkrUserRepository OkrUserRepository;
     private final OkrUserMapper OkrUserMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public OkrUserService(OkrUserRepository OkrUserRepository, OkrUserMapper OkrUserMapper) {
-        this.OkrUserRepository = OkrUserRepository;
-        this.OkrUserMapper = OkrUserMapper;
+    public OkrUserService(OkrUserRepository okrUserRepository, OkrUserMapper okrUserMapper, PasswordEncoder passwordEncoder) {
+        this.OkrUserRepository = okrUserRepository;
+        this.OkrUserMapper = okrUserMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<OkrUserDto> findAll() {
-        List<OkrUser> OkrUsers = OkrUserRepository.findAll();
-        return OkrUserMapper.okrUserListToOkrUserDtoList(OkrUsers);
+        List<OkrUser> okrUsers = OkrUserRepository.findAll();
+        return OkrUserMapper.okrUserListToOkrUserDtoList(okrUsers);
     }
 
     public Optional<OkrUserDto> findById(Long id) {
-        Optional<OkrUser> OkrUser = OkrUserRepository.findById(id);
-        return OkrUser.map(OkrUserMapper::okrUserToDto);
+        Optional<OkrUser> okrUser = OkrUserRepository.findById(id);
+        return okrUser.map(OkrUserMapper::okrUserToDto);
     }
 
     public OkrUserDto saveOkrUser(OkrUserDto OkrUserDto) {
-        OkrUser OkrUser = OkrUserMapper.dtoToOkrUser(OkrUserDto);
-        return OkrUserMapper.okrUserToDto(OkrUserRepository.save(OkrUser));
+        OkrUser okrUser = OkrUserMapper.dtoToOkrUser(OkrUserDto);
+        okrUser.setPassword(passwordEncoder.encode(okrUser.getPassword()));
+        return OkrUserMapper.okrUserToDto(OkrUserRepository.save(okrUser));
     }
 
     public boolean existsById(Long id) {

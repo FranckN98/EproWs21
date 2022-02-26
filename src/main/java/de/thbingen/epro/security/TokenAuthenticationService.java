@@ -3,26 +3,31 @@ package de.thbingen.epro.security;
 import com.google.common.collect.ImmutableMap;
 import de.thbingen.epro.model.business.OkrUser;
 import de.thbingen.epro.repository.OkrUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class TokenAuthenticationService implements UserAuthenticationService {
 
-    @Autowired
-    TokenService tokenService;
 
-    @Autowired
-    OkrUserRepository okrUserRepository;
+    private final TokenService tokenService;
+    private final OkrUserRepository okrUserRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public TokenAuthenticationService(TokenService tokenService, OkrUserRepository okrUserRepository,
+                                      PasswordEncoder passwordEncoder) {
+        this.tokenService = tokenService;
+        this.okrUserRepository = okrUserRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Optional<String> login(final String username, final String password) {
         return okrUserRepository
                 .findByUsername(username)
-                .filter(user -> Objects.equals(password, user.getPassword()))
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .map(user -> tokenService.newToken(ImmutableMap.of("username", username)));
     }
 

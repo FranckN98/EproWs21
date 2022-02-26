@@ -11,8 +11,12 @@ import java.util.Map;
 @RestController
 public class LoginController {
 
-    @Autowired
-    UserAuthenticationService authentication;
+
+    private final UserAuthenticationService authentication;
+
+    public LoginController(UserAuthenticationService authentication) {
+        this.authentication = authentication;
+    }
 
     @PostMapping("/login")
     String login(@RequestBody Map<String, String> body) {
