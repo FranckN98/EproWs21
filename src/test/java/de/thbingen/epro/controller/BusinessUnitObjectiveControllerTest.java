@@ -64,8 +64,8 @@ public class BusinessUnitObjectiveControllerTest {
     public void getAllShouldReturnAllBusinessUnitObjectives() throws Exception {
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
         Set<BusinessUnitObjectiveDto> businessUnitObjectives = Stream.of(
-                new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now()),
-                new BusinessUnitObjective(2L, 0, "Test2", LocalDate.now(), LocalDate.now())
+                new BusinessUnitObjective(1L, 0f, "Test1", LocalDate.now(), LocalDate.now()),
+                new BusinessUnitObjective(2L, 0f, "Test2", LocalDate.now(), LocalDate.now())
         ).map(businessUnitObjective -> {
             businessUnitObjective.setBusinessUnit(businessUnit);
             return assembler.toModel(businessUnitObjective);
@@ -108,7 +108,7 @@ public class BusinessUnitObjectiveControllerTest {
     @DisplayName("Get With ID should Return a single Company Objective with 200 - OK")
     public void getWithIdShouldReturnSingleCompanyObjective() throws Exception {
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0f, "Test1", LocalDate.now(), LocalDate.now());
         businessUnitObjective.setBusinessUnit(businessUnit);
         when(businessUnitObjectiveService.findById(1L)).thenReturn(Optional.of(assembler.toModel(businessUnitObjective)));
 
@@ -161,7 +161,7 @@ public class BusinessUnitObjectiveControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "changedName", LocalDate.now(), LocalDate.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0f, "changedName", LocalDate.now(), LocalDate.now());
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
         businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto businessUnitObjectiveDto = assembler.toModel(businessUnitObjective);

@@ -1,38 +1,49 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
 import de.thbingen.epro.model.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.BusinessUnitObjective;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.OkrUserService;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithReadOnlyUser;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -42,7 +53,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = BusinessUnitController.class)
+@WebMvcTest(controllers = BusinessUnitController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {BusinessUnitController.class,
+                                BusinessUnitMapper.class,
+                                BusinessUnitAssembler.class,
+                                BusinessUnitObjectiveMapper.class,
+                                BusinessUnitObjectiveAssembler.class
+                        }
+                )}
+)
+@Import(RestExceptionHandler.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class BusinessUnitControllerTest {
 
     @Autowired
@@ -57,17 +82,19 @@ public class BusinessUnitControllerTest {
     @MockBean
     private OkrUserService okrUserService;
 
-    private BusinessUnitMapper mapper = Mappers.getMapper(BusinessUnitMapper.class);
-    private final BusinessUnitAssembler assembler = new BusinessUnitAssembler(mapper);
+    @Autowired
+    private BusinessUnitAssembler assembler;
 
-    private final BusinessUnitObjectiveMapper businessUnitObjectiveMapper = Mappers.getMapper(BusinessUnitObjectiveMapper.class);
-    private final BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler = new BusinessUnitObjectiveAssembler(businessUnitObjectiveMapper);
+    @Autowired
+    private BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler;
 
     // region GET ALL
 
     @Test
     @DisplayName("Get All should return all Business Units with 200 - OK")
     public void getAllShouldReturnAllBusinessUnits() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         List<BusinessUnitDto> businessUnits = Stream.of(
                 new BusinessUnit(1L, "Personal"),
                 new BusinessUnit(2L, "IT")
@@ -98,7 +125,10 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single BusinessUnit with 200 - OK")
     public void getWithIdShouldReturnSingleBusinessUnit() throws Exception {
-        when(businessUnitService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new BusinessUnit(1L, "Personal"))));
+        initSecurityContextWithReadOnlyUser();
+
+        Optional<BusinessUnitDto> businessUnitDto = Optional.of(assembler.toModel(new BusinessUnit(1L, "Personal")));
+        when(businessUnitService.findById(anyLong())).thenReturn(businessUnitDto);
 
         mockMvc.perform(get("/businessUnits/1"))
                 .andDo(print())
@@ -115,6 +145,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with valid body should return 201 - Created with location header")
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         ObjectMapper objectMapper = new ObjectMapper();
         BusinessUnit businessUnit = new BusinessUnit(1L, "TEST");
         BusinessUnitDto toPost = assembler.toModel(businessUnit);
@@ -126,6 +158,7 @@ public class BusinessUnitControllerTest {
                         post("/businessUnits")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(jsonToPost)
+                                .characterEncoding(Charset.defaultCharset())
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -138,6 +171,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with invalid body should return 400 - Bad Request")
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         ObjectMapper objectMapper = new ObjectMapper();
         BusinessUnitDto toPost = assembler.toModel(new BusinessUnit(1L, ""));
         String invalidJson = objectMapper.writeValueAsString(toPost);
@@ -161,11 +196,15 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with malformatted json should return 400 - Bad Request")
     public void postWithMalformattedJsonShouldReturnBadRequest() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         String malformattedJson = "{";
 
         mockMvc.perform(post("/businessUnits")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(malformattedJson))
+                        .content(malformattedJson)
+                        .characterEncoding(Charset.defaultCharset())
+                )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
                 .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
@@ -177,6 +216,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with id should return 405 - Method not allowed")
     public void postWithIdShouldReturnMethodNotAllowed() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         mockMvc.perform(post("/businessUnits/1"))
                 .andExpect(status().isMethodNotAllowed());
     }
@@ -188,6 +229,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         BusinessUnitDto businessUnitDto = assembler.toModel(new BusinessUnit(1L, "Test"));
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonToPut = objectMapper.writeValueAsString(businessUnitDto);
@@ -210,6 +253,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Delete with valid ID should return 204 - No Content")
     public void deleteWithValidIdShouldReturnNoContent() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         when(businessUnitService.existsById(1L)).thenReturn(true);
         doNothing().when(businessUnitService).deleteById(1L);
 
@@ -220,6 +265,8 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Delete with Invalid ID should return 404 - Not found")
     public void deleteWithInvalidIdShouldReturnNotFound() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         when(businessUnitService.existsById(100L)).thenReturn(false);
         doNothing().when(businessUnitService).deleteById(100L);
 
@@ -230,16 +277,15 @@ public class BusinessUnitControllerTest {
     // endregion
 
 
-
-
-
     @Test
     @DisplayName("Post Objective with valid body should return 201 - Created with location header")
     public void postObjectiveWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0f, "Test1", LocalDate.now(), LocalDate.now().plusDays(1));
         businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -250,6 +296,7 @@ public class BusinessUnitControllerTest {
         mockMvc.perform(
                         post("/businessUnits/1/objectives")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .characterEncoding(Charset.defaultCharset())
                                 .content(jsonToPost)
                 )
                 .andDo(print())
@@ -266,10 +313,12 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post Objective with Invalid Business Unit Id should return 404 - Not found")
     public void postObjectiveWithInvalidBusinessUnitIdShouldReturnNoFound() throws Exception {
+        initSecurityContextWithReadOnlyUser();
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         BusinessUnit businessUnit = new BusinessUnit(1L, "Personal");
-        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0, "Test1", LocalDate.now(), LocalDate.now());
+        BusinessUnitObjective businessUnitObjective = new BusinessUnitObjective(1L, 0f, "Test1", LocalDate.now(), LocalDate.now());
         businessUnitObjective.setBusinessUnit(businessUnit);
         BusinessUnitObjectiveDto toPost = businessUnitObjectiveAssembler.toModel(businessUnitObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -279,7 +328,8 @@ public class BusinessUnitControllerTest {
         mockMvc.perform(
                         post("/businessUnits/1/objectives")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonToPost)
+                                .content("{\"achievement\":0,\"name\":\"Test1\",\"startDate\":\"2020-01-01\",\"endDate\":\"2022-05-01\"}")
+                                .characterEncoding(Charset.defaultCharset())
                 )
                 .andDo(print())
                 .andExpect(status().isNotFound())

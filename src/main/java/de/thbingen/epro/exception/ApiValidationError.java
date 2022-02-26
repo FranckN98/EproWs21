@@ -1,5 +1,8 @@
 package de.thbingen.epro.exception;
 
+/**
+ * This class is for representing errors in Springs Validation
+ */
 public class ApiValidationError extends ApiSubError {
     private String object;
     private String field;

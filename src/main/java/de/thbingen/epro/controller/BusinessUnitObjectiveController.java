@@ -1,6 +1,6 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.exception.InvalidDateRangeError;
+import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
@@ -53,7 +53,7 @@ public class BusinessUnitObjectiveController {
         LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
         LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
         if(startDate.isAfter(endDate)) {
-            throw new InvalidDateRangeError();
+            throw new InvalidDateRangeException();
         }
         return pagedResourcesAssembler.toModel(
                 businessUnitObjectiveService.getAllBusinessUnitObjectives(

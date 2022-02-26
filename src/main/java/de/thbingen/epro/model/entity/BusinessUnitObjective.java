@@ -1,10 +1,7 @@
 package de.thbingen.epro.model.entity;
 
-import org.hibernate.annotations.Formula;
-
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +12,7 @@ public class BusinessUnitObjective {
     private Long id;
 
     @Column(nullable = false)
-    private Integer achievement;
+    private Float achievement;
 
     @Column(nullable = false)
     private String name;
@@ -43,7 +40,7 @@ public class BusinessUnitObjective {
     public BusinessUnitObjective() {
     }
 
-    public BusinessUnitObjective(Long id, Integer achievement, String name, BusinessUnit businessUnit, CompanyKeyResult companyKeyResult, LocalDate startDate, LocalDate endDate, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
+    public BusinessUnitObjective(Long id, Float achievement, String name, BusinessUnit businessUnit, CompanyKeyResult companyKeyResult, LocalDate startDate, LocalDate endDate, Set<BusinessUnitKeyResult> businessUnitKeyResults) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
@@ -55,7 +52,7 @@ public class BusinessUnitObjective {
     }
 
 
-    public BusinessUnitObjective(Long id, Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
+    public BusinessUnitObjective(Long id, Float achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
@@ -71,11 +68,11 @@ public class BusinessUnitObjective {
         this.id = id;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

@@ -28,7 +28,7 @@ public class BusinessUnitKeyResultHistoryService {
      * @param businessUnitKeyResultHistoryRepository The Repository for DB access
      * @param assembler                              The RepresentationModelAssembler to add the hateoas relations
      */
-    public BusinessUnitKeyResultHistoryService(BusinessUnitKeyResultHistoryRepository businessUnitKeyResultHistoryRepository, BusinessUnitKeyResultHistoryMapper businessUnitKeyResultHistoryMapper, BusinessUnitKeyResultHistoryAssembler assembler) {
+    public BusinessUnitKeyResultHistoryService(BusinessUnitKeyResultHistoryRepository businessUnitKeyResultHistoryRepository, BusinessUnitKeyResultHistoryAssembler assembler) {
         this.businessUnitKeyResultHistoryRepository = businessUnitKeyResultHistoryRepository;
         this.assembler = assembler;
     }

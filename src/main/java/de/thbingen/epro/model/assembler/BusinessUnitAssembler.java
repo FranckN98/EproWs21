@@ -6,7 +6,6 @@ import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 

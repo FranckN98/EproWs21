@@ -4,7 +4,7 @@ import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.model.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
 import de.thbingen.epro.model.assembler.CompanyObjectiveAssembler;
-import de.thbingen.epro.model.dto.DashboardItem;
+import de.thbingen.epro.model.dto.dashboard.DashboardItem;
 import de.thbingen.epro.model.dto.dashboard.BusinessUnitDashboardItem;
 import de.thbingen.epro.model.dto.dashboard.CompanyDashboardItem;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;

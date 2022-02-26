@@ -25,9 +25,4 @@ public interface CompanyKeyResultMapper {
     @Mapping(target = "businessUnitKeyResults", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateCompanyKeyResultFromDto(CompanyKeyResultDto companyKeyResultDto, @MappingTarget CompanyKeyResult companyKeyResult);
-
-    @Mapping(target = "companyObjective", source = "companyObjectiveDto")
-    @Mapping(target = "name", source = "companyKeyResultDto.name")
-    @Mapping(target = "achievement", source = "companyKeyResultDto.achievement")
-    CompanyKeyResult dtoToCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, CompanyObjectiveDto companyObjectiveDto);
 }

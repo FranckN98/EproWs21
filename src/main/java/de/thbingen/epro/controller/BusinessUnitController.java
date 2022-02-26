@@ -1,6 +1,6 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.exception.InvalidDateRangeError;
+import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.dto.OkrUserDto;
@@ -28,6 +28,9 @@ import java.util.Optional;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
+/**
+ * This Controller is responsible for returning all resources under the /businessUnits path
+ */
 @RestController
 @RequestMapping("/businessUnits")
 public class BusinessUnitController {
@@ -50,8 +53,9 @@ public class BusinessUnitController {
     }
 
     /**
-     * Returns all Business Units
-     * @param pageable The parameters which page you want
+     * Returns all Business Units of the requested Page
+     *
+     * @param pageable Allows requesting a certain page of a certain size with a certain sort
      * @return The requested Page of Business Units
      */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
@@ -60,6 +64,14 @@ public class BusinessUnitController {
         return pagedResourcesAssembler.toModel(businessUnitService.findAll(pageable));
     }
 
+    /**
+     * Returns the BusinessUnit with the given id.
+     * <p>
+     * Will throw an EntityNotFoundException if there is no BusinessUnit with the given id
+     *
+     * @param id the id of the requested BusinessUnit
+     * @return the requested BusinessUnit
+     */
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public BusinessUnitDto findById(@PathVariable Long id) {
@@ -70,6 +82,13 @@ public class BusinessUnitController {
         throw new EntityNotFoundException("No BusinessUnit with this id exists");
     }
 
+    /**
+     * Adds the BusinessUnit given in the RequestBody.
+     * The location header will contain the location at which the new BusinessUnit can be queried
+     *
+     * @param newBusinessUnit The BusinessUnit to be added
+     * @return the newly added BusinessUnit
+     */
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
@@ -79,6 +98,15 @@ public class BusinessUnitController {
                 .body(businessUnitDto);
     }
 
+    /**
+     * Update the BusinessUnit with the given id with the BusinessUnit in the Request Body.
+     *
+     * Will throw an EntityNotFoundException if there is no BusinessUnit with the given id
+     *
+     * @param id    the id of the BusinessUnit to be updated
+     * @param businessUnitDto the new values for the BusinessUnit
+     * @return the newly updated BusinessUnit
+     */
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
@@ -89,6 +117,14 @@ public class BusinessUnitController {
         return ResponseEntity.ok(businessUnitService.updateBusinessUnit(id, businessUnitDto));
     }
 
+    /**
+     * Deletes the BusinessUnit with the given id
+     *
+     * Will throw an EntityNotFoundException if there is no BusinessUnit with the given id
+     *
+     * @param id the id of the BusinessUnit which is to be deleted
+     * @return an empty Response with the noContent Status Code
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -114,8 +150,8 @@ public class BusinessUnitController {
     ) {
         LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
         LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
-        if(startDate.isAfter(endDate)) {
-            throw new InvalidDateRangeError();
+        if (startDate.isAfter(endDate)) {
+            throw new InvalidDateRangeException();
         }
         return pagedResourcesAssemblerObjective.toModel(
                 businessUnitObjectiveService.findAllByBusinessUnitId(

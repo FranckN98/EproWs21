@@ -79,6 +79,8 @@ public class OkrUser implements UserDetails {
         return role;
     }
 
+    public void setRole(Role role) { this.role = role; }
+
     public BusinessUnit getBusinessUnit() {
         return businessUnit;
     }
@@ -119,6 +121,7 @@ public class OkrUser implements UserDetails {
     }
 
     public boolean hasPrivilege(String privilegeName) {
-        return role.getPrivileges().stream().anyMatch(privilege -> privilege.getName().equals(privilegeName));
+        return role != null &&
+                role.getPrivileges().stream().anyMatch(privilege -> privilege.getName().equals(privilegeName));
     }
 }

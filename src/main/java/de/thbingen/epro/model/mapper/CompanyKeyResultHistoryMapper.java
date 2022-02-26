@@ -8,8 +8,4 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {CompanyKeyResultMapper.class, HistoricalCompanyKeyResultMapper.class})
 public interface CompanyKeyResultHistoryMapper {
     CompanyKeyResultHistoryDto companyKeyResultHistoryToDto(CompanyKeyResultHistory companyKeyResultHistory);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "companyKeyResult", ignore = true)
-    CompanyKeyResultHistory dtoToCompanyKeyResultHistory(CompanyKeyResultHistoryDto companyKeyResultHistoryDto);
 }

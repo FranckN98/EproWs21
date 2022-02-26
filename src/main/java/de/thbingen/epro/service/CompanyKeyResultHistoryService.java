@@ -1,7 +1,6 @@
 package de.thbingen.epro.service;
 
 import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
-import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.entity.CompanyKeyResultHistory;

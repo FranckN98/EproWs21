@@ -1,6 +1,6 @@
 package de.thbingen.epro.controller;
 
-import de.thbingen.epro.model.dto.DashboardItem;
+import de.thbingen.epro.model.dto.dashboard.DashboardItem;
 import de.thbingen.epro.service.DashboardService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.GetMapping;

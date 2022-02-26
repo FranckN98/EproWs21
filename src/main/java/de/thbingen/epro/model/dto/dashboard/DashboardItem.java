@@ -1,7 +1,5 @@
-package de.thbingen.epro.model.dto;
+package de.thbingen.epro.model.dto.dashboard;
 
-import de.thbingen.epro.model.dto.dashboard.BusinessUnitDashboardItem;
-import de.thbingen.epro.model.dto.dashboard.CompanyDashboardItem;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.util.List;
