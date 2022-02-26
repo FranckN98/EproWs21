@@ -12,6 +12,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -37,11 +38,13 @@ public class BusinessUnitKeyResultController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitKeyResultService.findAllBusinessUnitKeyResults(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitKeyResultDto findById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultDto> result = businessUnitKeyResultService.findById(id);
         if (result.isPresent()) {
@@ -51,6 +54,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitKeyResultDto businessUnitKeyResultDto
@@ -62,6 +66,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
@@ -71,6 +76,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @GetMapping(value = "/{id}/history", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultHistoryDto>> getHistory(
             @PageableDefault Pageable pageable,
             @PathVariable Long id
@@ -87,6 +93,7 @@ public class BusinessUnitKeyResultController {
             value = "/{businessUnitKeyResultId}/companyKeyResultReference/{companyKeyResultId}",
             method = {RequestMethod.PUT, RequestMethod.POST}
     )
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> referenceCompanyKeyResult(
             @PathVariable Long businessUnitKeyResultId,
             @PathVariable Long companyKeyResultId
@@ -105,6 +112,7 @@ public class BusinessUnitKeyResultController {
     }
 
     @DeleteMapping("/{businessUnitKeyResultId}/companyKeyResultReference")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteCompanyKeyResultReference(
             @PathVariable Long businessUnitKeyResultId
     ) {

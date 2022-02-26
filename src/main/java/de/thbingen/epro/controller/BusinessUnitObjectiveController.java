@@ -16,6 +16,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -45,6 +46,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitObjectiveDto>> findAll(
             @PageableDefault Pageable pageable,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
@@ -65,6 +67,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public BusinessUnitObjectiveDto findById(@PathVariable Long id) {
         Optional<BusinessUnitObjectiveDto> result = businessUnitObjectiveService.findById(id);
         if (result.isPresent()) {
@@ -74,6 +77,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitObjectiveDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitObjectiveDto businessUnitObjectiveDto
@@ -85,6 +89,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitObjectiveService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitObjective with this businessUnitObjectiveId exists");
@@ -99,6 +104,7 @@ public class BusinessUnitObjectiveController {
             value = "/{businessUnitObjectiveId}/companyKeyResultReference/{companyKeyResultId}",
             method = {RequestMethod.PUT, RequestMethod.POST}
     )
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> referenceCompanyKeyResult(
             @PathVariable Long businessUnitObjectiveId,
             @PathVariable Long companyKeyResultId
@@ -117,6 +123,7 @@ public class BusinessUnitObjectiveController {
     }
 
     @DeleteMapping("/{businessUnitObjectiveId}/companyKeyResultReference")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteCompanyKeyResultReference(
             @PathVariable Long businessUnitObjectiveId
     ) {
@@ -139,6 +146,7 @@ public class BusinessUnitObjectiveController {
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.ALL_VALUE
     )
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(
             @PathVariable Long businessUnitObjectiveId,
             @PageableDefault Pageable pageable
@@ -151,6 +159,7 @@ public class BusinessUnitObjectiveController {
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> addNewKeyResult(
             @PathVariable Long businessUnitObjectiveId,
             @RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto

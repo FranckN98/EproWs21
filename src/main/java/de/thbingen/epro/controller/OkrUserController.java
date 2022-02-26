@@ -9,6 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -28,11 +29,13 @@ public class OkrUserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('view_users')")
     public PagedModel<EntityModel<OkrUserDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(okrUserService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('view_users') or (hasAuthority('read') and @customExpressions.isSameUser(#id, principal.username))")
     public OkrUserDto findById(@PathVariable Long id) {
         Optional<OkrUserDto> result = okrUserService.findById(id);
         if (result.isPresent())
@@ -41,12 +44,14 @@ public class OkrUserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('add_users')")
     public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
         OkrUserDto okrUserDto = okrUserService.insertOkrUser(newUser);
         return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_users')")
     public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserDto okrUserDto) {
         if (!okrUserService.existsById(id))
             throw new EntityNotFoundException("No OkrUser with this id exists");
@@ -55,6 +60,7 @@ public class OkrUserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_users')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!okrUserService.existsById(id)) {
             throw new EntityNotFoundException("No OkrUser with this id exists");

@@ -3,45 +3,50 @@ package de.thbingen.epro.security;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.compression.GzipCompressionCodec;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Map;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-import static io.jsonwebtoken.impl.TextCodec.BASE64;
-import static java.util.Objects.requireNonNull;
 
 @Service
 public class JWTTokenService implements Clock, TokenService {
-    private static final GzipCompressionCodec COMPRESSION_CODEC = new GzipCompressionCodec();
 
-    String issuer;
-    String secretKey;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    @Value("${jwt.issuer}")
+    private String jwtIssuer;
+    @Value("${jwt.type}")
+    private String jwtType;
+    @Value("${jwt.audience}")
+    private String jwtAudience;
 
     JWTTokenService() {
         super();
-        this.issuer = requireNonNull("testing");
-        this.secretKey = BASE64.encode("testingkeytesting");
     }
 
     @Override
     public String newToken(final Map<String, String> attributes) {
         final DateTime now = DateTime.now();
         final Claims claims = Jwts.claims()
-                .setIssuer(issuer)
-                .setIssuedAt(now.toDate());
-        claims.putAll(attributes);
+                .setIssuer(jwtIssuer)
+                .setSubject(attributes.get("username"))
+                .setIssuedAt(now.toDate()).setAudience(jwtAudience)
+                .setExpiration(new Date(System.currentTimeMillis()+3600000));
+                claims.putAll(attributes);
 
-        return Jwts.builder().setClaims(claims).signWith(HS256, secretKey).compressWith(COMPRESSION_CODEC)
+        return Jwts.builder()
+                .setClaims(claims)
+                .signWith(HS256, jwtSecret)
                 .compact();
     }
 
     @Override
     public Map<String, String> verify(final String token) {
-        final JwtParser parser = Jwts.parser().requireIssuer(issuer).setClock(this).setSigningKey(secretKey);
+        final JwtParser parser = Jwts.parser().requireIssuer(jwtIssuer).setClock(this).setSigningKey(jwtSecret);
         return parseClaims(() -> parser.parseClaimsJws(token).getBody());
     }
 

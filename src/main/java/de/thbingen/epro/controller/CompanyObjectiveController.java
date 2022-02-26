@@ -14,6 +14,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -41,6 +42,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyObjectiveDto>> findAll(
             @PageableDefault Pageable pageable,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
@@ -61,6 +63,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public CompanyObjectiveDto findById(@PathVariable Long id) {
         Optional<CompanyObjectiveDto> result = companyObjectiveService.findById(id);
         if (result.isPresent()) {
@@ -70,12 +73,14 @@ public class CompanyObjectiveController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyObjectiveDto> addNew(@RequestBody @Valid CompanyObjectiveDto newCompanyObjective) {
         CompanyObjectiveDto companyObjectiveDto = companyObjectiveService.insertCompanyObjective(newCompanyObjective);
         return ResponseEntity.created(companyObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyObjectiveDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyObjectiveDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid CompanyObjectiveDto companyObjectiveDto
@@ -88,6 +93,7 @@ public class CompanyObjectiveController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!companyObjectiveService.existsById(id)) {
             throw new EntityNotFoundException("No CompanyObjective with this id exists");
@@ -97,6 +103,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping(value = "/{id}/keyresults", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultDto>> findAllCompanyKeyResultsByCompanyObjectiveId(
             @PageableDefault Pageable pageable,
             @PathVariable Long id
@@ -105,6 +112,7 @@ public class CompanyObjectiveController {
     }
 
     @PostMapping("/{id}/keyresults")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyKeyResultDto> addNew(
             @PathVariable Long id,
             @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto

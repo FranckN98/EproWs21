@@ -12,6 +12,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -35,6 +36,7 @@ public class CompanyKeyResultController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultDto>> findAll(
             @PageableDefault Pageable pageable
     ) {
@@ -43,6 +45,7 @@ public class CompanyKeyResultController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public CompanyKeyResultDto findById(@PathVariable Long id) {
         Optional<CompanyKeyResultDto> result = companyKeyResultService.findById(id);
         if (result.isPresent()) {
@@ -52,6 +55,7 @@ public class CompanyKeyResultController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyKeyResultDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid CompanyKeyResultDto companyKeyResultDto
@@ -63,6 +67,7 @@ public class CompanyKeyResultController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!companyKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
@@ -72,6 +77,7 @@ public class CompanyKeyResultController {
     }
 
     @GetMapping(value = "/{id}/history", produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getHistory(
             @PageableDefault Pageable pageable,
             @PathVariable Long id

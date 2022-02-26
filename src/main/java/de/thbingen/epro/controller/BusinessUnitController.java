@@ -90,7 +90,7 @@ public class BusinessUnitController {
      * @return the newly added BusinessUnit
      */
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs')")
     public ResponseEntity<BusinessUnitDto> addNew(@RequestBody @Valid BusinessUnitDto newBusinessUnit) {
         BusinessUnitDto businessUnitDto = businessUnitService.insertBusinessUnit(newBusinessUnit);
         return ResponseEntity
@@ -108,7 +108,7 @@ public class BusinessUnitController {
      * @return the newly updated BusinessUnit
      */
     @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or (hasAuthority('change_own_BU_OKRs') and @customExpressions.belongsToBusinessUnit(#id, principal.username))")
     public ResponseEntity<BusinessUnitDto> updateById(@PathVariable Long id, @RequestBody @Valid BusinessUnitDto businessUnitDto) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
@@ -126,7 +126,7 @@ public class BusinessUnitController {
      * @return an empty Response with the noContent Status Code
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
@@ -168,7 +168,7 @@ public class BusinessUnitController {
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('change_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or (hasAuthority('change_own_BU_OKRs') and @customExpressions.belongsToBusinessUnit(#id, principal.username))")
     public ResponseEntity<BusinessUnitObjectiveDto> addNewBusinessUnitObjective(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitObjectiveDto newBusinessUnitObjectiveDto
@@ -190,6 +190,7 @@ public class BusinessUnitController {
             value = "/{id}/users",
             produces = MediaTypes.HAL_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('view_users')")
     public PagedModel<EntityModel<OkrUserDto>> getAllOkrUsers(@PageableDefault Pageable pageable, @PathVariable Long id) {
         return pagedResourcesAssemblerOkrUser.toModel(okrUserService.findAllByBusinessUnitId(id, pageable));
     }
@@ -199,6 +200,7 @@ public class BusinessUnitController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaTypes.HAL_JSON_VALUE
     )
+    @PreAuthorize("")
     public OkrUserDto addNewUser() {
         //TODO
         return new OkrUserDto();
