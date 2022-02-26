@@ -25,13 +25,16 @@ public class CamelCaseDisplayNameGenerator extends DisplayNameGenerator.Standard
 
     // Adapted to not seperate consecutive Upper-Case-Chars with Whitespace
     // Adapted to make first char uppercase
+    // Adapted to replace _ with whitespace
     String replaceCamelCase(String camelCase) {
         StringBuilder result = new StringBuilder();
         result.append(Character.toUpperCase(camelCase.charAt(0)));
-        for (int i=1; i<camelCase.length(); i++) {
-            if (Character.isUpperCase(camelCase.charAt(i)) && Character.isLowerCase(camelCase.charAt(i-1))) {
+        for (int i = 1; i < camelCase.length(); i++) {
+            if (Character.isUpperCase(camelCase.charAt(i)) && Character.isLowerCase(camelCase.charAt(i - 1))) {
                 result.append(' ');
                 result.append(camelCase.charAt(i));
+            } else if (camelCase.charAt(i) == '_') {
+                result.append(' ');
             } else {
                 result.append(camelCase.charAt(i));
             }
