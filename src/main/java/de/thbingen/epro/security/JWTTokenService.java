@@ -19,10 +19,12 @@ public class JWTTokenService implements Clock, TokenService {
     private String jwtSecret;
     @Value("${jwt.issuer}")
     private String jwtIssuer;
-    @Value("${jwt..type}")
+    @Value("${jwt.type}")
     private String jwtType;
     @Value("${jwt.audience}")
     private String jwtAudience;
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
     JWTTokenService() {
         super();
@@ -36,10 +38,11 @@ public class JWTTokenService implements Clock, TokenService {
                 .setSubject(attributes.get("username"))
                 .setIssuedAt(now.toDate())
                 .setAudience(jwtAudience)
-                .setExpiration(new Date(System.currentTimeMillis()+3600000));
+                .setExpiration(new Date(System.currentTimeMillis()+expiration));
                 claims.putAll(attributes);
 
         return Jwts.builder()
+                .setHeaderParam("typ", jwtType)
                 .setClaims(claims)
                 .signWith(HS256, jwtSecret)
                 .compact();
