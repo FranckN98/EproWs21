@@ -79,6 +79,8 @@ public class OkrUser implements UserDetails
         return role;
     }
 
+    public void setRole(Role role) {this.role = role;}
+
     public BusinessUnit getBusinessUnit() {
         return businessUnit;
     }
