@@ -1,6 +1,5 @@
 package de.thbingen.epro.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,8 +11,13 @@ import java.util.Optional;
 @Component
 public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-    @Autowired
-    UserAuthenticationService auth;
+
+    private final UserAuthenticationService auth;
+
+    public TokenAuthenticationProvider(UserAuthenticationService auth) {
+        super();
+        this.auth = auth;
+    }
 
     protected void additionalAuthenticationChecks(final UserDetails d, final UsernamePasswordAuthenticationToken auth) {
     }

@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.NonMatchingIdsException;
 import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.dto.OkrUserPostDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,28 +43,28 @@ public class OkrUserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('add_users')")
-    public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
-        OkrUserDto okrUserDto = okrUserService.saveOkrUser(newUser);
+    public ResponseEntity<OkrUserPostDto> addNew(@RequestBody @Valid OkrUserPostDto newUser) {
+        OkrUserPostDto okrUserPostDto = okrUserService.saveOkrUser(newUser);
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("localhost")
                 .port(8080)
                 .path("/api/v1/users/{id}")
-                .buildAndExpand(okrUserDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(okrUserDto);
+                .buildAndExpand(okrUserPostDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(okrUserPostDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('change_users')")
-    public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserDto okrUserDto) {
-        if (okrUserDto.getId() == null)
-            okrUserDto.setId(id);
-        if (!Objects.equals(okrUserDto.getId(), id))
+    public ResponseEntity<OkrUserPostDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserPostDto okrUserPostDto) {
+        if (okrUserPostDto.getId() == null)
+            okrUserPostDto.setId(id);
+        if (!Objects.equals(okrUserPostDto.getId(), id))
             throw new NonMatchingIdsException("Ids in path and jsonObject do not match");
         if (!okrUserService.existsById(id))
-            return this.addNew(okrUserDto);
+            return this.addNew(okrUserPostDto);
 
-        return ResponseEntity.ok(okrUserService.saveOkrUser(okrUserDto));
+        return ResponseEntity.ok(okrUserService.saveOkrUser(okrUserPostDto));
     }
 
     @DeleteMapping("/{id}")
