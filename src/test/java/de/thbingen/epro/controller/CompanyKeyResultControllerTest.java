@@ -1,22 +1,28 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
+import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
+import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
+import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,16 +32,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = {CompanyKeyResultController.class, CompanyKeyResultHistoryController.class})
+@WebMvcTest(controllers = CompanyKeyResultController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {
+                                CompanyKeyResultController.class,
+                                CompanyKeyResultMapper.class,
+                                CompanyKeyResultAssembler.class,
+                                CompanyKeyResultHistoryMapper.class,
+                                CompanyKeyResultHistoryAssembler.class,
+                                HistoricalCompanyKeyResultMapper.class
+                        }
+                )}
+)
+@Import(RestExceptionHandler.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CompanyKeyResultControllerTest {
 
     @Autowired
@@ -46,10 +70,7 @@ public class CompanyKeyResultControllerTest {
     private CompanyKeyResultHistoryService companyKeyResultHistoryService;
 
     @Autowired
-    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
-
-    private final CompanyKeyResultMapper companyKeyResultMapper = Mappers.getMapper(CompanyKeyResultMapper.class);
-    private final CompanyKeyResultAssembler companyKeyResultAssembler = new CompanyKeyResultAssembler(companyKeyResultMapper, annotationLinkRelationProvider);
+    private CompanyKeyResultAssembler companyKeyResultAssembler;
 
 
     // region GET ALL
@@ -95,66 +116,6 @@ public class CompanyKeyResultControllerTest {
     }
 
     // endregion
-    // region POST
-
-    /*@Test
-    @DisplayName("Post with valid body should return 201 - Created with location header")
-    public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
-        CompanyKeyResultDto toPost = companyKeyResultAssembler.toModel(companyKeyResult);
-        String jsonToPost = objectMapper.writeValueAsString(toPost);
-
-        when(companyKeyResultService.insertCompanyKeyResult(ArgumentMatchers.any(CompanyKeyResultDto.class))).thenReturn(toPost);
-
-        mockMvc.perform(
-                        post("/companyKeyResults")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonToPost)
-                )
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/companyKeyResults/1"))
-                .andExpect(jsonPath("$.name").value("CK1"))
-                .andExpect(jsonPath("$.achievement").value(0))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyKeyResults/1")));
-    }*/
-
-    @Test
-    @DisplayName("Post with invalid body should return 400 - Bad Request")
-    public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
-        CompanyKeyResultDto toPost = companyKeyResultAssembler.toModel(companyKeyResult);
-        String invalidJson = objectMapper.writeValueAsString(toPost);
-
-        mockMvc.perform(post("/companyKeyResults")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidJson))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
-                .andExpect(jsonPath("$.timestamp", matchesPattern("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d+")))
-                .andExpect(jsonPath("$.message").value("Invalid JSON"))
-                .andExpect(jsonPath("$.debugMessage").doesNotExist())
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors[0].object").value("companyKeyResultDto"))
-                .andExpect(jsonPath("$.errors[0].field").value("name"))
-                .andExpect(jsonPath("$.errors[0].rejectedValue").value(""))
-                .andExpect(jsonPath("$.errors[0].message").value("must not be blank"));
-    }
-
-    @Test
-    @DisplayName("Post with id should return 405 - Method not allowed")
-    public void postWithIdShouldReturnMethodNotAllowed() throws Exception {
-        mockMvc.perform(post("/companyKeyResults/1"))
-                .andExpect(status().isMethodNotAllowed());
-    }
-
-    // endregion
 
     // region PUT
 
@@ -177,27 +138,6 @@ public class CompanyKeyResultControllerTest {
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/companyKeyResults/1")));
     }
-
-    /*@Test
-    @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
-    public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
-        CompanyKeyResultDto toPut = companyKeyResultAssembler.toModel(companyKeyResult);
-        String jsonToPut = objectMapper.writeValueAsString(toPut);
-
-        when(companyKeyResultService.existsById(1L)).thenReturn(false);
-        when(companyKeyResultService.insertCompanyKeyResult(any(CompanyKeyResultDto.class))).thenReturn(toPut);
-
-        mockMvc.perform(put("/companyKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
-                .andDo(print())
-                .andExpect(status().isCreated()
-                )
-                .andExpect(jsonPath("$.name").value("changedName"))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyKeyResults/1")));
-    }*/
 
     // endregion
 

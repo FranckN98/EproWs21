@@ -16,7 +16,7 @@ public class LoginController {
     UserAuthenticationService authentication;
 
     @PostMapping("/login")
-    String login(@RequestBody Map<String, String> body) {
+    public String login(@RequestBody Map<String, String> body) {
         return authentication.login(body.get("username"), body.get("password"))
                 .orElseThrow(() -> new RuntimeException("invalid login and/or password"));
     }

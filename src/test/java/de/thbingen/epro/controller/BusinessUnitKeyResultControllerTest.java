@@ -1,10 +1,16 @@
 package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
+import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
+import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
+import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
+import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
+import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -12,8 +18,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
@@ -37,7 +47,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = BusinessUnitKeyResultController.class)
+@WebMvcTest(controllers = BusinessUnitKeyResultController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {
+                                BusinessUnitKeyResultController.class,
+                                BusinessUnitKeyResultMapper.class,
+                                BusinessUnitKeyResultAssembler.class,
+                        }
+                )}
+)
+@Import(RestExceptionHandler.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class BusinessUnitKeyResultControllerTest {
 
     @Autowired
@@ -48,11 +71,12 @@ public class BusinessUnitKeyResultControllerTest {
     private BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService;
     @MockBean
     private CompanyKeyResultService companyKeyResultService;
-    @MockBean
+
+    @Autowired
     private AnnotationLinkRelationProvider annotationLinkRelationProvider;
 
-    private final BusinessUnitKeyResultMapper businessUnitKeyResultMapper = Mappers.getMapper(BusinessUnitKeyResultMapper.class);
-    private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler = new BusinessUnitKeyResultAssembler(businessUnitKeyResultMapper, annotationLinkRelationProvider);
+    @Autowired
+    private BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler;
 
 
     // region GET ALL
@@ -106,41 +130,6 @@ public class BusinessUnitKeyResultControllerTest {
 
     // endregion
 
-    // region POST
-
-    /*@Test
-    @DisplayName("Post with valid body should return 201 - Created with location header")
-    public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "BKR1", 10, 100, 50, "a comment", OffsetDateTime.now());
-        BusinessUnitKeyResultDto toPost = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
-        String jsonToPost = objectMapper.writeValueAsString(toPost);
-
-        when(businessUnitKeyResultService.saveBusinessUnitKeyResult(ArgumentMatchers.any(BusinessUnitKeyResultDto.class))).thenReturn(toPost);
-
-        mockMvc.perform(
-                        post("/businessUnitKeyResults")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonToPost)
-                )
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/businessUnitKeyResults/1"))
-                .andExpect(jsonPath("$.name").value("BKR1"))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
-    }*/
-
-    @Test
-    @DisplayName("Post with id should return 405 - Method not allowed")
-    public void postWithIdShouldReturnMethodNotAllowed() throws Exception {
-        mockMvc.perform(post("/businessUnitKeyResults/1"))
-                .andExpect(status().isMethodNotAllowed());
-    }
-
-    // endregion
-
     // region PUT
 
     @Test
@@ -162,26 +151,6 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
     }
-
-    /*@Test
-    @DisplayName("Valid put should return 201 - Created when Object does not already Exist")
-    public void validPutShouldReturnCreatedWhenObjectDoesNotAlreadyExist() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "changedName", 10, 100, 50, "a comment", OffsetDateTime.now());
-        BusinessUnitKeyResultDto toPut = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
-        String jsonToPut = objectMapper.writeValueAsString(toPut);
-
-        when(businessUnitKeyResultService.existsById(1L)).thenReturn(false);
-        when(businessUnitKeyResultService.saveBusinessUnitKeyResult(any(BusinessUnitKeyResultDto.class))).thenReturn(toPut);
-
-        mockMvc.perform(put("/businessUnitKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("changedName"))
-                .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
-    }*/
 
     // endregion
 

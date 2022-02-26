@@ -13,6 +13,7 @@ public class CompanyObjectiveDto extends RepresentationModel<CompanyObjectiveDto
     @Min(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     @Max(value = 0, message = "Achievement must be 0 when creating a new Company Objective")
     private Float achievement = 0f;
+    @NotBlank
     private String name;
     private LocalDate startDate;
     @Future

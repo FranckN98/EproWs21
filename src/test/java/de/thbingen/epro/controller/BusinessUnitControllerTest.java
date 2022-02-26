@@ -13,9 +13,11 @@ import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.OkrUserService;
+import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
 import de.thbingen.epro.util.SecurityContextInitializer;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -84,6 +87,9 @@ public class BusinessUnitControllerTest {
     @Autowired
     private BusinessUnitObjectiveAssembler businessUnitObjectiveAssembler;
 
+    @Autowired
+    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
+
     // region GET ALL
 
     @Test
@@ -95,20 +101,23 @@ public class BusinessUnitControllerTest {
                 new BusinessUnit(1L, "Personal"),
                 new BusinessUnit(2L, "IT")
         ).map(assembler::toModel).collect(Collectors.toList());
+
         when(businessUnitService.findAll(Pageable.ofSize(10))).thenReturn(new PageImpl<>(businessUnits));
+
+        String expectedLinkRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitDto.class).toString();
         mockMvc.perform(get("/businessUnits").accept(MediaTypes.HAL_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(3)))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$._embedded").exists())
-                .andExpect(jsonPath("$._embedded.businessUnits").exists())
-                .andExpect(jsonPath("$._embedded.businessUnits", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.businessUnits[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.businessUnits[0]._links.self.href", endsWith("/businessUnits/1")))
-                .andExpect(jsonPath("$._embedded.businessUnits[0].name", is("Personal")))
-                .andExpect(jsonPath("$._embedded.businessUnits[1]._links.self.href", endsWith("/businessUnits/2")))
-                .andExpect(jsonPath("$._embedded.businessUnits[1].name", is("IT")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation).exists())
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation, hasSize(2)))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation +"[*]._links").exists())
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation +"[0]._links.self.href", endsWith("/businessUnits/1")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation +"[0].name", is("Personal")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation +"[1]._links.self.href", endsWith("/businessUnits/2")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation +"[1].name", is("IT")))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits")))
                 .andReturn();

@@ -1,17 +1,25 @@
 package de.thbingen.epro.controller;
 
+import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
+import de.thbingen.epro.model.assembler.CompanyObjectiveAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.model.dto.HistoricalCompanyKeyResultDto;
 import de.thbingen.epro.model.entity.*;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
+import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
+import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
@@ -32,7 +40,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CompanyKeyResultHistoryController.class)
+@WebMvcTest(controllers = CompanyKeyResultHistoryController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {
+                                CompanyKeyResultHistoryController.class,
+                                CompanyKeyResultHistoryMapper.class,
+                                CompanyKeyResultHistoryAssembler.class,
+                                HistoricalCompanyKeyResultMapper.class
+                        }
+                )}
+)
+@Import(RestExceptionHandler.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class CompanyKeyResultHistoryControllerTest {
 
     @Autowired
@@ -41,8 +63,7 @@ public class CompanyKeyResultHistoryControllerTest {
     @MockBean
     private CompanyKeyResultHistoryService companyKeyResultHistoryService;
 
-    private CompanyKeyResultHistoryMapper companyKeyResultHistoryMapper;
-    @MockBean
+    @Autowired
     private CompanyKeyResultHistoryAssembler companyKeyResultHistoryAssembler;
 
     // region GET ALL
@@ -66,11 +87,11 @@ public class CompanyKeyResultHistoryControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$._embedded").exists())
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistory").exists())
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistory", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistory[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistory[0]._links.self.href", endsWith("/companyKeyResultHistory/1")))
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistory[1]._links.self.href", endsWith("/companyKeyResultHistory/2")))
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList").exists())
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList", hasSize(2)))
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[*]._links").exists())
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[0]._links.self.href", endsWith("/companyKeyResultHistory/1")))
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[1]._links.self.href", endsWith("/companyKeyResultHistory/2")))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/companyKeyResultHistory")))
                 .andReturn();

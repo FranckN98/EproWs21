@@ -1,25 +1,37 @@
 package de.thbingen.epro.controller;
 
+import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitKeyResultHistoryAssembler;
+import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
+import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.entity.HistoricalBusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
+import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
+import de.thbingen.epro.model.mapper.HistoricalBusinessUnitKeyResultMapper;
+import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +45,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = BusinessUnitKeyResultHistoryController.class)
+@WebMvcTest(controllers = BusinessUnitKeyResultHistoryController.class,
+        useDefaultFilters = false,
+        includeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {
+                                BusinessUnitKeyResultHistoryController.class,
+                                BusinessUnitKeyResultHistoryMapper.class,
+                                BusinessUnitKeyResultHistoryAssembler.class,
+                                HistoricalBusinessUnitKeyResultMapper.class
+                        }
+                )}
+)
+@Import(RestExceptionHandler.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class BusinessUnitKeyResultHistoryControllerTest {
 
     @Autowired
@@ -41,9 +67,11 @@ public class BusinessUnitKeyResultHistoryControllerTest {
     @MockBean
     private BusinessUnitKeyResultHistoryService businessUnitKeyResultHistoryService;
 
-    private BusinessUnitKeyResultHistoryMapper businessUnitKeyResultHistoryMapper;
-    @MockBean
+    @Autowired
     private BusinessUnitKeyResultHistoryAssembler businessUnitKeyResultHistoryAssembler;
+
+    @Autowired
+    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
 
     // region GET ALL
 
@@ -52,13 +80,16 @@ public class BusinessUnitKeyResultHistoryControllerTest {
     public void getAllShouldReturnAllBusinessUnitKeyResultHistories() throws Exception {
         BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "BKR1", 10, 100, 50, "a comment", OffsetDateTime.now());
         HistoricalBusinessUnitKeyResult businessUnitKeyResultHistorical = new HistoricalBusinessUnitKeyResult();
-        Set<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtos = Stream.of(
+        List<BusinessUnitKeyResultHistoryDto> businessUnitKeyResultHistoryDtos = Stream.of(
                 new BusinessUnitKeyResultHistory(1L, businessUnitKeyResult, OffsetDateTime.now(), businessUnitKeyResultHistorical),
                 new BusinessUnitKeyResultHistory(2L, businessUnitKeyResult, OffsetDateTime.now(), businessUnitKeyResultHistorical)
-        ).map(businessUnitKeyResultHistoryAssembler::toModel).collect(Collectors.toSet());
+        ).map(businessUnitKeyResultHistoryAssembler::toModel).toList();
 
 
-        when(businessUnitKeyResultHistoryService.findAll(Pageable.ofSize(10))).thenReturn(new PageImpl<>(new ArrayList<>(businessUnitKeyResultHistoryDtos)));
+        when(businessUnitKeyResultHistoryService.findAll(Pageable.ofSize(10)))
+                .thenReturn(new PageImpl<>(businessUnitKeyResultHistoryDtos));
+
+        String expectedLinkRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitKeyResultHistoryDto.class).toString();
 
         mockMvc.perform(get("/businessUnitKeyResultHistory").accept(MediaTypes.HAL_JSON))
                 .andDo(print())
@@ -66,11 +97,11 @@ public class BusinessUnitKeyResultHistoryControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$._embedded").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResultHistory").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResultHistory", hasSize(2)))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResultHistory[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResultHistory[0]._links.self.href", endsWith("/businessUnitKeyResultHistory/1")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResultHistory[1]._links.self.href", endsWith("/businessUnitKeyResultHistory/2")))
+                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation).exists())
+                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation, hasSize(2)))
+                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[*]._links").exists())
+                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[0]._links.self.href", endsWith("/businessUnitKeyResultHistory/1")))
+                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[1]._links.self.href", endsWith("/businessUnitKeyResultHistory/2")))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResultHistory")))
                 .andReturn();
