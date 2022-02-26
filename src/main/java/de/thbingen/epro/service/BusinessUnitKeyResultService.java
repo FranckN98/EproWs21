@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -103,7 +105,8 @@ public class BusinessUnitKeyResultService {
      * @return A {@link BusinessUnitKeyResultDto} of the new {@link BusinessUnitKeyResult}
      */
     public BusinessUnitKeyResultDto updateBusinessUnitKeyResult(Long id, BusinessUnitKeyResultDto businessUnitKeyResultDto) {
-        BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultRepository.getById(id);
+        Optional<BusinessUnitKeyResult> businessUnitKeyResultOptional = businessUnitKeyResultRepository.findById(id);
+        BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultOptional.orElseThrow(() -> new EntityNotFoundException("No BusinessUnitKeyResult with this id exists"));
         businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromDto(businessUnitKeyResultDto, businessUnitKeyResult);
         return businessUnitKeyResultAssembler.toModel(businessUnitKeyResultRepository.save(businessUnitKeyResult));
     }

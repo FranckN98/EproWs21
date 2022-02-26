@@ -85,7 +85,7 @@ public class BusinessUnitKeyResultController {
             throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
         }
         return businessUnitKeyResultHistoryDtoPagedResourcesAssembler.toModel(
-                businessUnitKeyResultHistoryService.getAllByBusinessUnitKeyResultId(id, pageable)
+                businessUnitKeyResultHistoryService.findAllByBusinessUnitKeyResultId(id, pageable)
         );
     }
 

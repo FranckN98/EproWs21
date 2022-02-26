@@ -200,7 +200,7 @@ public class BusinessUnitController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaTypes.HAL_JSON_VALUE
     )
-    @PreAuthorize("")
+    @PreAuthorize("hasAuthority('add_users')")
     public OkrUserDto addNewUser() {
         //TODO
         return new OkrUserDto();

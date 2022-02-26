@@ -4,7 +4,6 @@ import de.thbingen.epro.model.assembler.BusinessUnitKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
-import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
 import de.thbingen.epro.repository.BusinessUnitKeyResultHistoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,7 +68,7 @@ public class BusinessUnitKeyResultHistoryService {
      * @param pageable Pagination information to request a specific {@link Page} of {@link BusinessUnitKeyResultHistory}s
      * @return The requested {@link Page} of {@link BusinessUnitKeyResultHistory}s
      */
-    public Page<BusinessUnitKeyResultHistoryDto> getAllByBusinessUnitKeyResultId(Long id, Pageable pageable) {
+    public Page<BusinessUnitKeyResultHistoryDto> findAllByBusinessUnitKeyResultId(Long id, Pageable pageable) {
         Page<BusinessUnitKeyResultHistory> pagedResult = businessUnitKeyResultHistoryRepository.findAllByCurrentBusinessUnitKeyResultIdOrderByChangeTimeStampDesc(id, pageable);
 
         if (pagedResult.hasContent()) {

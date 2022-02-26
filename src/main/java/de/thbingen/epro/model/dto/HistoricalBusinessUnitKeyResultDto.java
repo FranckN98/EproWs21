@@ -12,14 +12,14 @@ public class HistoricalBusinessUnitKeyResultDto {
     private float currentValue;
     private float goalValue;
     private float confidenceLevel;
-    private Integer achievement;
+    private Float achievement;
     private String comment;
     private OffsetDateTime timestamp;
 
     public HistoricalBusinessUnitKeyResultDto() {
     }
 
-    public HistoricalBusinessUnitKeyResultDto(String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp) {
+    public HistoricalBusinessUnitKeyResultDto(String name, float currentValue, float goalValue, float confidenceLevel, Float achievement, String comment, OffsetDateTime timestamp) {
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
@@ -61,11 +61,11 @@ public class HistoricalBusinessUnitKeyResultDto {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

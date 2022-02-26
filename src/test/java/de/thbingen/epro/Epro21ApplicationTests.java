@@ -27,11 +27,4 @@ class Epro21ApplicationTests {
         assertThat(businessUnitRepository).isNotNull();
     }
 
-    @Test
-    void test() throws Exception {
-        mockMvc.perform(get("/businessUnits"))
-                .andExpect(jsonPath("$.*").isArray())
-                .andExpect(jsonPath("$.*", hasSize(1)));
-    }
-
 }

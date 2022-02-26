@@ -12,7 +12,7 @@ public class HistoricalBusinessUnitKeyResult {
     private float currentValue;
     private float goalValue;
     private float confidenceLevel;
-    private Integer achievement;
+    private Float achievement;
     private String comment;
     private OffsetDateTime timestamp;
     private Long businessUnitObjectiveId;
@@ -21,7 +21,7 @@ public class HistoricalBusinessUnitKeyResult {
     public HistoricalBusinessUnitKeyResult() {
     }
 
-    public HistoricalBusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp, Long businessUnitObjectiveId, Long companyKeyResultRef) {
+    public HistoricalBusinessUnitKeyResult(Long id, String name, float currentValue, float goalValue, float confidenceLevel, Float achievement, String comment, OffsetDateTime timestamp, Long businessUnitObjectiveId, Long companyKeyResultRef) {
         this.id = id;
         this.name = name;
         this.currentValue = currentValue;
@@ -74,11 +74,11 @@ public class HistoricalBusinessUnitKeyResult {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

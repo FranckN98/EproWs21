@@ -1,7 +1,6 @@
 package de.thbingen.epro.security;
 
-
-import de.thbingen.epro.model.business.OkrUser;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.repository.OkrUserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ public class CustomExpressions {
 
     public boolean belongsToBusinessUnit(long targetBuId, String username) {
         final Optional<OkrUser> opt = okrUserRepository.findByUsername(username);
-        if (!opt.isPresent())
+        if (opt.isEmpty())
             throw new UsernameNotFoundException("Couldn't find user");
         OkrUser okrUser = opt.get();
         return targetBuId == okrUser.getBusinessUnit().getId();
@@ -27,7 +26,7 @@ public class CustomExpressions {
 
     public boolean isSameUser(long targetUserId, String username) {
         final Optional<OkrUser> opt = okrUserRepository.findByUsername(username);
-        if (!opt.isPresent())
+        if (opt.isEmpty())
             throw new UsernameNotFoundException("Couldn't find user");
         OkrUser okrUser = opt.get();
         return targetUserId == okrUser.getId();
