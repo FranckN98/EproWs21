@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,8 +53,11 @@ public class CompanyObjectiveControllerTest {
     @MockBean
     private CompanyKeyResultService companyKeyResultService;
 
+    @Autowired
+    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
+
     private final CompanyObjectiveMapper mapper = Mappers.getMapper(CompanyObjectiveMapper.class);
-    private final CompanyObjectiveAssembler assembler = new CompanyObjectiveAssembler(mapper);
+    private final CompanyObjectiveAssembler assembler = new CompanyObjectiveAssembler(mapper, annotationLinkRelationProvider);
 
     // region GET ALL
 

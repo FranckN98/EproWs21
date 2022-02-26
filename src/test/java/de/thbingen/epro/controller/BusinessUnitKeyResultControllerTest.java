@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,7 +35,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BusinessUnitKeyResultController.class)
 public class BusinessUnitKeyResultControllerTest {
@@ -48,8 +50,11 @@ public class BusinessUnitKeyResultControllerTest {
     @MockBean
     private CompanyKeyResultService companyKeyResultService;
 
+    @Autowired
+    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
+
     private final BusinessUnitKeyResultMapper businessUnitKeyResultMapper = Mappers.getMapper(BusinessUnitKeyResultMapper.class);
-    private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler = new BusinessUnitKeyResultAssembler(businessUnitKeyResultMapper);
+    private final BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler = new BusinessUnitKeyResultAssembler(businessUnitKeyResultMapper, annotationLinkRelationProvider);
 
 
     // region GET ALL

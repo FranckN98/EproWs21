@@ -10,7 +10,8 @@ import static org.mockito.Mockito.when;
 
 public class SecurityContextInitializer {
 
-    public static final UserProvider ReadOnlyUser = new UserProvider.WithReadOnlyUser();
+    public static final UserProvider ReadOnlyUser = new UserProvider.ReadOnlyUserProvider();
+    public static final UserProvider ViewUsersUser = new UserProvider.ViewUsersUserProvider();
 
     public static void initSecurityContextWithUser(UserProvider userProvider) {
         Authentication authentication = Mockito.mock(Authentication.class);

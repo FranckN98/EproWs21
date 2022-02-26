@@ -10,11 +10,22 @@ public interface UserProvider {
 
     OkrUser provideUser();
 
-    public static class WithReadOnlyUser implements UserProvider {
+    class ReadOnlyUserProvider implements UserProvider {
         @Override
         public OkrUser provideUser() {
             Role role = new Role("Read Only");
             role.setPrivileges(Set.of(new Privilege("read")));
+            OkrUser okrUser = new OkrUser();
+            okrUser.setRole(role);
+            return okrUser;
+        }
+    }
+
+    class ViewUsersUserProvider implements UserProvider {
+        @Override
+        public OkrUser provideUser() {
+            Role role = new Role("View Users");
+            role.setPrivileges(Set.of(new Privilege("view_users")));
             OkrUser okrUser = new OkrUser();
             okrUser.setRole(role);
             return okrUser;

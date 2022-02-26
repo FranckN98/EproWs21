@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -44,8 +45,11 @@ public class CompanyKeyResultControllerTest {
     @MockBean
     private CompanyKeyResultHistoryService companyKeyResultHistoryService;
 
+    @Autowired
+    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
+
     private final CompanyKeyResultMapper companyKeyResultMapper = Mappers.getMapper(CompanyKeyResultMapper.class);
-    private final CompanyKeyResultAssembler companyKeyResultAssembler = new CompanyKeyResultAssembler(companyKeyResultMapper);
+    private final CompanyKeyResultAssembler companyKeyResultAssembler = new CompanyKeyResultAssembler(companyKeyResultMapper, annotationLinkRelationProvider);
 
 
     // region GET ALL

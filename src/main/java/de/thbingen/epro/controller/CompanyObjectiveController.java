@@ -97,7 +97,7 @@ public class CompanyObjectiveController {
     }
 
     @GetMapping(value = "/{id}/keyresults", produces = MediaTypes.HAL_JSON_VALUE)
-    public PagedModel<EntityModel<CompanyKeyResultDto>> getAllCompanyKeyResults(
+    public PagedModel<EntityModel<CompanyKeyResultDto>> findAllCompanyKeyResultsByCompanyObjectiveId(
             @PageableDefault Pageable pageable,
             @PathVariable Long id
     ) {
