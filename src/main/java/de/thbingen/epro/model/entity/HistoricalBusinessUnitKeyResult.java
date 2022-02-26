@@ -9,9 +9,9 @@ import java.time.OffsetDateTime;
 public class HistoricalBusinessUnitKeyResult {
     private Long id;
     private String name;
-    private float currentValue;
-    private float goalValue;
-    private float confidenceLevel;
+    private Float currentValue;
+    private Float goalValue;
+    private Float confidenceLevel;
     private Float achievement;
     private String comment;
     private OffsetDateTime timestamp;
@@ -50,27 +50,27 @@ public class HistoricalBusinessUnitKeyResult {
         this.name = name;
     }
 
-    public float getCurrentValue() {
+    public Float getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(float currentValue) {
+    public void setCurrentValue(Float currentValue) {
         this.currentValue = currentValue;
     }
 
-    public float getGoalValue() {
+    public Float getGoalValue() {
         return goalValue;
     }
 
-    public void setGoalValue(float goalValue) {
+    public void setGoalValue(Float goalValue) {
         this.goalValue = goalValue;
     }
 
-    public float getConfidenceLevel() {
+    public Float getConfidenceLevel() {
         return confidenceLevel;
     }
 
-    public void setConfidenceLevel(float confidenceLevel) {
+    public void setConfidenceLevel(Float confidenceLevel) {
         this.confidenceLevel = confidenceLevel;
     }
 

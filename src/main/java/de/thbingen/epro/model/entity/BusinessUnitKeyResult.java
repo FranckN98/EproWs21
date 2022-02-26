@@ -71,7 +71,8 @@ public class BusinessUnitKeyResult {
         this.comment = comment;
         this.timestamp = timestamp;
         this.businessUnitObjective = businessUnitObjective;
-        //this.businessUnitKeyResultHistories = businessUnitKeyResultHistories;
+        this.companyKeyResult = companyKeyResult;
+        this.businessUnitKeyResultHistories = businessUnitKeyResultHistories;
     }
 
     public Long getId() {

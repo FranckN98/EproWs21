@@ -48,7 +48,7 @@ public class BusinessUnitKeyResultAssembler implements RepresentationModelAssemb
         }
         if (entity.getBusinessUnitKeyResultHistories() != null && !entity.getBusinessUnitKeyResultHistories().isEmpty()) {
             businessUnitKeyResultDto.add(
-                    linkTo(methodOn(BusinessUnitKeyResultHistoryController.class).getAll(null))
+                    linkTo(methodOn(BusinessUnitKeyResultController.class).getHistory(null, entity.getId()))
                             .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitKeyResultHistoryDto.class))
             );
         }

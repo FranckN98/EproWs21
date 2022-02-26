@@ -3,8 +3,6 @@ package de.thbingen.epro.model.dto;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
 
@@ -12,15 +10,10 @@ import java.time.OffsetDateTime;
 public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto> {
 
     private String name;
-    private Integer currentValue;
-    @Min(value = 0, message = "Negative goal Values are not allowed")
-    private Integer goalValue;
-    @Min(value = 0, message = "You shouldn't be negatively confident")
-    @Max(value = 100, message = "Don't bee too overconfident")
-    private Integer confidenceLevel;
-    @Min(value = 0, message = "Achievement must be 0 when creating a new Company Key Result")
-    @Max(value = 0, message = "Achievement must be 0 when creating a new Company Key Result")
-    private Integer achievement;
+    private Float currentValue;
+    private Float goalValue;
+    private Float confidenceLevel;
+    private Float achievement;
     @NotBlank
     private String comment;
     private OffsetDateTime timestamp;
@@ -28,7 +21,7 @@ public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto
     public CompanyKeyResultDto() {
     }
 
-    public CompanyKeyResultDto(String name, Integer currentValue, Integer goalValue, Integer confidenceLevel, Integer achievement, String comment, OffsetDateTime timestamp) {
+    public CompanyKeyResultDto(String name, Float currentValue, Float goalValue, Float confidenceLevel, Float achievement, String comment, OffsetDateTime timestamp) {
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
@@ -46,35 +39,35 @@ public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto
         this.name = name;
     }
 
-    public Integer getCurrentValue() {
+    public Float getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(Integer currentValue) {
+    public void setCurrentValue(Float currentValue) {
         this.currentValue = currentValue;
     }
 
-    public Integer getGoalValue() {
+    public Float getGoalValue() {
         return goalValue;
     }
 
-    public void setGoalValue(Integer goalValue) {
+    public void setGoalValue(Float goalValue) {
         this.goalValue = goalValue;
     }
 
-    public Integer getConfidenceLevel() {
+    public Float getConfidenceLevel() {
         return confidenceLevel;
     }
 
-    public void setConfidenceLevel(Integer confidenceLevel) {
+    public void setConfidenceLevel(Float confidenceLevel) {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

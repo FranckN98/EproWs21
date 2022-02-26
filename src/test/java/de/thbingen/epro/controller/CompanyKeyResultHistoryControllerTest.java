@@ -71,7 +71,7 @@ public class CompanyKeyResultHistoryControllerTest {
     @Test
     @DisplayName("Get All should return all Company Key Result History with 200 - OK")
     public void getAllShouldReturnAllCompanyKeyResultHistories() throws Exception {
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "BKR1", 10, 100, 50, 25,"a comment", OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "BKR1", 10f, 100f, 50f, 25f,"a comment", OffsetDateTime.now());
         HistoricalCompanyKeyResult historicalCompanyKeyResult = new HistoricalCompanyKeyResult();
         Set<CompanyKeyResultHistoryDto> companyKeyResultHistoryDtos = Stream.of(
                 new CompanyKeyResultHistory(1L, OffsetDateTime.now(), companyKeyResult, historicalCompanyKeyResult),
@@ -102,7 +102,7 @@ public class CompanyKeyResultHistoryControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single Business Unit Key result History with 200 - OK")
     public void getWithIdShouldReturnSingleBusinessUnitKeyResultHistory() throws Exception {
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "BKR1", 10, 100, 50, 25,"a comment", OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "BKR1", 10f, 100f, 50f, 25f,"a comment", OffsetDateTime.now());
         HistoricalCompanyKeyResult historicalCompanyKeyResult = new HistoricalCompanyKeyResult();
         when(companyKeyResultHistoryService.findById(1L)).thenReturn(Optional.of(companyKeyResultHistoryAssembler.toModel(new CompanyKeyResultHistory(1L, OffsetDateTime.now(), companyKeyResult, historicalCompanyKeyResult))));
 

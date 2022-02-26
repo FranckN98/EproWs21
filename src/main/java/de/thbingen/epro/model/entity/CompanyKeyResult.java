@@ -16,16 +16,16 @@ public class CompanyKeyResult {
     private String name;
 
     @Column(nullable = false)
-    private Integer currentValue;
+    private Float currentValue;
 
     @Column(nullable = false)
-    private Integer goalValue;
+    private Float goalValue;
 
     @Column(nullable = false)
-    private Integer confidenceLevel;
+    private Float confidenceLevel;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    private Integer achievement;
+    private Float achievement;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String comment;
@@ -49,7 +49,7 @@ public class CompanyKeyResult {
     public CompanyKeyResult() {
     }
 
-    public CompanyKeyResult(Integer goalValue, Integer confidenceLevel, Integer achievement, String name, String comment, OffsetDateTime timestamp) {
+    public CompanyKeyResult(Float goalValue, Float confidenceLevel, Float achievement, String name, String comment, OffsetDateTime timestamp) {
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
         this.achievement = achievement;
@@ -59,7 +59,7 @@ public class CompanyKeyResult {
     }
 
 
-    public CompanyKeyResult(Long id, String name, Integer currentValue, Integer goalValue, Integer achievement, Integer confidenceLevel, String comment, OffsetDateTime timestamp) {
+    public CompanyKeyResult(Long id, String name, Float currentValue, Float goalValue, Float achievement, Float confidenceLevel, String comment, OffsetDateTime timestamp) {
         this.id = id;
         this.name = name;
         this.currentValue = currentValue;
@@ -90,35 +90,35 @@ public class CompanyKeyResult {
         this.name = name;
     }
 
-    public Integer getCurrentValue() {
+    public Float getCurrentValue() {
         return currentValue;
     }
 
-    public void setCurrentValue(Integer currentValue) {
+    public void setCurrentValue(Float currentValue) {
         this.currentValue = currentValue;
     }
 
-    public Integer getGoalValue() {
+    public Float getGoalValue() {
         return goalValue;
     }
 
-    public void setGoalValue(Integer goalValue) {
+    public void setGoalValue(Float goalValue) {
         this.goalValue = goalValue;
     }
 
-    public Integer getConfidenceLevel() {
+    public Float getConfidenceLevel() {
         return confidenceLevel;
     }
 
-    public void setConfidenceLevel(Integer confidenceLevel) {
+    public void setConfidenceLevel(Float confidenceLevel) {
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Integer getAchievement() {
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 

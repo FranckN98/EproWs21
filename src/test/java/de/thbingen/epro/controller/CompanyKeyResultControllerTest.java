@@ -79,8 +79,8 @@ public class CompanyKeyResultControllerTest {
     @DisplayName("Get All should return all Company Key Result with 200 - OK")
     public void getAllshouldReturnAllCompanyKeyresults() throws Exception {
         List<CompanyKeyResultDto> companyKeyResultDtos = Stream.of(
-                new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now()),
-                new CompanyKeyResult(2L, "CK2", 30, 150, 0, 30, "no comment", OffsetDateTime.now())
+                new CompanyKeyResult(1L, "CK1", 10f, 100f, 0f, 50f, "a comment", OffsetDateTime.now()),
+                new CompanyKeyResult(2L, "CK2", 30f, 150f, 0f, 30f, "no comment", OffsetDateTime.now())
         ).map(companyKeyResultAssembler::toModel).collect(Collectors.toList());
 
         when(companyKeyResultService.findAllCompanyKeyResults(ArgumentMatchers.any(Pageable.class)))
@@ -105,7 +105,7 @@ public class CompanyKeyResultControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single Company Key result with 200 - OK")
     public void getWithIdShouldReturnSingleCompanykeyResult() throws Exception {
-        when(companyKeyResultService.findById(1L)).thenReturn(Optional.of(companyKeyResultAssembler.toModel(new CompanyKeyResult(1L, "CK1", 10, 100, 0, 50, "a comment", OffsetDateTime.now()))));
+        when(companyKeyResultService.findById(1L)).thenReturn(Optional.of(companyKeyResultAssembler.toModel(new CompanyKeyResult(1L, "CK1", 10f, 100f, 0f, 50f, "a comment", OffsetDateTime.now()))));
 
         mockMvc.perform(get("/companyKeyResults/1"))
                 .andDo(print())
@@ -124,7 +124,7 @@ public class CompanyKeyResultControllerTest {
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10, 100, 0, 50, "a comment", OffsetDateTime.now());
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10f, 100f, 0f, 50f, "a comment", OffsetDateTime.now());
         CompanyKeyResultDto toPut = companyKeyResultAssembler.toModel(companyKeyResult);
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
