@@ -3,13 +3,12 @@ package de.thbingen.epro.service;
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
-import de.thbingen.epro.model.entity.*;
+import de.thbingen.epro.model.entity.BusinessUnit;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import de.thbingen.epro.repository.OkrUserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,18 +20,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithReadOnlyUser;
+import static de.thbingen.epro.util.SecurityContextInitializer.ReadOnlyUser;
+import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -61,7 +56,7 @@ public class BusinessUnitServiceTest {
 
     @Test
     void testFindById() {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         BusinessUnit businessUnit = new BusinessUnit(1L, "Test", null, null);
         when(repository.findById(1L)).thenReturn(Optional.of(businessUnit));
@@ -76,7 +71,7 @@ public class BusinessUnitServiceTest {
 
     @Test
     void testFindAll() {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         List<BusinessUnit> businessUnits = List.of(
                 new BusinessUnit(1L, "BU1", null, null),
@@ -99,7 +94,7 @@ public class BusinessUnitServiceTest {
 
     @Test
     void testFindAllWithMoreLinks() {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         List<BusinessUnitObjective> businessUnitObjectives = List.of(
                 new BusinessUnitObjective(1L, 0f, "TestName", LocalDate.now(), LocalDate.now())
@@ -120,6 +115,7 @@ public class BusinessUnitServiceTest {
         assertEquals("BU1", businessUnitDtos.get(0).getName());
         assertEquals("BU2", businessUnitDtos.get(1).getName());
         assertEquals("/businessUnits/1", businessUnitDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertTrue(businessUnitDtos.get(0).getLink("businessUnitObjectives").isPresent());
         assertEquals("/businessUnits/1/objectives", businessUnitDtos.get(0).getLink("businessUnitObjectives").get().toUri().toString());
         assertEquals("/businessUnits/2", businessUnitDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
     }

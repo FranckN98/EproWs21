@@ -8,18 +8,16 @@ import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.BusinessUnitObjective;
-import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.mapper.BusinessUnitMapper;
 import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.OkrUserService;
+import de.thbingen.epro.util.SecurityContextInitializer;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,9 +29,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
@@ -43,7 +38,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithReadOnlyUser;
+import static de.thbingen.epro.util.SecurityContextInitializer.ReadOnlyUser;
+import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithUser;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -93,7 +89,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Get All should return all Business Units with 200 - OK")
     public void getAllShouldReturnAllBusinessUnits() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         List<BusinessUnitDto> businessUnits = Stream.of(
                 new BusinessUnit(1L, "Personal"),
@@ -125,7 +121,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single BusinessUnit with 200 - OK")
     public void getWithIdShouldReturnSingleBusinessUnit() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         Optional<BusinessUnitDto> businessUnitDto = Optional.of(assembler.toModel(new BusinessUnit(1L, "Personal")));
         when(businessUnitService.findById(anyLong())).thenReturn(businessUnitDto);
@@ -145,7 +141,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with valid body should return 201 - Created with location header")
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         ObjectMapper objectMapper = new ObjectMapper();
         BusinessUnit businessUnit = new BusinessUnit(1L, "TEST");
@@ -171,7 +167,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with invalid body should return 400 - Bad Request")
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         ObjectMapper objectMapper = new ObjectMapper();
         BusinessUnitDto toPost = assembler.toModel(new BusinessUnit(1L, ""));
@@ -196,7 +192,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with malformatted json should return 400 - Bad Request")
     public void postWithMalformattedJsonShouldReturnBadRequest() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         String malformattedJson = "{";
 
@@ -216,7 +212,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post with id should return 405 - Method not allowed")
     public void postWithIdShouldReturnMethodNotAllowed() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         mockMvc.perform(post("/businessUnits/1"))
                 .andExpect(status().isMethodNotAllowed());
@@ -229,7 +225,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         BusinessUnitDto businessUnitDto = assembler.toModel(new BusinessUnit(1L, "Test"));
         ObjectMapper objectMapper = new ObjectMapper();
@@ -253,7 +249,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Delete with valid ID should return 204 - No Content")
     public void deleteWithValidIdShouldReturnNoContent() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         when(businessUnitService.existsById(1L)).thenReturn(true);
         doNothing().when(businessUnitService).deleteById(1L);
@@ -265,7 +261,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Delete with Invalid ID should return 404 - Not found")
     public void deleteWithInvalidIdShouldReturnNotFound() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         when(businessUnitService.existsById(100L)).thenReturn(false);
         doNothing().when(businessUnitService).deleteById(100L);
@@ -280,7 +276,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post Objective with valid body should return 201 - Created with location header")
     public void postObjectiveWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
@@ -313,7 +309,7 @@ public class BusinessUnitControllerTest {
     @Test
     @DisplayName("Post Objective with Invalid Business Unit Id should return 404 - Not found")
     public void postObjectiveWithInvalidBusinessUnitIdShouldReturnNoFound() throws Exception {
-        initSecurityContextWithReadOnlyUser();
+        initSecurityContextWithUser(ReadOnlyUser);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
