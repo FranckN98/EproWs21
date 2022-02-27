@@ -31,14 +31,15 @@ import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static de.thbingen.epro.util.SecurityContextInitializer.ReadOnlyUser;
 import static de.thbingen.epro.util.SecurityContextInitializer.initSecurityContextWithUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = {CompanyKeyResultService.class},
@@ -163,6 +164,99 @@ public class CompanyKeyResultServiceTest {
         assertTrue(companyKeyResultDtos.get(0).getLink(getCollectionLinkRelationFor(CompanyKeyResultHistoryDto.class)).isPresent());
         assertFalse(companyKeyResultDtos.get(1).getLink(getCollectionLinkRelationFor(CompanyKeyResultHistoryDto.class)).isPresent());
         assertEquals("/companyKeyResultHistory", companyKeyResultDtos.get(0).getLink(getCollectionLinkRelationFor(CompanyKeyResultHistoryDto.class)).get().toUri().toString());
+    }
+
+    @Test
+    void findAllCompanyObjectiveIdShouldReturnEmptyPageIfNoneExist() {
+        initSecurityContextWithUser(ReadOnlyUser);
+
+        when(repository.findAllByCompanyObjectiveId(anyLong(), any(Pageable.class))).thenReturn(Page.empty());
+
+        Page<CompanyKeyResultDto> returned = service.findAllByCompanyObjectiveId(1L, Pageable.ofSize(10));
+        assertTrue(returned.isEmpty());
+    }
+
+    @Test
+    void findAllByCompanyObjectiveIdWithOnlyCompanyObjectivesShouldReturnOnlySelf() {
+        initSecurityContextWithUser(ReadOnlyUser);
+
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        List<CompanyKeyResult> companyKeyResults = List.of(
+                new CompanyKeyResult(1L, "COKR1", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now()),
+                new CompanyKeyResult(2L, "COKR2", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now())
+        );
+        companyKeyResults.get(0).setCompanyObjective(rootCompanyObjective);
+        companyKeyResults.get(1).setCompanyObjective(rootCompanyObjective);
+        Pageable pageable = Pageable.ofSize(10);
+
+        when(repository.findAllByCompanyObjectiveId(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(companyKeyResults, pageable, companyKeyResults.size()));
+
+        Page<CompanyKeyResultDto> returned = service.findAllByCompanyObjectiveId(1L, pageable);
+
+        assertFalse(returned.isEmpty());
+        List<CompanyKeyResultDto> companyKeyResultDtos = returned.getContent();
+        assertEquals("COKR1", companyKeyResultDtos.get(0).getName());
+        assertEquals("COKR2", companyKeyResultDtos.get(1).getName());
+        assertEquals("/companyKeyResults/1", companyKeyResultDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/companyKeyResults/2", companyKeyResultDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertTrue(companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
+        assertTrue(companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
+        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+
+    }
+
+    @Test
+    void insertCompanyKeyResultShouldInsertNewCompanyObjective() {
+        initSecurityContextWithUser(ReadOnlyUser);
+
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyKeyResultDto toBeInserted = new CompanyKeyResultDto("Insert Me", 0f, 100f, 100f, 0f, "comment", OffsetDateTime.now());
+        CompanyKeyResult inserted = new CompanyKeyResult(1L, "Insert Me", 0f, 100f, 0f, 100f, "comment", OffsetDateTime.now());
+        when(repository.save(any(CompanyKeyResult.class))).thenReturn(inserted);
+
+        CompanyKeyResultDto returned = service.insertCompanyKeyResultWithObjective(toBeInserted, 1L);
+
+        assertEquals(toBeInserted.getName(), returned.getName());
+        assertEquals("/companyKeyResults/1", returned.getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+    }
+
+    @Test
+    void findByIdShouldReturnEmptyOptionalIfNoneExist() {
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Optional<CompanyKeyResultDto> returned = service.findById(1L);
+
+        assertTrue(returned.isEmpty());
+    }
+
+    @Test
+    void findByIdShouldReturnDtoIfExists() {
+        CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "Old name", 0f, 100f, 0f, 100f, "comment", OffsetDateTime.now());
+
+        when(repository.findById(anyLong())).thenReturn(Optional.of(companyKeyResult));
+
+        Optional<CompanyKeyResultDto> returned = service.findById(1L);
+
+        assertTrue(returned.isPresent());
+    }
+
+    @Test
+    void existsByIdShouldReturnTrueIfCompanyKeyResultExists() {
+        initSecurityContextWithUser(ReadOnlyUser);
+
+        when(repository.existsById(1L)).thenReturn(true);
+
+        assertTrue(service.existsById(1L));
+    }
+
+    @Test
+    void existsByIdShouldReturnFalseIfNoCompanyKeyResultExists() {
+        initSecurityContextWithUser(ReadOnlyUser);
+
+        when(repository.existsById(1L)).thenReturn(false);
+
+        assertFalse(service.existsById(1L));
     }
 
     // region convenience Methods
