@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thbingen.epro.controller.LoginController;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.repository.BusinessUnitRepository;
+import de.thbingen.epro.repository.OkrUserRepository;
 import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.parameters.P;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +53,9 @@ class BusinessUnitIntegrationTest {
 
     @Autowired
     private BusinessUnitRepository businessUnitRepository;
+
+    @Autowired
+    private OkrUserRepository okrUserRepository;
 
     @Autowired
     private AnnotationLinkRelationProvider annotationLinkRelationProvider;
@@ -165,9 +172,9 @@ class BusinessUnitIntegrationTest {
             }
 
             mockMvc.perform(
-                    get("/businessUnits/"+id)
-                            .header("Authorization", "Bearer " + token)
-            )
+                            get("/businessUnits/" + id)
+                                    .header("Authorization", "Bearer " + token)
+                    )
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(2)))
@@ -229,7 +236,6 @@ class BusinessUnitIntegrationTest {
                     .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")))
                     .andExpect(jsonPath("$._links", hasKey("businessUnitObjectives")))
                     .andExpect(jsonPath("$._links", hasKey("users")));
-
 
 
             mockMvc.perform(
@@ -424,7 +430,6 @@ class BusinessUnitIntegrationTest {
                     .andReturn();
 
 
-
             Pattern idAtEndOfUrlPattern = Pattern.compile("(\\d+)$");
             String locationHeader = mvcResult.getResponse().getHeader("Location");
             assertNotNull(locationHeader);
@@ -435,7 +440,7 @@ class BusinessUnitIntegrationTest {
             }
 
             mockMvc.perform(
-                            get("/businessUnitObjectives/"+id)
+                            get("/businessUnitObjectives/" + id)
                                     .header("Authorization", "Bearer " + token)
                     )
                     .andDo(print())
@@ -552,5 +557,49 @@ class BusinessUnitIntegrationTest {
                     .andExpect(jsonPath("$.errors[0].rejectedValue", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
                     .andExpect(jsonPath("$.errors[0].message", is("must be a future date")));
         }
+
+        @Test
+        @Transactional
+        void getAllUsersByBusinessUnitShouldReturnAllUsers() throws Exception {
+            String token = doLogin();
+
+            LinkRelation usersCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(OkrUserDto.class);
+            LinkRelation roleItemRelation = annotationLinkRelationProvider.getItemResourceRelFor(RoleDto.class);
+            LinkRelation businessUnitItemRelation = annotationLinkRelationProvider.getItemResourceRelFor(BusinessUnitDto.class);
+
+            mockMvc.perform(
+                            get("/businessUnits/1/users")
+                                    .header("Authorization", "Bearer " + token)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(3)))
+                    .andExpect(jsonPath("$.page").exists())
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits/1/users(\\?page=0&size=10)?")))
+                    .andExpect(jsonPath("$._embedded." + usersCollectionRelation + "[0]._links", aMapWithSize(3)))
+                    .andExpect(jsonPath("$._embedded." + usersCollectionRelation + "[0]._links", hasKey("self")))
+                    .andExpect(jsonPath("$._embedded." + usersCollectionRelation + "[0]._links", hasKey(roleItemRelation.toString())))
+                    .andExpect(jsonPath("$._embedded." + usersCollectionRelation + "[0]._links", hasKey(businessUnitItemRelation.toString())));
+        }
+
+        @Test
+        @Transactional
+        void getAllUsersByBusinessUnitShouldReturn_404_IfBusinessUnitIdIsInvalid() throws Exception {
+            String token = doLogin();
+
+            mockMvc.perform(
+                            get("/businessUnits/9999/users")
+                                    .header("Authorization", "Bearer " + token)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("NOT_FOUND")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("No BusinessUnit with this id exists")))
+                    .andExpect(jsonPath("$.errors", nullValue()));
+        }
+
+        //TODO: Posting Users
     }
 }

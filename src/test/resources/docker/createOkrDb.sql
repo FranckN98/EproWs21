@@ -1,4 +1,4 @@
-
+-- region Create tables
 
 create table company_objective
 (
@@ -22,7 +22,7 @@ create table company_key_result
     timestamp            timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
 create table company_key_result_history
 (
     id                int primary key generated always as identity,
@@ -62,7 +62,7 @@ create table business_unit_key_result
     company_key_result_ref     int         REFERENCES company_key_result (id) ON DELETE SET NULL
 );
 
-
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
 create table business_unit_key_result_history
 (
     id                int primary key generated always as identity,
@@ -101,6 +101,13 @@ create table okr_user
     business_unit_id int REFERENCES business_unit (id) ON DELETE SET DEFAULT
 );
 
+-- endregion
+
+-- region triggers
+
+-- historization inspired by https://stackoverflow.com/questions/56295703/how-to-store-table-history-in-postgresql
+-- region do_businessunit_keyresult_historization
+
 CREATE OR REPLACE FUNCTION do_businessunit_keyresult_historization()
     RETURNS TRIGGER
     LANGUAGE plpgsql
@@ -119,9 +126,9 @@ CREATE TRIGGER do_businessunit_keyresult_historization
     FOR EACH ROW
 EXECUTE PROCEDURE do_businessunit_keyresult_historization();
 
+-- endregion
 
-
-
+-- region do_company_keyresult_historization
 
 CREATE OR REPLACE FUNCTION do_company_keyresult_historization()
     RETURNS TRIGGER
@@ -141,9 +148,9 @@ CREATE TRIGGER do_company_keyresult_historization
     FOR EACH ROW
 EXECUTE PROCEDURE do_company_keyresult_historization();
 
+-- endregion
 
-
-
+-- region update_company_objective_achievement
 
 CREATE FUNCTION update_company_objective_achievement()
     RETURNS TRIGGER
@@ -161,7 +168,7 @@ BEGIN
     FROM subq
     WHERE id = NEW.company_objective_id;
     RETURN NEW;
-end
+END
 $$;
 
 CREATE TRIGGER update_company_objective_achievement
@@ -170,9 +177,9 @@ CREATE TRIGGER update_company_objective_achievement
     FOR EACH ROW
 EXECUTE PROCEDURE update_company_objective_achievement();
 
+-- endregion
 
-
-
+-- region update_businessunit_objective_achievement
 
 CREATE FUNCTION update_businessunit_objective_achievement()
     RETURNS TRIGGER
@@ -190,7 +197,7 @@ BEGIN
     FROM subq
     WHERE id = NEW.business_unit_objective_id;
     RETURN NEW;
-end
+END
 $$;
 
 CREATE TRIGGER update_businessunit_objective_achievement
@@ -199,11 +206,11 @@ CREATE TRIGGER update_businessunit_objective_achievement
     FOR EACH ROW
 EXECUTE PROCEDURE update_businessunit_objective_achievement();
 
+-- endregion
 
+-- endregion
 
-
-
-
+-- region insert sample data
 
 insert into business_unit (name)
 values ('Personal');
@@ -300,10 +307,11 @@ insert into privileges_in_role (privilege_id, role_id)
 VALUES(1, 3);
 
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname1', 'Nachname1', 'vor.nach1', 'password1', 1, 1);
+VALUES ('Vorname1', 'Nachname1', 'vor.nach1', '$2a$10$Z154TMv/13Ou6aUxC7FsHe65KWPhRt4fO5D4yVr5gTgANWyPFEd9a', 1, 1);
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname2', 'Nachname2', 'vor.nach2', 'password2', 2, 2);
+VALUES ('Vorname2', 'Nachname2', 'vor.nach2', '$2a$10$Y.CbRvBR.S3FkvQ3EEYbo./AYIREzjzSfgMcQa2R6/hVa6RCdf/WS', 2, 2);
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname3', 'Nachname3', 'vor.nach3', 'password3', 3, 1);
+VALUES ('Vorname3', 'Nachname3', 'vor.nach3', '$2a$10$Afs4WVE/ypBaVaLqONQpCONaDO/X9FanqF7VyaboEalxUQTXXZUO2', 3, 1);
 
 
+-- endregion

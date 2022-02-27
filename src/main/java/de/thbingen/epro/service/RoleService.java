@@ -1,9 +1,9 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.model.business.Privilege;
 import de.thbingen.epro.model.assembler.RoleAssembler;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
+import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.entity.Role;
 import de.thbingen.epro.model.mapper.RoleMapper;
 import de.thbingen.epro.repository.PrivilegeRepository;
@@ -117,7 +117,7 @@ public class RoleService {
             throw new EntityNotFoundException("No role with this id exists");
         }
         Role role = roleResult.get();
-        Optional<Privilege> privilegeResult = privilegeRepository.findById(privilegeDto.getId());
+        Optional<Privilege> privilegeResult = privilegeRepository.findById(id);
         if (!privilegeResult.isPresent()) {
             throw new EntityNotFoundException("No privilege with this id exists");
         }

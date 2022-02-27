@@ -75,14 +75,7 @@ public class OkrUserController {
     @PreAuthorize("hasAuthority('add_users')")
     public ResponseEntity<RoleDto> addNewRole(@PathVariable Long id, @RequestBody @Valid RoleDto newRoleDto) {
         RoleDto roleDto = okrUserService.addNewRole(id, newRoleDto);
-
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(8080)
-                .path("/api/v1/roles/{id}")
-                .buildAndExpand(roleDto.getId());
-        return ResponseEntity.created(uriComponents.toUri()).body(roleDto);
+        return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
     }
 
 }

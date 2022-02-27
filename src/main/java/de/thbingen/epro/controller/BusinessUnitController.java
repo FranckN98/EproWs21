@@ -148,7 +148,6 @@ public class BusinessUnitController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> end
     ) {
-        // fix this behaviour
         LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
         LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
         if (startDate.isAfter(endDate)) {
@@ -193,6 +192,10 @@ public class BusinessUnitController {
     )
     @PreAuthorize("hasAuthority('view_users')")
     public PagedModel<EntityModel<OkrUserDto>> getAllOkrUsers(@PageableDefault Pageable pageable, @PathVariable Long id) {
+        if (!businessUnitService.existsById(id)) {
+            throw new EntityNotFoundException("No BusinessUnit with this id exists");
+        }
+
         return pagedResourcesAssemblerOkrUser.toModel(okrUserService.findAllByBusinessUnitId(id, pageable));
     }
 

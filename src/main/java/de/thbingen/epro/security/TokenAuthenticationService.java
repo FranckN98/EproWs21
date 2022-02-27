@@ -16,7 +16,8 @@ public class TokenAuthenticationService implements UserAuthenticationService {
     private final OkrUserRepository okrUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public TokenAuthenticationService(TokenService tokenService, OkrUserRepository okrUserRepository,
+    public TokenAuthenticationService(TokenService tokenService,
+                                      OkrUserRepository okrUserRepository,
                                       PasswordEncoder passwordEncoder) {
         this.tokenService = tokenService;
         this.okrUserRepository = okrUserRepository;

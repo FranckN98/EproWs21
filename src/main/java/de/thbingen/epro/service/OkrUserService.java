@@ -1,10 +1,10 @@
 package de.thbingen.epro.service;
 
 import de.thbingen.epro.model.assembler.OkrUserAssembler;
-import de.thbingen.epro.model.business.Role;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.OkrUser;
+import de.thbingen.epro.model.entity.Role;
 import de.thbingen.epro.model.mapper.OkrUserMapper;
 import de.thbingen.epro.repository.OkrUserRepository;
 import de.thbingen.epro.repository.RoleRepository;
@@ -81,7 +81,7 @@ public class OkrUserService {
      * @return The requested {@link Page} of {@link OkrUser}s
      */
     public Page<OkrUserDto> findAllByBusinessUnitId(Long businessUnitId, Pageable pageable) {
-        Page<OkrUser> pageadResult = okrUserRepository.findAllByBusinessUnitId(businessUnitId, pageable);
+        Page<OkrUser> pagedResult = okrUserRepository.findAllByBusinessUnitId(businessUnitId, pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
@@ -136,12 +136,12 @@ public class OkrUserService {
 
     public RoleDto addNewRole(Long id, RoleDto roleDto) {
         Optional<OkrUser> okrUserResult = okrUserRepository.findById(id);
-        if (!okrUserResult.isPresent()) {
+        if (okrUserResult.isEmpty()) {
             throw new EntityNotFoundException("No user with this id exists");
         }
         OkrUser okrUser = okrUserResult.get();
-        Optional<Role> roleResult = roleRepository.findById(roleDto.getId());
-        if (!roleResult.isPresent()) {
+        Optional<Role> roleResult = roleRepository.findById(id);
+        if (roleResult.isEmpty()) {
             throw new EntityNotFoundException(("No role with this id exists"));
         }
         Role role = roleResult.get();
