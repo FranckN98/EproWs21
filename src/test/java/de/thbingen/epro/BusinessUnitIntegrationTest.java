@@ -2,29 +2,35 @@ package de.thbingen.epro;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.thbingen.epro.controller.LoginController;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
+import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,7 +58,9 @@ class BusinessUnitIntegrationTest {
     @LocalServerPort
     private Integer port;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    //private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public String doLogin() {
         return loginController.login(Map.of("username", "vor.nach1", "password", "password1"));
@@ -63,7 +71,7 @@ class BusinessUnitIntegrationTest {
 
         @Test
         @Transactional
-        void findAllReturnsTheTwoPresentBusinessUnits() throws Exception {
+        void findAllReturnsAllPresentBusinessUnitsWithAllPossibleRelations() throws Exception {
             String token = doLogin();
 
             String expectedLinkRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitDto.class).toString();
@@ -130,13 +138,13 @@ class BusinessUnitIntegrationTest {
 
         @Test
         @Transactional
-        void postReturns_201_IfValidItemIsPosted() throws Exception {
+        void postReturns_201_IfValidItemIsPostedAndGetByIdReturnsNewlyPostedItem() throws Exception {
             String token = doLogin();
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("Insert Me");
             String jsonToPost = objectMapper.writeValueAsString(businessUnitDto);
 
-            mockMvc.perform(
+            MvcResult mvcResult = mockMvc.perform(
                             post("/businessUnits")
                                     .header("Authorization", "Bearer " + token)
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -145,6 +153,28 @@ class BusinessUnitIntegrationTest {
                     )
                     .andDo(print())
                     .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.*", hasSize(2)))
+                    .andExpect(jsonPath("$.name", is(businessUnitDto.getName())))
+                    .andExpect(jsonPath("$._links", hasKey("self")))
+                    .andExpect(jsonPath("$._links", aMapWithSize(1)))
+                    .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/3")))
+                    .andReturn();
+
+            Pattern idAtEndOfUrlPattern = Pattern.compile("(\\d+)$");
+            String locationHeader = mvcResult.getResponse().getHeader("Location");
+            assertNotNull(locationHeader);
+            Matcher matcher = idAtEndOfUrlPattern.matcher(locationHeader);
+            Long id = null;
+            if (matcher.find()) {
+                id = Long.parseLong(matcher.group(1));
+            }
+
+            mockMvc.perform(
+                    get("/businessUnits/"+id)
+                            .header("Authorization", "Bearer " + token)
+            )
+                    .andDo(print())
+                    .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(2)))
                     .andExpect(jsonPath("$.name", is(businessUnitDto.getName())))
                     .andExpect(jsonPath("$._links", hasKey("self")))
@@ -182,7 +212,7 @@ class BusinessUnitIntegrationTest {
 
         @Test
         @Transactional
-        void validPutShouldReturn_200_Ok() throws Exception {
+        void validPutShouldReturn_200_OkAndItemShouldBeUpdated() throws Exception {
             String token = doLogin();
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("Lala");
@@ -204,6 +234,20 @@ class BusinessUnitIntegrationTest {
                     .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")))
                     .andExpect(jsonPath("$._links", hasKey("businessUnitObjectives")))
                     .andExpect(jsonPath("$._links", hasKey("users")));
+
+
+
+            mockMvc.perform(
+                            get("/businessUnits/1")
+                                    .header("Authorization", "Bearer " + token)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(2)))
+                    .andExpect(jsonPath("$.name", is(businessUnitDto.getName())))
+                    .andExpect(jsonPath("$._links", hasKey("self")))
+                    .andExpect(jsonPath("$._links", aMapWithSize(3)))
+                    .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnits/1")));
         }
 
         @Test
@@ -260,6 +304,261 @@ class BusinessUnitIntegrationTest {
                     .andDo(print())
                     .andExpect(status().isNoContent())
                     .andExpect(jsonPath("$").doesNotExist());
+        }
+
+        @Test
+        @Transactional
+        void findBusinessObjectivesByBusinessUnitIdWithDefaultTimeFrameShouldReturnListOfObjectivesInCurrentYear() throws Exception {
+            String token = doLogin();
+
+            LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
+
+            int currentYear = LocalDate.now().getYear();
+
+            mockMvc.perform(
+                            get("/businessUnits/1/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(3)))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?page=0&size=10)?")))
+                    .andExpect(jsonPath("$.page").exists())
+                    .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
+                    .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..startDate", everyItem(matchesRegex(currentYear + "-\\d{2}-\\d{2}"))))
+                    .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..endDate", everyItem(matchesRegex(currentYear + "-\\d{2}-\\d{2}"))));
+        }
+
+        @Test
+        @Transactional
+        void findBusinessObjectivesByBusinessUnitIdWithInvalidTimeFrameShouldReturnBadRequest() throws Exception {
+            String token = doLogin();
+
+            mockMvc.perform(
+                            get("/businessUnits/1/objectives?start=2030-01-01")
+                                    .header("Authorization", "Bearer " + token)
+                    ).andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("BAD_REQUEST")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("Invalid Date Range. Make sure the Start Date is before the End Date")))
+                    .andExpect(jsonPath("$.errors", nullValue()));
+        }
+
+        @Test
+        @Transactional
+        void findBusinessObjectivesByBusinessUnitIdWithHugeTimeFrameShouldReturnAllObjectives() throws Exception {
+            String token = doLogin();
+
+            LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
+
+            mockMvc.perform(
+                            get("/businessUnits/1/objectives?start=1900-01-01&end=2999-12-31")
+                                    .header("Authorization", "Bearer " + token)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(3)))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$.page").exists())
+                    .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
+                    .andExpect(jsonPath("$._embedded." + buoCollectionRelation, hasSize(2)));
+        }
+
+        @Test
+        @Transactional
+        void findBusinessObjectivesByBusinessUnitIdWith_2021_AsTimeFrameShouldReturnAllObjectivesFrom_2021() throws Exception {
+            String token = doLogin();
+
+            LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
+
+            mockMvc.perform(
+                            get("/businessUnits/1/objectives?start=2021-01-01&end=2021-12-31")
+                                    .header("Authorization", "Bearer " + token)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(3)))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$.page").exists())
+                    .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
+                    .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..startDate", everyItem(matchesRegex("2021-\\d{2}-\\d{2}"))))
+                    .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..endDate", everyItem(matchesRegex("2021-\\d{2}-\\d{2}"))));
+        }
+
+        @Test
+        @Transactional
+        void findBusinessObjectivesByBusinessUnitIdWith_1900_AsTimeFrameShouldReturnNoObjectives() throws Exception {
+            String token = doLogin();
+
+            mockMvc.perform(
+                            get("/businessUnits/1/objectives?start=1900-01-01&end=1900-12-31")
+                                    .header("Authorization", "Bearer " + token)
+                    ).andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(2)))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$.page").exists())
+                    .andExpect(jsonPath("$._embedded").doesNotExist());
+        }
+
+        @Test
+        @Transactional
+        void postBusinessUnitObjectiveShouldReturn_201_AndObjectiveShouldBeCreated() throws Exception {
+            String token = doLogin();
+
+            BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now(), LocalDate.now().plusDays(1));
+            String jsonToPost = objectMapper.writeValueAsString(toPost);
+
+            MvcResult mvcResult = mockMvc.perform(
+                            post("/businessUnits/1/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.*", hasSize(5)))
+                    .andExpect(jsonPath("$.name", is(toPost.getName())))
+                    .andExpect(jsonPath("$.achievement", is(0.0)))
+                    .andExpect(jsonPath("$.startDate", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
+                    .andExpect(jsonPath("$.endDate", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
+                    .andExpect(jsonPath("$._links", hasKey("self")))
+                    .andExpect(jsonPath("$._links", aMapWithSize(2)))
+                    .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitObjectives/3")))
+                    .andExpect(jsonPath("$._links.businessUnit.href", endsWith("/businessUnits/1")))
+                    .andReturn();
+
+
+
+            Pattern idAtEndOfUrlPattern = Pattern.compile("(\\d+)$");
+            String locationHeader = mvcResult.getResponse().getHeader("Location");
+            assertNotNull(locationHeader);
+            Matcher matcher = idAtEndOfUrlPattern.matcher(locationHeader);
+            Long id = null;
+            if (matcher.find()) {
+                id = Long.parseLong(matcher.group(1));
+            }
+
+            mockMvc.perform(
+                            get("/businessUnitObjectives/"+id)
+                                    .header("Authorization", "Bearer " + token)
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.*", hasSize(5)))
+                    .andExpect(jsonPath("$.name", is(toPost.getName())))
+                    .andExpect(jsonPath("$.achievement", is(0.0)))
+                    .andExpect(jsonPath("$.startDate", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
+                    .andExpect(jsonPath("$.endDate", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
+                    .andExpect(jsonPath("$._links", hasKey("self")))
+                    .andExpect(jsonPath("$._links", aMapWithSize(2)))
+                    .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitObjectives/3")))
+                    .andExpect(jsonPath("$._links.businessUnit.href", endsWith("/businessUnits/1")));
+        }
+
+        @Test
+        @Transactional
+        void postBusinessUnitObjectiveShouldReturn_400_OnMalformedJson() throws Exception {
+            String token = doLogin();
+
+            mockMvc.perform(
+                            post("/businessUnits/1/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content("{\n" +
+                                            "  \"name\": \"TestName\",\n" +
+                                            "  startDate: \"2022-01-01\",\n" +
+                                            "}")
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.*", hasSize(5)))
+                    .andExpect(jsonPath("$.httpStatus", is("BAD_REQUEST")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("Malformed JSON request")))
+                    .andExpect(jsonPath("$.debugMessage").exists())
+                    .andExpect(jsonPath("$.errors", nullValue()));
+        }
+
+        @Test
+        @Transactional
+        void postBusinessUnitObjectiveShouldReturn_404_OnInvalidBusinessUnitId() throws Exception {
+            String token = doLogin();
+
+            BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now(), LocalDate.now().plusDays(1));
+            String jsonToPost = objectMapper.writeValueAsString(toPost);
+
+            mockMvc.perform(
+                            post("/businessUnits/9999/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("NOT_FOUND")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("No BusinessUnit with the given ID exists")))
+                    .andExpect(jsonPath("$.errors", nullValue()));
+        }
+
+        @Test
+        @Transactional
+        void postBusinessUnitObjectiveShouldReturn_400_OnInvalidTimeFrame() throws Exception {
+            String token = doLogin();
+
+            BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now().plusDays(2), LocalDate.now().plusDays(1));
+            String jsonToPost = objectMapper.writeValueAsString(toPost);
+
+            mockMvc.perform(
+                            post("/businessUnits/9999/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("BAD_REQUEST")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("Invalid JSON")))
+                    .andExpect(jsonPath("$.errors", hasSize(1)))
+                    .andExpect(jsonPath("$.errors[0].object", is("businessUnitObjectiveDto")))
+                    .andExpect(jsonPath("$.errors[0].field", is("endAfterBeginning")))
+                    .andExpect(jsonPath("$.errors[0].rejectedValue", is(false)))
+                    .andExpect(jsonPath("$.errors[0].message", is("The End date must be after the startDate")));
+        }
+
+        @Test
+        @Transactional
+        void postBusinessUnitObjectiveShouldReturn_400_OnEndDateInPast() throws Exception {
+            String token = doLogin();
+
+            BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now().minusYears(1), LocalDate.now().minusDays(1));
+            String jsonToPost = objectMapper.writeValueAsString(toPost);
+
+            mockMvc.perform(
+                            post("/businessUnits/9999/objectives")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("BAD_REQUEST")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("Invalid JSON")))
+                    .andExpect(jsonPath("$.errors", hasSize(1)))
+                    .andExpect(jsonPath("$.errors[0].object", is("businessUnitObjectiveDto")))
+                    .andExpect(jsonPath("$.errors[0].field", is("endDate")))
+                    .andExpect(jsonPath("$.errors[0].rejectedValue", matchesRegex("\\d{4}-\\d{2}-\\d{2}")))
+                    .andExpect(jsonPath("$.errors[0].message", is("must be a future date")));
         }
     }
 }

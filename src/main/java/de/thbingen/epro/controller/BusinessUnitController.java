@@ -148,6 +148,7 @@ public class BusinessUnitController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> end
     ) {
+        // fix this behaviour
         LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
         LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
         if (startDate.isAfter(endDate)) {

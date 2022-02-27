@@ -61,7 +61,7 @@ public class BusinessUnitObjectiveService {
      * @return a Page of {@link BusinessUnitObjectiveDto}s
      */
     public Page<BusinessUnitObjectiveDto> findAllByBusinessUnitId(Long businessUnitId, Pageable pageable, LocalDate startDate, LocalDate endDate) {
-        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAllByBusinessUnitIdAndStartDateAfterAndEndDateBefore(businessUnitId, startDate, endDate, pageable);
+        Page<BusinessUnitObjective> pagedResult = businessUnitObjectiveRepository.findAllByBusinessUnitIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(businessUnitId, startDate, endDate, pageable);
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);

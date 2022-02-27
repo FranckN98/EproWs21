@@ -10,7 +10,6 @@ import javax.validation.constraints.Future;
 import java.time.LocalDate;
 
 @Relation(collectionRelation = "businessUnitObjectives", itemRelation = "businessUnitObjective")
-@Valid()
 public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitObjectiveDto> {
 
     private Float achievement = 0f;
