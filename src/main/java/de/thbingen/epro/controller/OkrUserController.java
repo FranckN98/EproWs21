@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.OkrUserPostDto;
+import de.thbingen.epro.model.dto.OkrUserUpdateDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
@@ -47,14 +48,14 @@ public class OkrUserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('add_users')")
-    public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserDto newUser) {
+    public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserPostDto newUser) {
         OkrUserDto okrUserDto = okrUserService.insertOkrUser(newUser);
         return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('change_users')")
-    public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserDto okrUserDto) {
+    public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserUpdateDto okrUserDto) {
         if (!okrUserService.existsById(id))
             throw new EntityNotFoundException("No OkrUser with this id exists");
 

@@ -1,25 +1,19 @@
 package de.thbingen.epro.model.dto;
 
-import javax.validation.constraints.NotBlank;
+public class OkrUserUpdateDto {
 
-public class OkrUserPostDto {
-
-    @NotBlank
     private String name;
 
-    @NotBlank
     private String surname;
 
-    @NotBlank
     private String username;
 
-    @NotBlank
     private String password;
 
-    public OkrUserPostDto() {
+    public OkrUserUpdateDto() {
     }
 
-    public OkrUserPostDto(String name, String surname, String username, String password) {
+    public OkrUserUpdateDto(String name, String surname, String username, String password) {
         this.name = name;
         this.surname = surname;
         this.username = username;

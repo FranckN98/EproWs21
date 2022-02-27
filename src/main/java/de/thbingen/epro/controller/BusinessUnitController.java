@@ -4,6 +4,7 @@ import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.dto.OkrUserPostDto;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.OkrUserService;
@@ -205,9 +206,14 @@ public class BusinessUnitController {
             produces = MediaTypes.HAL_JSON_VALUE
     )
     @PreAuthorize("hasAuthority('add_users')")
-    public OkrUserDto addNewUser() {
-        //TODO
-        return new OkrUserDto();
+    public ResponseEntity<OkrUserDto> addNewUser(@PathVariable Long id, @RequestBody @Valid OkrUserPostDto newOkrUserDto) {
+        if (businessUnitService.existsById(id)) {
+            OkrUserDto okrUserDto = okrUserService.insertOkrUserByBusinessUnitId(newOkrUserDto, id);
+            return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                    .body(okrUserDto);
+        }
+
+        throw new EntityNotFoundException("No BusinessUnit with the given ID exists");
     }
 
     // endregion
