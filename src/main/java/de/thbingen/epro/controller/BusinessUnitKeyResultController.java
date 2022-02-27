@@ -11,6 +11,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +38,16 @@ public class BusinessUnitKeyResultController {
         this.companyKeyResultService = companyKeyResultService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitKeyResultService.findAllBusinessUnitKeyResults(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('read')")
     public BusinessUnitKeyResultDto findById(@PathVariable Long id) {
         Optional<BusinessUnitKeyResultDto> result = businessUnitKeyResultService.findById(id);
@@ -53,7 +57,11 @@ public class BusinessUnitKeyResultController {
         throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,

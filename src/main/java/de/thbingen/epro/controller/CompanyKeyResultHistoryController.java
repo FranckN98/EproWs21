@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,14 +28,17 @@ public class CompanyKeyResultHistoryController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getAll(
             @PageableDefault Pageable pageable
     ) {
         return pagedResourcesAssembler.toModel(companyKeyResultHistoryService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     public CompanyKeyResultHistoryDto getById(@PathVariable Long id) {
         Optional<CompanyKeyResultHistoryDto> result = companyKeyResultHistoryService.findById(id);
         if (result.isPresent())

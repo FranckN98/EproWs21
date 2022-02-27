@@ -85,12 +85,12 @@ public class CompanyObjectiveControllerTest {
     @DisplayName("Get All should return all Company Objectives with 200 - OK")
     public void getAllshouldReturnAllCompanyObjectives() throws Exception {
         List<CompanyObjectiveDto> companyObjectives = Stream.of(
-                new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now()),
-                new CompanyObjective(2L, 0, "test", LocalDate.now(), LocalDate.now())
+                new CompanyObjective(1L, 0f, "name", LocalDate.now(), LocalDate.now()),
+                new CompanyObjective(2L, 0f, "test", LocalDate.now(), LocalDate.now())
         ).map(assembler::toModel).collect(Collectors.toList());
         when(companyObjectiveService.getAllCompanyObjectives(Pageable.ofSize(10), LocalDate.now().with(firstDayOfYear()), LocalDate.now().with(lastDayOfYear()))).thenReturn(new PageImpl<>(companyObjectives));
 
-        mockMvc.perform(get("/companyobjectives").accept(MediaTypes.HAL_JSON))
+        mockMvc.perform(get("/companyObjectives").accept(MediaTypes.HAL_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(3)))
@@ -99,14 +99,14 @@ public class CompanyObjectiveControllerTest {
                 .andExpect(jsonPath("$._embedded.companyObjectives").exists())
                 .andExpect(jsonPath("$._embedded.companyObjectives", hasSize(2)))
                 .andExpect(jsonPath("$._embedded.companyObjectives[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.companyObjectives[0]._links.self.href", endsWith("/companyobjectives/1")))
+                .andExpect(jsonPath("$._embedded.companyObjectives[0]._links.self.href", endsWith("/companyObjectives/1")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[0].name", is("name")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[0].achievement", is(0.0)))
-                .andExpect(jsonPath("$._embedded.companyObjectives[1]._links.self.href", endsWith("/companyobjectives/2")))
+                .andExpect(jsonPath("$._embedded.companyObjectives[1]._links.self.href", endsWith("/companyObjectives/2")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[1].name", is("test")))
                 .andExpect(jsonPath("$._embedded.companyObjectives[1].achievement", is(0.0)))
                 .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyobjectives")))
+                .andExpect(jsonPath("$._links.self.href", endsWith("/companyObjectives")))
                 .andReturn();
     }
 
@@ -117,14 +117,14 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Get With ID should Return a single Company Objective with 200 - OK")
     public void getWithIdShouldReturnSingleCompanyObjective() throws Exception {
-        when(companyObjectiveService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now()))));
+        when(companyObjectiveService.findById(1L)).thenReturn(Optional.of(assembler.toModel(new CompanyObjective(1L, 0f, "name", LocalDate.now(), LocalDate.now()))));
 
-        mockMvc.perform(get("/companyobjectives/1"))
+        mockMvc.perform(get("/companyObjectives/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("name"))
                 .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyobjectives/1")));
+                .andExpect(jsonPath("$._links.self.href", endsWith("/companyObjectives/1")));
     }
 
     // endregion
@@ -136,25 +136,25 @@ public class CompanyObjectiveControllerTest {
     public void postWithValidBodyShouldReturnCreatedWithLocationHeader() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyObjective companyObjective = new CompanyObjective(1L, 0, "name", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective companyObjective = new CompanyObjective(1L, 0f, "name", LocalDate.now(), LocalDate.now().plusDays(1));
         CompanyObjectiveDto toPost = assembler.toModel(companyObjective);
         String jsonToPost = objectMapper.writeValueAsString(toPost);
 
         when(companyObjectiveService.insertCompanyObjective(ArgumentMatchers.any(CompanyObjectiveDto.class))).thenReturn(toPost);
 
         mockMvc.perform(
-                        post("/companyobjectives")
+                        post("/companyObjectives")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(jsonToPost)
                                 .characterEncoding(Charset.defaultCharset())
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "/companyobjectives/1"))
+                .andExpect(header().string("location", "/companyObjectives/1"))
                 .andExpect(jsonPath("$.name").value("name"))
                 .andExpect(jsonPath("$.achievement").value(0))
                 .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyobjectives/1")));
+                .andExpect(jsonPath("$._links.self.href", endsWith("/companyObjectives/1")));
     }
 
     @Test
@@ -162,13 +162,13 @@ public class CompanyObjectiveControllerTest {
     public void postWithInvalidDtoShouldReturnBadRequest() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        CompanyObjective companyObjective = new CompanyObjective(1L, 0, "", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective companyObjective = new CompanyObjective(1L, 0f, "", LocalDate.now(), LocalDate.now().plusDays(1));
         CompanyObjectiveDto toPost = assembler.toModel(companyObjective);
         String invalidJson = objectMapper.writeValueAsString(toPost);
 
         when(companyObjectiveService.insertCompanyObjective(any(CompanyObjectiveDto.class))).thenReturn(toPost);
 
-        mockMvc.perform(post("/companyobjectives")
+        mockMvc.perform(post("/companyObjectives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson)
                         .characterEncoding(Charset.defaultCharset())
@@ -191,7 +191,7 @@ public class CompanyObjectiveControllerTest {
     public void postWithMalformattedJsonShouldReturnBadRequest() throws Exception {
         String malformattedJson = "{";
 
-        mockMvc.perform(post("/companyobjectives")
+        mockMvc.perform(post("/companyObjectives")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(malformattedJson))
                 .andDo(print())
@@ -206,7 +206,7 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Post with id should return 405 - Method not allowed")
     public void postWithIdShouldReturnMethodNotAllowed() throws Exception {
-        mockMvc.perform(post("/companyobjectives/1"))
+        mockMvc.perform(post("/companyObjectives/1"))
                 .andExpect(status().isMethodNotAllowed());
     }
 
@@ -217,7 +217,7 @@ public class CompanyObjectiveControllerTest {
     @Test
     @DisplayName("Valid put should return 200 - OK when Object is being updated")
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
-        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L, 0, "changedName", LocalDate.now(), LocalDate.now().plusDays(1)));
+        CompanyObjectiveDto companyObjectiveDto = assembler.toModel(new CompanyObjective(1L, 0f, "changedName", LocalDate.now(), LocalDate.now().plusDays(1)));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         String jsonToPut = objectMapper.writeValueAsString(companyObjectiveDto);
@@ -226,7 +226,7 @@ public class CompanyObjectiveControllerTest {
         when(companyObjectiveService.updateCompanyObjective(anyLong(), any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
 
         mockMvc.perform(
-                put("/companyobjectives/1")
+                put("/companyObjectives/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonToPut)
                         .characterEncoding(Charset.defaultCharset())
@@ -235,7 +235,7 @@ public class CompanyObjectiveControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("changedName"))
                 .andExpect(jsonPath("$._links").exists())
-                .andExpect(jsonPath("$._links.self.href", endsWith("/companyobjectives/1")));
+                .andExpect(jsonPath("$._links.self.href", endsWith("/companyObjectives/1")));
     }
 
     // endregion
@@ -248,7 +248,7 @@ public class CompanyObjectiveControllerTest {
         when(companyObjectiveService.existsById(1L)).thenReturn(true);
         doNothing().when(companyObjectiveService).deleteById(1L);
 
-        mockMvc.perform(delete("/companyobjectives/1"))
+        mockMvc.perform(delete("/companyObjectives/1"))
                 .andExpect(status().isNoContent());
     }
 
@@ -258,7 +258,7 @@ public class CompanyObjectiveControllerTest {
         when(companyObjectiveService.existsById(100L)).thenReturn(false);
         doNothing().when(companyObjectiveService).deleteById(100L);
 
-        mockMvc.perform(delete("/companyobjectives/100"))
+        mockMvc.perform(delete("/companyObjectives/100"))
                 .andExpect(status().isNotFound());
     }
 

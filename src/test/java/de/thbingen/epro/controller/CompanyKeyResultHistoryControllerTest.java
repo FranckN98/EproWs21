@@ -32,8 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -90,8 +89,7 @@ public class CompanyKeyResultHistoryControllerTest {
                 .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList").exists())
                 .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList", hasSize(2)))
                 .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[0]._links.self.href", endsWith("/companyKeyResultHistory/1")))
-                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList[1]._links.self.href", endsWith("/companyKeyResultHistory/2")))
+                .andExpect(jsonPath("$._embedded.companyKeyResultHistoryList.._links.self.href", everyItem(matchesRegex("/companyKeyResultHistory/\\d+"))))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/companyKeyResultHistory")))
                 .andReturn();

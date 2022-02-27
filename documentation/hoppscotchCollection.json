@@ -6,11 +6,63 @@
       {
         "v": 1,
         "name": "CompanyObjective",
-        "folders": [],
+        "folders": [
+          {
+            "v": 1,
+            "name": "keyResults",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1/keyResults",
+                "name": "Get All CKRs by CO",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1/keyResults",
+                "name": "Add new CKR to CO",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"name\": \"TestName\",\n  \"currentValue\": 1.0,\n  \"goalValue\":  100.0,\n  \"confidenceLevel\": 1.0,\n  \"achievement\":  0,\n  \"comment\": \"Comment\"\n}"
+                }
+              }
+            ]
+          }
+        ],
         "requests": [
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
             "name": "Get All Company Objectives",
             "params": [],
             "headers": [],
@@ -32,7 +84,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
             "name": "Save valid Company Objective",
             "params": [],
             "headers": [],
@@ -54,7 +106,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
             "name": "Save Company Objective with achievement greater 0",
             "params": [],
             "headers": [],
@@ -76,7 +128,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
             "name": "Save Company Objective with name blank",
             "params": [],
             "headers": [],
@@ -98,7 +150,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives/1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1",
             "name": "Get CompanyObjective by id",
             "params": [],
             "headers": [],
@@ -120,7 +172,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives/10",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/10",
             "name": "Get CompanyObjective by invalid id",
             "params": [],
             "headers": [],
@@ -142,7 +194,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives/2",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/2",
             "name": "update company objective without id in json",
             "params": [],
             "headers": [],
@@ -164,7 +216,7 @@
           },
           {
             "v": "1",
-            "endpoint": "http://<<base_url>><<base_path>>/companyobjectives/1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1",
             "name": "delete company objective",
             "params": [],
             "headers": [],
@@ -702,7 +754,7 @@
             "testScript": "",
             "body": {
               "contentType": "application/json",
-              "body": "{\n  \"comment\": \"La\"\n}"
+              "body": "{\n  \"currentValue\": 25,\n  \"comment\": \"La\"\n}"
             }
           },
           {
@@ -1047,7 +1099,7 @@
             "testScript": "",
             "body": {
               "contentType": "application/json",
-              "body": "{\n  \"name\": \"Bla\",\n  \"comment\": \"Change name\"\n}"
+              "body": "{\n  \"name\": \"Bla\",\n  \"comment\": \"Change name\",\n  \"currentValue\": 10\n}"
             }
           },
           {

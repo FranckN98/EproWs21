@@ -76,7 +76,11 @@ public class BusinessUnitObjectiveController {
         throw new EntityNotFoundException("No BusinessUnitObjective with this businessUnitObjectiveId exists");
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitObjectiveDto> updateById(
             @PathVariable Long id,
@@ -143,8 +147,7 @@ public class BusinessUnitObjectiveController {
 
     @GetMapping(
             value = "/{businessUnitObjectiveId}/keyResults",
-            produces = MediaTypes.HAL_JSON_VALUE,
-            consumes = MediaType.ALL_VALUE
+            produces = MediaTypes.HAL_JSON_VALUE
     )
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(

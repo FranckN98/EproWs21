@@ -7,7 +7,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +29,17 @@ public class PrivilegeController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @GetMapping
+    @GetMapping(
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     public PagedModel<EntityModel<PrivilegeDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(privilegeService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     public PrivilegeDto findById(@RequestParam Long id) {
         Optional<PrivilegeDto> result = privilegeService.findById(id);
         if (result.isPresent())
@@ -40,13 +47,20 @@ public class PrivilegeController {
         throw new EntityNotFoundException("No Privilege with this id exists");
     }
 
-    @PostMapping
+    @PostMapping(
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<PrivilegeDto> addNew(@RequestBody @Valid PrivilegeDto newPrivilege) {
         PrivilegeDto privilegeDto = privilegeService.insertPrivilege(newPrivilege);
         return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<PrivilegeDto> updateById(@PathVariable Long id, @RequestBody @Valid PrivilegeDto privilegeDto) {
         if (!privilegeService.existsById(id))
             return this.addNew(privilegeDto);

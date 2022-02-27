@@ -15,7 +15,7 @@ public class CompanyObjective {
     private Long id;
 
     @Column(nullable = false, insertable = false, updatable = false)
-    private Integer achievement;
+    private Float achievement;
 
     @Column(nullable = false)
     private String name;
@@ -29,7 +29,7 @@ public class CompanyObjective {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    public CompanyObjective(Long id, Integer achievement, String name, LocalDate startDate, LocalDate endDate) {
+    public CompanyObjective(Long id, Float achievement, String name, LocalDate startDate, LocalDate endDate) {
         this.id = id;
         this.achievement = achievement;
         this.name = name;
@@ -40,19 +40,19 @@ public class CompanyObjective {
     public CompanyObjective() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public Integer getAchievement() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Float getAchievement() {
         return achievement;
     }
 
-    public void setAchievement(Integer achievement) {
+    public void setAchievement(Float achievement) {
         this.achievement = achievement;
     }
 
@@ -62,6 +62,14 @@ public class CompanyObjective {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<CompanyKeyResult> getCompanyKeyResults() {
+        return companyKeyResults;
+    }
+
+    public void setCompanyKeyResults(Set<CompanyKeyResult> companyKeyResults) {
+        this.companyKeyResults = companyKeyResults;
     }
 
     public LocalDate getStartDate() {
@@ -79,9 +87,4 @@ public class CompanyObjective {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
-
-    public Set<CompanyKeyResult> getCompanyKeyResults() {
-        return companyKeyResults;
-    }
-
 }

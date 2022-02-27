@@ -16,7 +16,7 @@ public class CompanyKeyResultDto extends RepresentationModel<CompanyKeyResultDto
     private Float achievement;
     @NotBlank
     private String comment;
-    private OffsetDateTime timestamp;
+    private OffsetDateTime timestamp = OffsetDateTime.now();
 
     public CompanyKeyResultDto() {
     }

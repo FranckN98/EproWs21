@@ -10,7 +10,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +36,15 @@ public class RoleController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<RoleDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(roleService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     public RoleDto findById(@PathVariable Long id) {
         Optional<RoleDto> result = roleService.findById(id);
         if (result.isPresent())
@@ -47,13 +52,20 @@ public class RoleController {
         throw new EntityNotFoundException("No Role with this id exists");
     }
 
-    @PostMapping
+    @PostMapping(
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<RoleDto> addNew(@RequestBody @Valid RoleDto newRole) {
         RoleDto roleDto = roleService.insertRole(newRole);
         return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<RoleDto> updateById(@PathVariable Long id, @RequestBody @Valid RoleDto roleDto) {
         if (!roleService.existsById(id))
             return this.addNew(roleDto);
@@ -69,7 +81,11 @@ public class RoleController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/privileges")
+    @PostMapping(
+            value = "/{id}/privileges",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<PrivilegeDto> addNewPrivilege(@PathVariable Long id, @RequestBody @Valid PrivilegeDto newPrivilegeDto) {
         PrivilegeDto privilegeDto = roleService.addNewPrivilege(id, newPrivilegeDto);
         return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);

@@ -8,7 +8,7 @@ basePath: "/api/v1"
 schemes:
   - "http"
 paths:
-  /companyobjectives:
+  /companyObjectives:
     get:
       tags:
         - "Company Objectives"
@@ -43,7 +43,7 @@ paths:
         "405":
           description: "Invalid input"
 
-  /companyobjectives/{id}:
+  /companyObjectives/{id}:
     get:
       tags:
         - "Company Objectives"
@@ -118,7 +118,7 @@ paths:
             items:
               $ref: "#/definitions/CompanyKeyResult"
 
-  /companyobjective/{coId}/keyresults:
+  /companyobjective/{coId}/keyResults:
     get:
       tags:
         - "Company Key Results"
@@ -474,7 +474,7 @@ paths:
             items:
               $ref: "#/definitions/BusinessUnitKeyResult"
 
-  /businessUnitObjective/{buoId}/keyresults:
+  /businessUnitObjective/{buoId}/keyResults:
     get:
       tags:
         - "Business Unit Key Results"

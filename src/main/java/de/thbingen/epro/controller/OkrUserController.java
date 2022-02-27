@@ -10,7 +10,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +33,16 @@ public class OkrUserController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('view_users')")
     public PagedModel<EntityModel<OkrUserDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(okrUserService.findAll(pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('view_users') or (hasAuthority('read') and @customExpressions.isSameUser(#id, principal.username))")
     public OkrUserDto findById(@PathVariable Long id) {
         Optional<OkrUserDto> result = okrUserService.findById(id);
@@ -46,14 +51,21 @@ public class OkrUserController {
         throw new EntityNotFoundException("No User with this id exists");
     }
 
-    @PostMapping
+    @PostMapping(
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('add_users')")
     public ResponseEntity<OkrUserDto> addNew(@RequestBody @Valid OkrUserPostDto newUser) {
         OkrUserDto okrUserDto = okrUserService.insertOkrUser(newUser);
         return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            value = "/{id}",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('change_users')")
     public ResponseEntity<OkrUserDto> updateById(@PathVariable Long id, @RequestBody @Valid OkrUserUpdateDto okrUserDto) {
         if (!okrUserService.existsById(id))
@@ -72,7 +84,11 @@ public class OkrUserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/roles")
+    @PostMapping(
+            value = "/{id}/roles",
+            produces = MediaTypes.HAL_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("hasAuthority('add_users')")
     public ResponseEntity<RoleDto> addNewRole(@PathVariable Long id, @RequestBody @Valid RoleDto newRoleDto) {
         RoleDto roleDto = okrUserService.addNewRole(id, newRoleDto);

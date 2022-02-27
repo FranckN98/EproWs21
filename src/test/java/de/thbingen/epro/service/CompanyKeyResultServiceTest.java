@@ -95,7 +95,7 @@ public class CompanyKeyResultServiceTest {
     void findAllWithOnlyCompanyObjectivesShouldReturnOnlySelf() {
         initSecurityContextWithUser(ReadOnlyUser);
 
-        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
         List<CompanyKeyResult> companyKeyResults = List.of(
                 new CompanyKeyResult(1L, "COKR1", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now()),
                 new CompanyKeyResult(2L, "COKR2", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now())
@@ -116,8 +116,8 @@ public class CompanyKeyResultServiceTest {
         assertEquals("/companyKeyResults/2", companyKeyResultDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
         assertTrue(companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
         assertTrue(companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class CompanyKeyResultServiceTest {
 
         initSecurityContextWithUser(ReadOnlyUser);
 
-        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
         BusinessUnitKeyResult referencedBusinessUnitKeyResult = new BusinessUnitKeyResult(1L, "referenced", 0f, 100f, 0f, "I am referenced", OffsetDateTime.now());
         List<CompanyKeyResult> companyKeyResults = List.of(
                 new CompanyKeyResult(1L, "COKR1", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now()),
@@ -157,8 +157,8 @@ public class CompanyKeyResultServiceTest {
         assertEquals("/companyKeyResults/2", companyKeyResultDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
         assertTrue(companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
         assertTrue(companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
         assertTrue(companyKeyResultDtos.get(0).getLink(getCollectionLinkRelationFor(BusinessUnitKeyResultDto.class)).isPresent());
         assertEquals("/businessUnitKeyResults/1", companyKeyResultDtos.get(0).getLink(getCollectionLinkRelationFor(BusinessUnitKeyResultDto.class)).get().toUri().toString());
         assertTrue(companyKeyResultDtos.get(0).getLink(getCollectionLinkRelationFor(CompanyKeyResultHistoryDto.class)).isPresent());
@@ -180,7 +180,7 @@ public class CompanyKeyResultServiceTest {
     void findAllByCompanyObjectiveIdWithOnlyCompanyObjectivesShouldReturnOnlySelf() {
         initSecurityContextWithUser(ReadOnlyUser);
 
-        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
         List<CompanyKeyResult> companyKeyResults = List.of(
                 new CompanyKeyResult(1L, "COKR1", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now()),
                 new CompanyKeyResult(2L, "COKR2", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now())
@@ -201,16 +201,15 @@ public class CompanyKeyResultServiceTest {
         assertEquals("/companyKeyResults/2", companyKeyResultDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
         assertTrue(companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
         assertTrue(companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).isPresent());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
-        assertEquals("/companyobjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
-
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(0).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
+        assertEquals("/companyObjectives/1", companyKeyResultDtos.get(1).getLink(getItemLinkRelationFor(CompanyObjectiveDto.class)).get().toUri().toString());
     }
 
     @Test
     void insertCompanyKeyResultShouldInsertNewCompanyObjective() {
         initSecurityContextWithUser(ReadOnlyUser);
 
-        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0, "root", LocalDate.now(), LocalDate.now().plusDays(1));
+        CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
         CompanyKeyResultDto toBeInserted = new CompanyKeyResultDto("Insert Me", 0f, 100f, 100f, 0f, "comment", OffsetDateTime.now());
         CompanyKeyResult inserted = new CompanyKeyResult(1L, "Insert Me", 0f, 100f, 0f, 100f, "comment", OffsetDateTime.now());
         when(repository.save(any(CompanyKeyResult.class))).thenReturn(inserted);
