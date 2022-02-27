@@ -44,16 +44,16 @@ public class CompanyKeyResultAssembler implements RepresentationModelAssembler<C
         if (entity.getBusinessUnitObjectives() != null && !entity.getBusinessUnitObjectives().isEmpty()) {
             companyKeyResultDto.add(
                     entity.getBusinessUnitObjectives().stream().map(businessUnitObjective ->
-                            linkTo(methodOn(BusinessUnitObjectiveController.class).findById(businessUnitObjective.getId()))
-                                    .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class)))
+                                    linkTo(methodOn(BusinessUnitObjectiveController.class).findById(businessUnitObjective.getId()))
+                                            .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class)))
                             .collect(Collectors.toList())
             );
         }
         if (entity.getBusinessUnitKeyResults() != null && !entity.getBusinessUnitKeyResults().isEmpty()) {
             companyKeyResultDto.add(
                     entity.getCompanyKeyResultHistories().stream().map(businessUnitKeyResult ->
-                            linkTo(methodOn(BusinessUnitKeyResultController.class).findById(businessUnitKeyResult.getId()))
-                                    .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitKeyResultDto.class)))
+                                    linkTo(methodOn(BusinessUnitKeyResultController.class).findById(businessUnitKeyResult.getId()))
+                                            .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitKeyResultDto.class)))
                             .collect(Collectors.toList())
             );
         }

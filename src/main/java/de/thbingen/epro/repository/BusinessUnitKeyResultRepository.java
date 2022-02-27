@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface BusinessUnitKeyResultRepository extends JpaRepository<BusinessUnitKeyResult, Long> {
     Page<BusinessUnitKeyResult> findAllByBusinessUnitObjectiveId(Long id, Pageable pageable);
+
     List<BusinessUnitKeyResult> findAllByBusinessUnitObjectiveId(Long id);
 }

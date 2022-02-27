@@ -38,7 +38,7 @@ public class PrivilegeAssembler implements RepresentationModelAssembler<Privileg
         if (okrUser.hasPrivilege("access_roles") && entity.getRoles() != null && !entity.getRoles().isEmpty()) {
             privilegeDto.add(
                     entity.getRoles().stream().map(role -> linkTo(methodOn(RoleController.class).findById(role.getId()))
-                            .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(RoleDto.class)))
+                                    .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(RoleDto.class)))
                             .collect(Collectors.toList())
             );
         }

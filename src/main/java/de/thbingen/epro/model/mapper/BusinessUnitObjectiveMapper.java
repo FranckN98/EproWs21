@@ -1,6 +1,5 @@
 package de.thbingen.epro.model.mapper;
 
-import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import org.mapstruct.*;

@@ -101,10 +101,10 @@ public class BusinessUnitController {
 
     /**
      * Update the BusinessUnit with the given id with the BusinessUnit in the Request Body.
-     *
+     * <p>
      * Will throw an EntityNotFoundException if there is no BusinessUnit with the given id
      *
-     * @param id    the id of the BusinessUnit to be updated
+     * @param id              the id of the BusinessUnit to be updated
      * @param businessUnitDto the new values for the BusinessUnit
      * @return the newly updated BusinessUnit
      */
@@ -120,7 +120,7 @@ public class BusinessUnitController {
 
     /**
      * Deletes the BusinessUnit with the given id
-     *
+     * <p>
      * Will throw an EntityNotFoundException if there is no BusinessUnit with the given id
      *
      * @param id the id of the BusinessUnit which is to be deleted

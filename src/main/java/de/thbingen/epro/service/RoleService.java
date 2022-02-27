@@ -12,8 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 /**
  * This Service represents the interface between presentation logic and the data layer for everything related to
@@ -29,9 +29,10 @@ public class RoleService {
 
     /**
      * Default constructor to be used for Constructor Injection
-     * @param roleRepository The Repository for DB access
-     * @param roleMapper     The Mapstruct mapper to convert from DTO to entity and back
-     * @param assembler      The RepresentationModelAssembler to add the hateoas relations
+     *
+     * @param roleRepository      The Repository for DB access
+     * @param roleMapper          The Mapstruct mapper to convert from DTO to entity and back
+     * @param assembler           The RepresentationModelAssembler to add the hateoas relations
      * @param privilegeRepository
      */
     public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository) {

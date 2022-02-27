@@ -71,9 +71,13 @@ public class OkrUser implements UserDetails {
         this.surname = surname;
     }
 
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public void setUsername(String username) { this.username = username; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getPassword() {
         return password;
@@ -87,7 +91,9 @@ public class OkrUser implements UserDetails {
         return role;
     }
 
-    public void setRole(Role role) { this.role = role; }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public BusinessUnit getBusinessUnit() {
         return businessUnit;

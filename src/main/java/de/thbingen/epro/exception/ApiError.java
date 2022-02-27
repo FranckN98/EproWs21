@@ -55,7 +55,7 @@ public class ApiError {
      * Creates an ApiError with the given HttpStatus and a debug message, which is extracted from the Throwable
      *
      * @param httpStatus The HttpStatus, which will be returned with this error
-     * @param exception The Throwable from which the DebugMessage will be taken
+     * @param exception  The Throwable from which the DebugMessage will be taken
      */
     public ApiError(HttpStatus httpStatus, Throwable exception) {
         this(httpStatus);
@@ -67,8 +67,8 @@ public class ApiError {
      * which is extracted from the Throwable
      *
      * @param httpStatus The HttpStatus, which will be returned with this error
-     * @param message The message, which will be displayed to the user
-     * @param exception The Throwable from which the DebugMessage will be taken
+     * @param message    The message, which will be displayed to the user
+     * @param exception  The Throwable from which the DebugMessage will be taken
      */
     public ApiError(HttpStatus httpStatus, String message, Throwable exception) {
         this(httpStatus, exception);

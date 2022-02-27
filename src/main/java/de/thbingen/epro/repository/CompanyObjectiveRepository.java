@@ -10,5 +10,6 @@ import java.util.List;
 
 public interface CompanyObjectiveRepository extends JpaRepository<CompanyObjective, Long> {
     Page<CompanyObjective> findAllByStartDateAfterAndEndDateBefore(LocalDate startDate, LocalDate endDate, Pageable pageable);
+
     List<CompanyObjective> findAllByStartDateBeforeAndEndDateAfter(LocalDate startDate, LocalDate endDate);
 }

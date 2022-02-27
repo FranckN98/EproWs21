@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -34,9 +33,9 @@ public class BusinessUnitKeyResultService {
      * Default constructor to be used for Constructor Injection
      *
      * @param businessUnitKeyResultRepository The Repository for DB access to {@link BusinessUnitKeyResult}s
-     * @param businessUnitKeyResultMapper The Mapstruct mapper to convert from DTO to entity and back
-     * @param businessUnitKeyResultAssembler The RepresentationModelAssembler to add the hateoas relations
-     * @param companyKeyResultRepository The Repository for DB access to {@link CompanyKeyResult}s
+     * @param businessUnitKeyResultMapper     The Mapstruct mapper to convert from DTO to entity and back
+     * @param businessUnitKeyResultAssembler  The RepresentationModelAssembler to add the hateoas relations
+     * @param companyKeyResultRepository      The Repository for DB access to {@link CompanyKeyResult}s
      * @param businessUnitObjectiveRepository The Repository for DB access to {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s
      */
     public BusinessUnitKeyResultService(BusinessUnitKeyResultRepository businessUnitKeyResultRepository, BusinessUnitKeyResultMapper businessUnitKeyResultMapper, BusinessUnitKeyResultAssembler businessUnitKeyResultAssembler, CompanyKeyResultRepository companyKeyResultRepository, BusinessUnitObjectiveRepository businessUnitObjectiveRepository) {

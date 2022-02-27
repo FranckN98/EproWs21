@@ -1,6 +1,5 @@
 package de.thbingen.epro.model.assembler;
 
-import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.controller.CompanyObjectiveController;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
@@ -9,8 +8,6 @@ import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;

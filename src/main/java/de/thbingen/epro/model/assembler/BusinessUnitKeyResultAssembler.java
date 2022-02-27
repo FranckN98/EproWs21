@@ -1,7 +1,6 @@
 package de.thbingen.epro.model.assembler;
 
 import de.thbingen.epro.controller.BusinessUnitKeyResultController;
-import de.thbingen.epro.controller.BusinessUnitKeyResultHistoryController;
 import de.thbingen.epro.controller.BusinessUnitObjectiveController;
 import de.thbingen.epro.controller.CompanyKeyResultController;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;

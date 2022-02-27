@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Future;
 import java.time.LocalDate;
@@ -64,7 +63,7 @@ public class BusinessUnitObjectiveDto extends RepresentationModel<BusinessUnitOb
     @AssertTrue(message = "The End date must be after the startDate")
     @JsonIgnore
     public boolean isEndAfterBeginning() {
-        return endDate != null && startDate != null &&endDate.isAfter(startDate);
+        return endDate != null && startDate != null && endDate.isAfter(startDate);
     }
 
 }

@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface CompanyKeyResultRepository extends JpaRepository<CompanyKeyResult, Long> {
     Page<CompanyKeyResult> findAllByCompanyObjectiveId(Long companyObjective_id, Pageable pageable);
+
     List<CompanyKeyResult> findAllByCompanyObjectiveId(Long companyObjective_id);
 }

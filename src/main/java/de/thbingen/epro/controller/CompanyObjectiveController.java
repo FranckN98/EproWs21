@@ -51,7 +51,7 @@ public class CompanyObjectiveController {
     ) {
         LocalDate startDate = start.orElse(LocalDate.now().with(firstDayOfYear()));
         LocalDate endDate = end.orElse(LocalDate.now().with(lastDayOfYear()));
-        if(startDate.isAfter(endDate)) {
+        if (startDate.isAfter(endDate)) {
             throw new InvalidDateRangeException();
         }
         return pagedResourcesAssembler.toModel(

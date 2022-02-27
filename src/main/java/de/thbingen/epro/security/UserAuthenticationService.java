@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface UserAuthenticationService {
     Optional<String> login(String username, String password);
+
     Optional<OkrUser> findByToken(String token);
+
     void logout(OkrUser okrUser);
 }

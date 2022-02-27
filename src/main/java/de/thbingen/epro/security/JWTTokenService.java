@@ -38,8 +38,8 @@ public class JWTTokenService implements Clock, TokenService {
                 .setSubject(attributes.get("username"))
                 .setIssuedAt(now.toDate())
                 .setAudience(jwtAudience)
-                .setExpiration(new Date(System.currentTimeMillis()+expiration));
-                claims.putAll(attributes);
+                .setExpiration(new Date(System.currentTimeMillis() + expiration));
+        claims.putAll(attributes);
 
         return Jwts.builder()
                 .setHeaderParam("typ", jwtType)
