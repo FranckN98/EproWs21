@@ -27,6 +27,11 @@ public class Role {
     @JoinColumn(name = "role_id")
     private Set<OkrUser> okrUsers = new HashSet<>();
 
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Role(String name) {
         this.name = name;
     }
@@ -51,7 +56,7 @@ public class Role {
     }
 
     public void setOkrUsers(Set<OkrUser> okrUsers) {
-        okrUsers = okrUsers;
+        this.okrUsers = okrUsers;
     }
 
     public String getName() {

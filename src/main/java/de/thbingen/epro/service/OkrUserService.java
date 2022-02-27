@@ -178,4 +178,24 @@ public class OkrUserService {
         return roleDto;
     }
 
+    /**
+     * Returns the request Page of all Users with the role with the given id
+     *
+     * @param id       the id of the role which the users should have
+     * @param pageable the parameters determining which page to return
+     * @return the requested page of Users with the role which has the given id
+     */
+    public Page<OkrUserDto> findAllUsersWithRole(Long id, Pageable pageable) {
+        if (!existsById(id))
+            throw new EntityNotFoundException("No Role with this id exists");
+
+        Page<OkrUser> pagedResult = okrUserRepository.findAllByRoleId(id, pageable);
+        ;
+
+        if (pagedResult.hasContent()) {
+            return pagedResult.map(assembler::toModel);
+        }
+        return Page.empty();
+    }
+
 }

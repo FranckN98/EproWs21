@@ -2,21 +2,15 @@ package de.thbingen.epro.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thbingen.epro.exception.RestExceptionHandler;
-import de.thbingen.epro.model.assembler.BusinessUnitAssembler;
-import de.thbingen.epro.model.assembler.BusinessUnitObjectiveAssembler;
 import de.thbingen.epro.model.assembler.CompanyObjectiveAssembler;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.model.entity.CompanyObjective;
-import de.thbingen.epro.model.mapper.BusinessUnitMapper;
-import de.thbingen.epro.model.mapper.BusinessUnitObjectiveMapper;
 import de.thbingen.epro.model.mapper.CompanyObjectiveMapper;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +22,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -83,7 +76,7 @@ public class CompanyObjectiveControllerTest {
 
     @Test
     @DisplayName("Get All should return all Company Objectives with 200 - OK")
-    public void getAllshouldReturnAllCompanyObjectives() throws Exception {
+    public void getAllShouldReturnAllCompanyObjectives() throws Exception {
         List<CompanyObjectiveDto> companyObjectives = Stream.of(
                 new CompanyObjective(1L, 0f, "name", LocalDate.now(), LocalDate.now()),
                 new CompanyObjective(2L, 0f, "test", LocalDate.now(), LocalDate.now())

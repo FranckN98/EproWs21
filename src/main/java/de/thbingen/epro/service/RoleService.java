@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 /**
  * This Service represents the interface between presentation logic and the data layer for everything related to
@@ -113,12 +112,12 @@ public class RoleService {
 
     public PrivilegeDto addNewPrivilege(Long id, PrivilegeDto privilegeDto) {
         Optional<Role> roleResult = roleRepository.findById(id);
-        if (!roleResult.isPresent()) {
+        if (roleResult.isEmpty()) {
             throw new EntityNotFoundException("No role with this id exists");
         }
         Role role = roleResult.get();
         Optional<Privilege> privilegeResult = privilegeRepository.findById(id);
-        if (!privilegeResult.isPresent()) {
+        if (privilegeResult.isEmpty()) {
             throw new EntityNotFoundException("No privilege with this id exists");
         }
         Privilege privilege = privilegeResult.get();

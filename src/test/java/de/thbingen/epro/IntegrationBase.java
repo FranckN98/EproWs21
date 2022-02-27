@@ -18,7 +18,6 @@ import java.nio.charset.Charset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ComponentScan(basePackages = {"de.thbingen.epro"})
 @AutoConfigureMockMvc
 @DisplayNameGeneration(CamelCaseDisplayNameGenerator.class)
 public abstract class IntegrationBase {

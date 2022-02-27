@@ -641,4 +641,9 @@ class BusinessUnitIntegrationTest extends IntegrationBase {
                     .andExpect(jsonPath("$.errors", nullValue()));
         }
     }
+
+    @Nested
+    class TestCasesWithReadOnlyAccount {
+
+    }
 }

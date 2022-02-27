@@ -101,10 +101,8 @@ public class BusinessUnitKeyResultControllerTest {
                 .andExpect(jsonPath("$._embedded.businessUnitKeyResults").exists())
                 .andExpect(jsonPath("$._embedded.businessUnitKeyResults", hasSize(2)))
                 .andExpect(jsonPath("$._embedded.businessUnitKeyResults[*]._links").exists())
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[0]._links.self.href", endsWith("/businessUnitKeyResults/1")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[0].name", is("BKR1")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[1]._links.self.href", endsWith("/businessUnitKeyResults/2")))
-                .andExpect(jsonPath("$._embedded.businessUnitKeyResults[1].name", is("BKR2")))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults.._links.self.href", everyItem(matchesRegex("/businessUnitKeyResults/\\d"))))
+                .andExpect(jsonPath("$._embedded.businessUnitKeyResults..name", everyItem(matchesRegex("BKR\\d"))))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults")))
                 .andReturn();

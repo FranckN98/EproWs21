@@ -9,5 +9,8 @@ import java.util.Optional;
 
 public interface OkrUserRepository extends JpaRepository<OkrUser, Long> {
     Page<OkrUser> findAllByBusinessUnitId(Long businessUnitId, Pageable pageable);
+
     Optional<OkrUser> findByUsername(String username);
+
+    Page<OkrUser> findAllByRoleId(Long roleId, Pageable pageable);
 }

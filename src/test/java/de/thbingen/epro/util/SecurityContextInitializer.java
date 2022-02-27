@@ -12,6 +12,7 @@ public class SecurityContextInitializer {
 
     public static final UserRoleProvider ReadOnlyUser = new UserRoleProvider.ReadOnlyUserRoleProvider();
     public static final UserRoleProvider ViewUsersUser = new UserRoleProvider.ViewUsersUserRoleProvider();
+    public static final UserRoleProvider AccessPrivilegesUser = new UserRoleProvider.AccessPrivilegesProvider();
 
     public static void initSecurityContextWithUser(UserRoleProvider userRoleProvider) {
         Authentication authentication = Mockito.mock(Authentication.class);

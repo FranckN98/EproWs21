@@ -3,6 +3,7 @@ package de.thbingen.epro.service;
 import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.entity.Privilege;
+import de.thbingen.epro.model.entity.Role;
 import de.thbingen.epro.model.mapper.PrivilegeMapper;
 import de.thbingen.epro.repository.PrivilegeRepository;
 import org.springframework.data.domain.Page;
@@ -65,7 +66,7 @@ public class PrivilegeService {
     /**
      * Updates the {@link Privilege} in the database with the given {@code id}, using the values from the given {@link PrivilegeDto}
      *
-     * @param id      The {@code id} of the {@link Privilege}, which is to be updated
+     * @param id           The {@code id} of the {@link Privilege}, which is to be updated
      * @param privilegeDto The new data, with which a {@link Privilege} is to be updated
      * @return A {@link PrivilegeDto} of the new {@link Privilege}
      */
@@ -102,5 +103,21 @@ public class PrivilegeService {
      */
     public void deleteById(Long id) {
         privilegeRepository.deleteById(id);
+    }
+
+    /**
+     * Returns all {@link Privilege}s which are contained in the {@link Role} with the given id
+     *
+     * @param roleId   the id of the {@link Role} for which all {@link Privilege}s should be returned
+     * @param pageable the parameters determining which Page to return
+     * @return the requested Page of Privileges contained in the Role with the given id
+     */
+    public Page<PrivilegeDto> findAllByRoleId(Long roleId, Pageable pageable) {
+        Page<Privilege> pagedResult = privilegeRepository.findAllByRoles_Id(roleId, pageable);
+
+        if (pagedResult.hasContent()) {
+            return pagedResult.map(assembler::toModel);
+        }
+        return Page.empty();
     }
 }

@@ -1,7 +1,5 @@
 package de.thbingen.epro.model.assembler;
 
-import de.thbingen.epro.controller.OkrUserController;
-import de.thbingen.epro.controller.PrivilegeController;
 import de.thbingen.epro.controller.RoleController;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.PrivilegeDto;
@@ -13,8 +11,6 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -39,18 +35,14 @@ public class RoleAssembler implements RepresentationModelAssembler<Role, RoleDto
 
         if (okrUser.hasPrivilege("view_users") && entity.getOkrUsers() != null && !entity.getOkrUsers().isEmpty()) {
             roleDto.add(
-                    entity.getOkrUsers().stream().map(user ->
-                            linkTo(methodOn(OkrUserController.class).findById(user.getId()))
-                                    .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(OkrUserDto.class)))
-                            .collect(Collectors.toList())
+                    linkTo(methodOn(RoleController.class).findAllUsersWithRole(null, entity.getId()))
+                            .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(OkrUserDto.class))
             );
         }
         if (okrUser.hasPrivilege("access_privileges") && entity.getPrivileges() != null && !entity.getPrivileges().isEmpty()) {
             roleDto.add(
-                    entity.getPrivileges().stream().map(privilege ->
-                            linkTo(methodOn(PrivilegeController.class).findById(privilege.getId()))
-                                    .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(PrivilegeDto.class)))
-                            .collect(Collectors.toList())
+                    linkTo(methodOn(RoleController.class).findAllPrivilegesInRole(null, entity.getId()))
+                            .withRel(annotationLinkRelationProvider.getCollectionResourceRelFor(PrivilegeDto.class))
             );
         }
         return roleDto;

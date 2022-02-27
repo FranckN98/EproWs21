@@ -1,8 +1,10 @@
 package de.thbingen.epro.controller;
 
 
+import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
+import de.thbingen.epro.service.OkrUserService;
 import de.thbingen.epro.service.PrivilegeService;
 import de.thbingen.epro.service.RoleService;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +29,20 @@ import java.util.Optional;
 public class RoleController {
 
     private final RoleService roleService;
-    private final PrivilegeService privilegeService;
     private final PagedResourcesAssembler<RoleDto> pagedResourcesAssembler;
+    private final OkrUserService okrUserService;
+    private final PagedResourcesAssembler<OkrUserDto> okrUserDtoPagedResourcesAssembler;
+    private final PrivilegeService privilegeService;
+    private final PagedResourcesAssembler<PrivilegeDto> privilegeDtoPagedResourcesAssembler;
 
-    public RoleController(RoleService roleService, PrivilegeService privilegeService, PagedResourcesAssembler<RoleDto> pagedResourcesAssembler) {
+
+    public RoleController(RoleService roleService, PagedResourcesAssembler<RoleDto> pagedResourcesAssembler, PagedResourcesAssembler<OkrUserDto> okrUserDtoPagedResourcesAssembler, OkrUserService okrUserService, PrivilegeService privilegeService, PagedResourcesAssembler<PrivilegeDto> privilegeDtoPagedResourcesAssembler) {
         this.roleService = roleService;
-        this.privilegeService = privilegeService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.okrUserDtoPagedResourcesAssembler = okrUserDtoPagedResourcesAssembler;
+        this.okrUserService = okrUserService;
+        this.privilegeService = privilegeService;
+        this.privilegeDtoPagedResourcesAssembler = privilegeDtoPagedResourcesAssembler;
     }
 
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
@@ -68,7 +77,7 @@ public class RoleController {
     )
     public ResponseEntity<RoleDto> updateById(@PathVariable Long id, @RequestBody @Valid RoleDto roleDto) {
         if (!roleService.existsById(id))
-            return this.addNew(roleDto);
+            throw new EntityNotFoundException("No Role with this id exists");
 
         return ResponseEntity.ok(roleService.updateRole(id, roleDto));
     }
@@ -81,14 +90,56 @@ public class RoleController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Returns all Privileges contained in the role paged.
+     *
+     * @param pageable the parameters, determining which Page to return
+     * @param id       The id which the Privileges to be returned belong to
+     * @return The requested Page of Privileges
+     */
+    @GetMapping(
+            value = "/{id}/privileges",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
+    public PagedModel<EntityModel<PrivilegeDto>> findAllPrivilegesInRole(
+            @PageableDefault Pageable pageable,
+            @PathVariable Long id
+    ) {
+        if (!roleService.existsById(id))
+            throw new EntityNotFoundException("No Role with this id exists");
+        return privilegeDtoPagedResourcesAssembler.toModel(privilegeService.findAllByRoleId(id, pageable));
+    }
+
     @PostMapping(
             value = "/{id}/privileges",
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<PrivilegeDto> addNewPrivilege(@PathVariable Long id, @RequestBody @Valid PrivilegeDto newPrivilegeDto) {
+        if (!roleService.existsById(id))
+            throw new EntityNotFoundException("No Role with this id exists");
         PrivilegeDto privilegeDto = roleService.addNewPrivilege(id, newPrivilegeDto);
         return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);
     }
 
+    /**
+     * Returns the requested Page of users with this Role
+     *
+     * @param pageable the parameters, determining which role to return
+     * @param id       the id of the role, which the users should have
+     * @return the requested page of users with the given role
+     */
+    @GetMapping(
+            value = "/{id}/users",
+            produces = MediaTypes.HAL_JSON_VALUE
+    )
+    public PagedModel<EntityModel<OkrUserDto>> findAllUsersWithRole(
+            @PageableDefault Pageable pageable,
+            @PathVariable Long id
+    ) {
+        if (!roleService.existsById(id))
+            throw new EntityNotFoundException("No Role with this id exists");
+
+        return okrUserDtoPagedResourcesAssembler.toModel(okrUserService.findAllUsersWithRole(id, pageable));
+    }
 }

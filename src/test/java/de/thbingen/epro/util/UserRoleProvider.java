@@ -31,4 +31,15 @@ public interface UserRoleProvider {
             return okrUser;
         }
     }
+
+    public class AccessPrivilegesProvider implements UserRoleProvider {
+        @Override
+        public OkrUser provideUser() {
+            Role role = new Role("Access Privileges");
+            role.setPrivileges(Set.of(new Privilege("access_privileges")));
+            OkrUser okrUser = new OkrUser();
+            okrUser.setRole(role);
+            return okrUser;
+        }
+    }
 }
