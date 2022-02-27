@@ -3,10 +3,7 @@ package de.thbingen.epro;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thbingen.epro.controller.LoginController;
-import de.thbingen.epro.model.dto.BusinessUnitDto;
-import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
-import de.thbingen.epro.model.dto.OkrUserDto;
-import de.thbingen.epro.model.dto.RoleDto;
+import de.thbingen.epro.model.dto.*;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import de.thbingen.epro.repository.OkrUserRepository;
 import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
@@ -20,14 +17,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +59,14 @@ class BusinessUnitIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String doLogin() {
-        return loginController.login(Map.of("username", "vor.nach1", "password", "password1"));
+    public String doLogin() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\": \"vor.nach1\",\"password\": \"password1\"}")
+                        .characterEncoding(Charset.defaultCharset())
+        ).andReturn();
+        return mvcResult.getResponse().getContentAsString();
     }
 
     @Nested
@@ -600,6 +601,80 @@ class BusinessUnitIntegrationTest {
                     .andExpect(jsonPath("$.errors", nullValue()));
         }
 
-        //TODO: Posting Users
+        @Test
+        @Transactional
+        void postUserToBusinessUnitShouldReturn_201_IfValid() throws Exception {
+            String token = doLogin();
+
+            String jsonToPost = objectMapper.writeValueAsString(
+                    new OkrUserPostDto("Bob", "Belcher", "bob.belch1", "burgers")
+            );
+
+            mockMvc.perform(
+                            post("/businessUnits/1/users")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$").exists());
+        }
+
+        @Test
+        @Transactional
+        void postUserToBusinessUnitShouldReturn_400_IfAnyValueIsBlank() throws Exception {
+            String token = doLogin();
+
+            String jsonToPost = objectMapper.writeValueAsString(
+                    new OkrUserPostDto("", "", "", "")
+            );
+
+            mockMvc.perform(
+                            post("/businessUnits/1/users")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("BAD_REQUEST")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("Invalid JSON")))
+                    .andExpect(jsonPath("$.errors.length()", is(4)))
+                    //name
+                    .andExpect(jsonPath("$.errors..object", everyItem(is("okrUserPostDto"))))
+                    .andExpect(jsonPath("$.errors..field", containsInAnyOrder("name", "username", "surname", "password")))
+                    .andExpect(jsonPath("$.errors..rejectedValue", everyItem(is(""))))
+                    .andExpect(jsonPath("$.errors..message", everyItem(is("must not be blank"))));
+        }
+
+        @Test
+        @Transactional
+        void postUserToBusinessUnitShouldReturn_404_IfBusinessUnitIdIsInvalid() throws Exception {
+            String token = doLogin();
+
+            String jsonToPost = objectMapper.writeValueAsString(
+                    new OkrUserPostDto("Tina", "Belcher", "dina.belch1", "jimmyPestoJunior")
+            );
+
+            mockMvc.perform(
+                            post("/businessUnits/9999/users")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.*", hasSize(4)))
+                    .andExpect(jsonPath("$.httpStatus", is("NOT_FOUND")))
+                    .andExpect(jsonPath("$.timestamp").exists())
+                    .andExpect(jsonPath("$.message", is("No BusinessUnit with the given ID exists")))
+                    .andExpect(jsonPath("$.errors", nullValue()));
+        }
     }
 }
