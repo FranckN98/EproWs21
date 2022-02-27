@@ -2,7 +2,6 @@ package de.thbingen.epro;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.thbingen.epro.controller.LoginController;
 import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
@@ -54,9 +52,6 @@ class BusinessUnitIntegrationTest {
 
     @Autowired
     private AnnotationLinkRelationProvider annotationLinkRelationProvider;
-
-    @LocalServerPort
-    private Integer port;
 
     //private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
@@ -465,10 +460,7 @@ class BusinessUnitIntegrationTest {
                             post("/businessUnits/1/objectives")
                                     .header("Authorization", "Bearer " + token)
                                     .contentType(MediaType.APPLICATION_JSON)
-                                    .content("{\n" +
-                                            "  \"name\": \"TestName\",\n" +
-                                            "  startDate: \"2022-01-01\",\n" +
-                                            "}")
+                                    .content("{\"name\": \"TestName\",startDate: \"2022-01-01\"}")
                                     .characterEncoding(Charset.defaultCharset())
                     )
                     .andDo(print())
