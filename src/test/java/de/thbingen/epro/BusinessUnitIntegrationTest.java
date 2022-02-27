@@ -1,23 +1,15 @@
 package de.thbingen.epro;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thbingen.epro.controller.LoginController;
 import de.thbingen.epro.model.dto.*;
 import de.thbingen.epro.repository.BusinessUnitRepository;
 import de.thbingen.epro.repository.OkrUserRepository;
-import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
-import org.junit.jupiter.api.DisplayNameGeneration;
+import de.thbingen.epro.util.UserLogin;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.hateoas.LinkRelation;
-import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,18 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ComponentScan(basePackages = {"de.thbingen.epro"})
-@AutoConfigureMockMvc
-@DisplayNameGeneration(CamelCaseDisplayNameGenerator.class)
-class BusinessUnitIntegrationTest {
-
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    LoginController loginController;
+class BusinessUnitIntegrationTest extends IntegrationBase {
 
     @Autowired
     private BusinessUnitRepository businessUnitRepository;
@@ -52,30 +33,13 @@ class BusinessUnitIntegrationTest {
     @Autowired
     private OkrUserRepository okrUserRepository;
 
-    @Autowired
-    private AnnotationLinkRelationProvider annotationLinkRelationProvider;
-
-    //private final ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public String doLogin() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(
-                post("/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"vor.nach1\",\"password\": \"password1\"}")
-                        .characterEncoding(Charset.defaultCharset())
-        ).andReturn();
-        return mvcResult.getResponse().getContentAsString();
-    }
-
     @Nested
     class TestCasesWithAdminAccount {
 
         @Test
         @Transactional
         void findAllReturnsAllPresentBusinessUnitsWithAllPossibleRelations() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             String expectedLinkRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitDto.class).toString();
 
@@ -91,20 +55,20 @@ class BusinessUnitIntegrationTest {
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation, hasSize(2)))
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[*]._links").exists())
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.self.href", endsWith("/businessUnits/1")))
-                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.businessUnitObjectives.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\{\\?start,end\\})?")))
-                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.users.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/users")))
+                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.businessUnitObjectives.href", matchesRegex("http://localhost/businessUnits/1/objectives(\\{\\?start,end})?")))
+                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.users.href", matchesRegex("http://localhost/businessUnits/1/users")))
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0].name", is("Personal")))
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[1]._links.self.href", endsWith("/businessUnits/2")))
-                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[1]._links.users.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/2\\/users")))
+                    .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[1]._links.users.href", matchesRegex("http://localhost/businessUnits/2/users")))
                     .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[1].name", is("IT")))
                     .andExpect(jsonPath("$._links").exists())
-                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits(\\?page=\\d+&size=\\d+)?")));
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits(\\?page=\\d+&size=\\d+)?")));
         }
 
         @Test
         @Transactional
         void findByIdReturnsOneIfIdIsValid() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             get("/businessUnits/1")
@@ -124,7 +88,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findByIdReturns_404_IfIdDoesNotExist() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             get("/businessUnits/999999")
@@ -142,7 +106,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postReturns_201_IfValidItemIsPostedAndGetByIdReturnsNewlyPostedItem() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("Insert Me");
             String jsonToPost = objectMapper.writeValueAsString(businessUnitDto);
@@ -188,7 +152,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postWithBlankNameReturns_400() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("");
             String jsonToPost = objectMapper.writeValueAsString(businessUnitDto);
@@ -216,7 +180,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void validPutShouldReturn_200_OkAndItemShouldBeUpdated() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("Lala");
             String jsonToPost = objectMapper.writeValueAsString(businessUnitDto);
@@ -255,7 +219,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void putOnInvalidIdShouldReturn_404() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitDto businessUnitDto = new BusinessUnitDto("Lala");
             String jsonToPost = objectMapper.writeValueAsString(businessUnitDto);
@@ -279,7 +243,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void deleteOnInvalidIdShouldReturn_404() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             delete("/businessUnits/9999")
@@ -297,7 +261,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void deleteOnValidIdShouldReturn_204() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             delete("/businessUnits/1")
@@ -311,7 +275,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findBusinessObjectivesByBusinessUnitIdWithDefaultTimeFrameShouldReturnListOfObjectivesInCurrentYear() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
 
@@ -323,7 +287,7 @@ class BusinessUnitIntegrationTest {
                     ).andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(3)))
-                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?page=0&size=10)?")))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits/1/objectives(\\?page=0&size=10)?")))
                     .andExpect(jsonPath("$.page").exists())
                     .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
                     .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..startDate", everyItem(matchesRegex(currentYear + "-\\d{2}-\\d{2}"))))
@@ -333,7 +297,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findBusinessObjectivesByBusinessUnitIdWithInvalidTimeFrameShouldReturnBadRequest() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             get("/businessUnits/1/objectives?start=2030-01-01")
@@ -350,7 +314,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findBusinessObjectivesByBusinessUnitIdWithHugeTimeFrameShouldReturnAllObjectives() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
 
@@ -360,7 +324,7 @@ class BusinessUnitIntegrationTest {
                     ).andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(3)))
-                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits/1/objectives(\\?.*)?")))
                     .andExpect(jsonPath("$.page").exists())
                     .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
                     .andExpect(jsonPath("$._embedded." + buoCollectionRelation, hasSize(2)));
@@ -369,7 +333,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findBusinessObjectivesByBusinessUnitIdWith_2021_AsTimeFrameShouldReturnAllObjectivesFrom_2021() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             LinkRelation buoCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitObjectiveDto.class);
 
@@ -379,7 +343,7 @@ class BusinessUnitIntegrationTest {
                     ).andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(3)))
-                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits/1/objectives(\\?.*)?")))
                     .andExpect(jsonPath("$.page").exists())
                     .andExpect(jsonPath("$._embedded", aMapWithSize(1)))
                     .andExpect(jsonPath("$._embedded." + buoCollectionRelation + "..startDate", everyItem(matchesRegex("2021-\\d{2}-\\d{2}"))))
@@ -389,7 +353,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void findBusinessObjectivesByBusinessUnitIdWith_1900_AsTimeFrameShouldReturnNoObjectives() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             get("/businessUnits/1/objectives?start=1900-01-01&end=1900-12-31")
@@ -397,7 +361,7 @@ class BusinessUnitIntegrationTest {
                     ).andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.*", hasSize(2)))
-                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http:\\/\\/localhost\\/businessUnits\\/1\\/objectives(\\?.*)?")))
+                    .andExpect(jsonPath("$._links.self.href", matchesRegex("http://localhost/businessUnits/1/objectives(\\?.*)?")))
                     .andExpect(jsonPath("$.page").exists())
                     .andExpect(jsonPath("$._embedded").doesNotExist());
         }
@@ -405,7 +369,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postBusinessUnitObjectiveShouldReturn_201_AndObjectiveShouldBeCreated() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now(), LocalDate.now().plusDays(1));
             String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -460,7 +424,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postBusinessUnitObjectiveShouldReturn_400_OnMalformedJson() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             post("/businessUnits/1/objectives")
@@ -482,7 +446,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postBusinessUnitObjectiveShouldReturn_404_OnInvalidBusinessUnitId() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now(), LocalDate.now().plusDays(1));
             String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -506,7 +470,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postBusinessUnitObjectiveShouldReturn_400_OnInvalidTimeFrame() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now().plusDays(2), LocalDate.now().plusDays(1));
             String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -534,7 +498,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postBusinessUnitObjectiveShouldReturn_400_OnEndDateInPast() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             BusinessUnitObjectiveDto toPost = new BusinessUnitObjectiveDto(0f, "Post me!", LocalDate.now().minusYears(1), LocalDate.now().minusDays(1));
             String jsonToPost = objectMapper.writeValueAsString(toPost);
@@ -562,7 +526,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void getAllUsersByBusinessUnitShouldReturnAllUsers() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             LinkRelation usersCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(OkrUserDto.class);
             LinkRelation roleItemRelation = annotationLinkRelationProvider.getItemResourceRelFor(RoleDto.class);
@@ -586,7 +550,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void getAllUsersByBusinessUnitShouldReturn_404_IfBusinessUnitIdIsInvalid() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             mockMvc.perform(
                             get("/businessUnits/9999/users")
@@ -604,7 +568,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postUserToBusinessUnitShouldReturn_201_IfValid() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             String jsonToPost = objectMapper.writeValueAsString(
                     new OkrUserPostDto("Bob", "Belcher", "bob.belch1", "burgers")
@@ -625,7 +589,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postUserToBusinessUnitShouldReturn_400_IfAnyValueIsBlank() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             String jsonToPost = objectMapper.writeValueAsString(
                     new OkrUserPostDto("", "", "", "")
@@ -655,7 +619,7 @@ class BusinessUnitIntegrationTest {
         @Test
         @Transactional
         void postUserToBusinessUnitShouldReturn_404_IfBusinessUnitIdIsInvalid() throws Exception {
-            String token = doLogin();
+            String token = doLogin(UserLogin.CO_ADMIN);
 
             String jsonToPost = objectMapper.writeValueAsString(
                     new OkrUserPostDto("Tina", "Belcher", "dina.belch1", "jimmyPestoJunior")

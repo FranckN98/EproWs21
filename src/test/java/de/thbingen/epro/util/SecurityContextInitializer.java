@@ -10,16 +10,16 @@ import static org.mockito.Mockito.when;
 
 public class SecurityContextInitializer {
 
-    public static final UserProvider ReadOnlyUser = new UserProvider.ReadOnlyUserProvider();
-    public static final UserProvider ViewUsersUser = new UserProvider.ViewUsersUserProvider();
+    public static final UserRoleProvider ReadOnlyUser = new UserRoleProvider.ReadOnlyUserRoleProvider();
+    public static final UserRoleProvider ViewUsersUser = new UserRoleProvider.ViewUsersUserRoleProvider();
 
-    public static void initSecurityContextWithUser(UserProvider userProvider) {
+    public static void initSecurityContextWithUser(UserRoleProvider userRoleProvider) {
         Authentication authentication = Mockito.mock(Authentication.class);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        OkrUser okrUser = userProvider.provideUser();
+        OkrUser okrUser = userRoleProvider.provideUser();
 
         when(securityContext.getAuthentication().getPrincipal()).thenReturn(okrUser);
     }

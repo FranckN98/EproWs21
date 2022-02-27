@@ -6,11 +6,11 @@ import de.thbingen.epro.model.entity.Role;
 
 import java.util.Set;
 
-public interface UserProvider {
+public interface UserRoleProvider {
 
     OkrUser provideUser();
 
-    class ReadOnlyUserProvider implements UserProvider {
+    class ReadOnlyUserRoleProvider implements UserRoleProvider {
         @Override
         public OkrUser provideUser() {
             Role role = new Role("Read Only");
@@ -21,7 +21,7 @@ public interface UserProvider {
         }
     }
 
-    class ViewUsersUserProvider implements UserProvider {
+    class ViewUsersUserRoleProvider implements UserRoleProvider {
         @Override
         public OkrUser provideUser() {
             Role role = new Role("View Users");
