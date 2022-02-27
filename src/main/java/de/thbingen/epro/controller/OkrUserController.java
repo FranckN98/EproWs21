@@ -1,6 +1,8 @@
 package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.dto.OkrUserPostDto;
+import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -67,6 +69,20 @@ public class OkrUserController {
         }
         okrUserService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/roles")
+    @PreAuthorize("hasAuthority('add_users')")
+    public ResponseEntity<RoleDto> addNewRole(@PathVariable Long id, @RequestBody @Valid RoleDto newRoleDto) {
+        RoleDto roleDto = okrUserService.addNewRole(id, newRoleDto);
+
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8080)
+                .path("/api/v1/roles/{id}")
+                .buildAndExpand(roleDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(roleDto);
     }
 
 }

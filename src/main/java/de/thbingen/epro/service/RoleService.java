@@ -1,15 +1,20 @@
 package de.thbingen.epro.service;
 
+import de.thbingen.epro.model.business.Privilege;
 import de.thbingen.epro.model.assembler.RoleAssembler;
+import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.Role;
 import de.thbingen.epro.model.mapper.RoleMapper;
+import de.thbingen.epro.repository.PrivilegeRepository;
 import de.thbingen.epro.repository.RoleRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 /**
  * This Service represents the interface between presentation logic and the data layer for everything related to
@@ -21,18 +26,20 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
     private final RoleAssembler assembler;
+    private final PrivilegeRepository privilegeRepository;
 
     /**
      * Default constructor to be used for Constructor Injection
-     *
      * @param roleRepository The Repository for DB access
      * @param roleMapper     The Mapstruct mapper to convert from DTO to entity and back
      * @param assembler      The RepresentationModelAssembler to add the hateoas relations
+     * @param privilegeRepository
      */
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler) {
+    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.assembler = assembler;
+        this.privilegeRepository = privilegeRepository;
     }
 
     /**
@@ -102,5 +109,21 @@ public class RoleService {
      */
     public void deleteById(Long id) {
         roleRepository.deleteById(id);
+    }
+
+    public PrivilegeDto addNewPrivilege(Long id, PrivilegeDto privilegeDto) {
+        Optional<Role> roleResult = roleRepository.findById(id);
+        if (!roleResult.isPresent()) {
+            throw new EntityNotFoundException("No role with this id exists");
+        }
+        Role role = roleResult.get();
+        Optional<Privilege> privilegeResult = privilegeRepository.findById(privilegeDto.getId());
+        if (!privilegeResult.isPresent()) {
+            throw new EntityNotFoundException("No privilege with this id exists");
+        }
+        Privilege privilege = privilegeResult.get();
+        role.addPrivilege(privilege);
+        roleRepository.save(role);
+        return privilegeDto;
     }
 }

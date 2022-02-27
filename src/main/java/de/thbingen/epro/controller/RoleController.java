@@ -1,7 +1,10 @@
 package de.thbingen.epro.controller;
 
 
+import de.thbingen.epro.exception.NonMatchingIdsException;
+import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
+import de.thbingen.epro.service.PrivilegeService;
 import de.thbingen.epro.service.RoleService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,10 +26,12 @@ import java.util.Optional;
 public class RoleController {
 
     private final RoleService roleService;
+    private final PrivilegeService privilegeService;
     private final PagedResourcesAssembler<RoleDto> pagedResourcesAssembler;
 
-    public RoleController(RoleService roleService, PagedResourcesAssembler<RoleDto> pagedResourcesAssembler) {
+    public RoleController(RoleService roleService, PrivilegeService privilegeService, PagedResourcesAssembler<RoleDto> pagedResourcesAssembler) {
         this.roleService = roleService;
+        this.privilegeService = privilegeService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
@@ -63,6 +68,19 @@ public class RoleController {
             throw new EntityNotFoundException("No Role with this id exists");
         roleService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/privileges")
+    public ResponseEntity<PrivilegeDto> addNewPrivilege(@PathVariable Long id, @RequestBody @Valid PrivilegeDto newPrivilegeDto) {
+        PrivilegeDto privilegeDto = roleService.addNewPrivilege(id, newPrivilegeDto);
+
+        UriComponents uriComponents = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8080)
+                .path("/api/v1/privileges/{id}")
+                .buildAndExpand(privilegeDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).body(privilegeDto);
     }
 
 }

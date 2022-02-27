@@ -311,11 +311,11 @@ insert into privileges_in_role (privilege_id, role_id)
 VALUES(1, 3);
 
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname1', 'Nachname1', 'vor.nach1', 'password1', 1, 1);
+VALUES ('Vorname1', 'Nachname1', 'vor.nach1', '$2a$10$Z154TMv/13Ou6aUxC7FsHe65KWPhRt4fO5D4yVr5gTgANWyPFEd9a', 1, 1);
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname2', 'Nachname2', 'vor.nach2', 'password2', 2, 2);
+VALUES ('Vorname2', 'Nachname2', 'vor.nach2', '$2a$10$Y.CbRvBR.S3FkvQ3EEYbo./AYIREzjzSfgMcQa2R6/hVa6RCdf/WS', 2, 2);
 insert into okr_user (name, surname, username, password, role_id, business_unit_id)
-VALUES ('Vorname3', 'Nachname3', 'vor.nach3', 'password3', 3, 1);
+VALUES ('Vorname3', 'Nachname3', 'vor.nach3', '$2a$10$Afs4WVE/ypBaVaLqONQpCONaDO/X9FanqF7VyaboEalxUQTXXZUO2', 3, 1);
 
 
 -- endregion
