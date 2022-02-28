@@ -39,7 +39,7 @@ public class OkrUserService {
      *
      * @param okrUserRepository      The Repository for DB access to OkrUsers
      * @param okrUserMapper          The Mapstruct mapper to convert from DTO to entity and back
-     * @param roleRepository         The Repository for DB access to Roels
+     * @param roleRepository         The Repository for DB access to Roles
      * @param passwordEncoder        The Password Encoder
      * @param assembler              The RepresentationModelAssembler to add the hateoas relations
      * @param businessUnitRepository The Repository for DB access to Business Units
@@ -186,11 +186,10 @@ public class OkrUserService {
      * @return the requested page of Users with the role which has the given id
      */
     public Page<OkrUserDto> findAllUsersWithRole(Long id, Pageable pageable) {
-        if (!existsById(id))
+        if (!roleRepository.existsById(id))
             throw new EntityNotFoundException("No Role with this id exists");
 
         Page<OkrUser> pagedResult = okrUserRepository.findAllByRoleId(id, pageable);
-        ;
 
         if (pagedResult.hasContent()) {
             return pagedResult.map(assembler::toModel);
