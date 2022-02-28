@@ -391,7 +391,7 @@ public class RoleControllerTest {
     class AddNewPrivilegeTests {
 
         @Test
-        public void AddNewPrivilegeToRoleShouldReturnPrivilegesInRole() throws Exception {
+        public void AddNewPrivilegeToRoleShouldReturnNoContentIfSucceeds() throws Exception {
             initSecurityContextWithUser(AccessPrivilegesUser);
 
             PrivilegeDto toPost = privilegeAssembler.toModel(new Privilege(1L, "P1"));
@@ -399,18 +399,16 @@ public class RoleControllerTest {
             String jsonToPost = objectMapper.writeValueAsString(toPost);
 
             when(roleService.existsById(anyLong())).thenReturn(true);
-            doNothing().when(roleService).addNewPrivilege(anyLong(), anyLong());
+            doNothing().when(roleService).addNewPrivilegeToRole(anyLong(), anyLong());
 
             mockMvc.perform(
-                            post("/roles/1/privileges")
+                            post("/roles/1/privileges/1")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(jsonToPost)
                                     .characterEncoding(Charset.defaultCharset())
                     )
                     .andDo(print())
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.*", hasSize(2)))
-                    .andExpect(jsonPath("$.name", is(toPost.getName())));
+                    .andExpect(status().isNoContent());
         }
 
 
@@ -423,10 +421,10 @@ public class RoleControllerTest {
             String jsonToPost = objectMapper.writeValueAsString(toPost);
 
             when(roleService.existsById(anyLong())).thenReturn(false);
-            doNothing().when(roleService).addNewPrivilege(anyLong(), anyLong());
+            doNothing().when(roleService).addNewPrivilegeToRole(anyLong(), anyLong());
 
             mockMvc.perform(
-                            post("/roles/1/privileges")
+                            post("/roles/1/privileges/1")
                                     .contentType(MediaType.APPLICATION_JSON)
                                     .content(jsonToPost)
                                     .characterEncoding(Charset.defaultCharset())

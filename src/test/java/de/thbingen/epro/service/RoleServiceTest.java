@@ -3,7 +3,6 @@ package de.thbingen.epro.service;
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
-import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.entity.Role;
@@ -158,15 +157,14 @@ public class RoleServiceTest {
     }
 
     @Test
-    void addingANewPrivilege() {
+    void afterAddingA_NewPrivilegeToA_RoleTheRoleShoudlContainThePrivilege() {
         Role role = new Role(1L, "R1");
         role.setPrivileges(new HashSet<>());
         Privilege privilege = new Privilege(1L, "P1");
-        PrivilegeDto newPrivilegeDto = new PrivilegeDto("P1");
         when(repository.findById(1L)).thenReturn(Optional.of(role));
         when(repository.save(any(Role.class))).thenReturn(role);
         when(privilegeRepository.findById(1L)).thenReturn(Optional.of(privilege));
-        service.addNewPrivilege(1L, 2L);
+        service.addNewPrivilegeToRole(1L, 1L);
 
         assertTrue(role.getPrivileges().contains(privilege));
     }

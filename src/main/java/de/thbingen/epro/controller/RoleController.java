@@ -118,7 +118,7 @@ public class RoleController {
     public ResponseEntity<Void> addNewPrivilege(@PathVariable Long id, @PathVariable Long privilegeId) {
         if (!roleService.existsById(id))
             throw new EntityNotFoundException("No Role with this id exists");
-        roleService.addNewPrivilege(id, privilegeId);
+        roleService.addNewPrivilegeToRole(id, privilegeId);
         return ResponseEntity.noContent().build();
     }
 

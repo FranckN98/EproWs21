@@ -2,7 +2,6 @@ package de.thbingen.epro.service;
 
 import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
-import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.entity.Role;
@@ -32,11 +31,12 @@ public class RoleService {
 
     /**
      * Default constructor to be used for Constructor Injection
-     *  @param roleRepository      The Repository for DB access
+     *
+     * @param roleRepository      The Repository for DB access
      * @param roleMapper          The Mapstruct mapper to convert from DTO to entity and back
      * @param assembler           The RepresentationModelAssembler to add the hateoas relations
-     * @param privilegeRepository
-     * @param privilegeAssembler
+     * @param privilegeRepository The Repository for DB Access to Privileges
+     * @param privilegeAssembler  The Assembler to add hateoas relations to privileges
      */
     public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository, PrivilegeAssembler privilegeAssembler) {
         this.roleRepository = roleRepository;
@@ -115,7 +115,7 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
-    public void addNewPrivilege(Long id, Long privilegeId) {
+    public void addNewPrivilegeToRole(Long id, Long privilegeId) {
         Optional<Role> roleResult = roleRepository.findById(id);
         if (roleResult.isEmpty()) {
             throw new EntityNotFoundException("No role with this id exists");
@@ -128,7 +128,7 @@ public class RoleService {
         }
         Privilege privilege = privilegeResult.get();
 
-        if(role.getPrivileges().contains(privilege)) {
+        if (role.getPrivileges().contains(privilege)) {
             return;
         }
 

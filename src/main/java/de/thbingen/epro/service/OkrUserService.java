@@ -4,7 +4,6 @@ import de.thbingen.epro.model.assembler.OkrUserAssembler;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.OkrUserPostDto;
 import de.thbingen.epro.model.dto.OkrUserUpdateDto;
-import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.entity.Role;
@@ -203,7 +202,7 @@ public class OkrUserService {
         }
 
         Optional<BusinessUnit> businessUnitResult = businessUnitRepository.findById(businessUnitId);
-        if(businessUnitResult.isEmpty()) {
+        if (businessUnitResult.isEmpty()) {
             throw new EntityNotFoundException("No BusinessUnit with this id exists");
         }
 

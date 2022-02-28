@@ -77,8 +77,8 @@ public class PrivilegeServiceTest {
         List<PrivilegeDto> privilegeDtos = privilegeDtoPage.getContent();
         assertEquals("P1", privilegeDtos.get(0).getName());
         assertEquals("P2", privilegeDtos.get(1).getName());
-        assertEquals("/privileges/?id=1", privilegeDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
-        assertEquals("/privileges/?id=1", privilegeDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", privilegeDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", privilegeDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class PrivilegeServiceTest {
 
         assertTrue(returned.isPresent());
         assertEquals("P1", returned.get().getName());
-        assertEquals("/privileges/?id=1", returned.get().getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", returned.get().getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class PrivilegeServiceTest {
         PrivilegeDto returned = service.insertPrivilege(toBeInserted);
 
         assertEquals(toBeInserted.getName(), returned.getName());
-        assertEquals("/privileges/?id=1", returned.getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", returned.getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
     }
 
     // region existsById
@@ -163,8 +163,8 @@ public class PrivilegeServiceTest {
         List<PrivilegeDto> privilegeDtos = returned.getContent();
         assertEquals("P1", privilegeDtos.get(0).getName());
         assertEquals("P2", privilegeDtos.get(1).getName());
-        assertEquals("/privileges/?id=1", privilegeDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
-        assertEquals("/privileges/?id=1", privilegeDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", privilegeDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/privileges/1", privilegeDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
 
     }
 

@@ -3,7 +3,6 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.OkrUserPostDto;
 import de.thbingen.epro.model.dto.OkrUserUpdateDto;
-import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.service.OkrUserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
