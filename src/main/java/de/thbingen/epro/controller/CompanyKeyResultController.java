@@ -21,6 +21,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * This Controller is responsible for everything under the /companyKeyResults endpoint
+ */
 @RestController
 @RequestMapping("/companyKeyResults")
 public class CompanyKeyResultController {
@@ -37,6 +40,11 @@ public class CompanyKeyResultController {
         this.companyKeyResultHistoryService = companyKeyResultHistoryService;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.CompanyKeyResult}s
+     * @param pageable the parameters determining which page to return
+     * @return all {@link de.thbingen.epro.model.entity.CompanyKeyResult}s of the requested page
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultDto>> findAll(
@@ -46,6 +54,11 @@ public class CompanyKeyResultController {
         return pagedResourcesAssembler.toModel(allCompanyKeyResults);
     }
 
+    /**
+     * Returns the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyKeyResult} to be returned
+     * @return the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -59,6 +72,13 @@ public class CompanyKeyResultController {
         throw new EntityNotFoundException("No CompanyKeyResult with this id exists");
     }
 
+    /**
+     * Updates the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id with the values from the
+     * request body
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyKeyResult} to be updated
+     * @param companyKeyResultDto the new values of the {@link de.thbingen.epro.model.entity.CompanyKeyResult}
+     * @return the newly updated {@link de.thbingen.epro.model.entity.CompanyKeyResult}
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -75,6 +95,11 @@ public class CompanyKeyResultController {
         return ResponseEntity.ok(companyKeyResultService.updateCompanyKeyResult(id, companyKeyResultDto));
     }
 
+    /**
+     * Deletes the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyKeyResult} to be deleted
+     * @return
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -85,6 +110,12 @@ public class CompanyKeyResultController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Get the requested page of history for the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id
+     * @param pageable the parameters determining which page to return
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyKeyResult} for which the history shall be returned
+     * @return the requested page of history for the {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given id
+     */
     @GetMapping(value = "/{id}/history", produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getHistory(

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+/**
+ * This Controller is responsible for everything under the /companyKeyResultHistory endpoint
+ */
 @RestController
 @RequestMapping("/companyKeyResultHistory")
 public class CompanyKeyResultHistoryController {
@@ -28,6 +31,11 @@ public class CompanyKeyResultHistoryController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} items
+     * @param pageable the parameters determining which page to return
+     * @return the requested page of {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} items
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getAll(
             @PageableDefault Pageable pageable
@@ -35,6 +43,11 @@ public class CompanyKeyResultHistoryController {
         return pagedResourcesAssembler.toModel(companyKeyResultHistoryService.findAll(pageable));
     }
 
+    /**
+     * return the {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} item with the given id
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} to be returned
+     * @return the requested {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} item
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE

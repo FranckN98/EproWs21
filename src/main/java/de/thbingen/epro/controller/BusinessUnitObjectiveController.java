@@ -4,6 +4,7 @@ import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -28,6 +29,9 @@ import java.util.Optional;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
+/**
+ * This Controller is responsible for everything under the /businessUnitObjectives endpoint
+ */
 @RestController
 @RequestMapping("/businessUnitObjectives")
 public class BusinessUnitObjectiveController {
@@ -46,6 +50,15 @@ public class BusinessUnitObjectiveController {
         this.pagedResourcesAssemblerKeyResult = pagedResourcesAssemblerKeyResult;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s of the requested Page, that have a
+     * start Date that starts after the given start date and an end date that ends after the given end date
+     *
+     * @param pageable the parameters determining which page to return
+     * @param start    the start date after which {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s must start to be returned
+     * @param end      the end date before which {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s must end to be returned
+     * @return the requested {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitObjectiveDto>> findAll(
@@ -67,6 +80,12 @@ public class BusinessUnitObjectiveController {
         );
     }
 
+    /**
+     * Returns the {@link de.thbingen.epro.model.entity.BusinessUnitObjective} with the given id
+     *
+     * @param id of the {@link de.thbingen.epro.model.entity.BusinessUnitObjective} to be returned
+     * @return the {@link BusinessUnitObjective} with the given id
+     */
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public BusinessUnitObjectiveDto findById(@PathVariable Long id) {
@@ -77,6 +96,12 @@ public class BusinessUnitObjectiveController {
         throw new EntityNotFoundException("No BusinessUnitObjective with this businessUnitObjectiveId exists");
     }
 
+    /**
+     * Update the {@link BusinessUnitObjective} with the given id from the values in the request body
+     * @param id of the {@link BusinessUnitObjective} to be updated
+     * @param businessUnitObjectiveDto the values to update the {@link BusinessUnitObjective} with
+     * @return the newly updated {@link BusinessUnitObjective}
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -93,6 +118,11 @@ public class BusinessUnitObjectiveController {
         return ResponseEntity.ok(businessUnitObjectiveService.updateBusinessUnitObjective(id, businessUnitObjectiveDto));
     }
 
+    /**
+     * Delete the {@link BusinessUnitObjective} with the given id
+     * @param id of the {@link BusinessUnitObjective} to be deleted
+     * @return no content
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -105,6 +135,13 @@ public class BusinessUnitObjectiveController {
 
     // region companyKeyResultReference
 
+    /**
+     * Creates a reference between the {@link BusinessUnitObjective} with the given businessUnitObjectiveId and the
+     * {@link de.thbingen.epro.model.entity.CompanyKeyResult} with the given companyKeyResultId
+     * @param businessUnitObjectiveId of the {@link BusinessUnitObjective} which is to be updated
+     * @param companyKeyResultId of the {@link de.thbingen.epro.model.entity.CompanyKeyResult} which is to be updated
+     * @return NoContent
+     */
     @RequestMapping(
             value = "/{businessUnitObjectiveId}/companyKeyResultReference/{companyKeyResultId}",
             method = {RequestMethod.PUT, RequestMethod.POST}
@@ -127,6 +164,12 @@ public class BusinessUnitObjectiveController {
         }
     }
 
+    /**
+     * Delete the reference to any {@link de.thbingen.epro.model.entity.CompanyKeyResult} from the {@link BusinessUnitObjective}
+     * with the given id
+     * @param businessUnitObjectiveId of the {@link BusinessUnitObjective} for which the reference is to be deleted
+     * @return no content
+     */
     @DeleteMapping("/{businessUnitObjectiveId}/companyKeyResultReference")
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteCompanyKeyResultReference(
@@ -146,6 +189,14 @@ public class BusinessUnitObjectiveController {
 
     // region keyResults
 
+    /**
+     * Get all {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}s belonging to the {@link BusinessUnitObjective}
+     * with the given id
+     *
+     * @param businessUnitObjectiveId of the {@link BusinessUnitObjective} that the returned {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}s should belong to
+     * @param pageable the parameters determining which page to return
+     * @return the requested page of {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}s
+     */
     @GetMapping(
             value = "/{businessUnitObjectiveId}/keyResults",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -158,6 +209,14 @@ public class BusinessUnitObjectiveController {
         return pagedResourcesAssemblerKeyResult.toModel(businessUnitKeyResultService.findAllByBusinessUnitObjectiveId(businessUnitObjectiveId, pageable));
     }
 
+    /**
+     * Adds a new {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult} to the {@link BusinessUnitObjective}
+     * with the given id
+     *
+     * @param businessUnitObjectiveId of the {@link BusinessUnitObjective} the {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult} should be added to
+     * @param newBusinessUnitKeyResultDto the {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult} to be added
+     * @return the newly added {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}
+     */
     @PostMapping(
             value = "/{businessUnitObjectiveId}/keyResults",
             produces = MediaTypes.HAL_JSON_VALUE,

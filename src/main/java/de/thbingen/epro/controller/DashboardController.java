@@ -21,6 +21,13 @@ public class DashboardController {
         this.dashboardService = dashboardService;
     }
 
+    /**
+     * Gets the current dashboard containing all {@link de.thbingen.epro.model.entity.BusinessUnitObjective}s that are
+     * currently active and its {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}s as well as the currently
+     * active {@link de.thbingen.epro.model.entity.CompanyObjective}s with their {@link de.thbingen.epro.model.entity.CompanyKeyResult}s
+     *
+     * @return the current dashboard
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<DashboardItem> getDashboard() {
         CollectionModel<DashboardItem> collectionModel = CollectionModel.of(dashboardService.getDashboardItems());

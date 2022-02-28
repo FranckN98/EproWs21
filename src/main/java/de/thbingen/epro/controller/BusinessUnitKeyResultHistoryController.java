@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+/**
+ * This controller is responsible for the /businessUnitKeyResultHistory endpoint
+ */
 @RestController
 @RequestMapping("/businessUnitKeyResultHistory")
 public class BusinessUnitKeyResultHistoryController {
@@ -28,11 +31,21 @@ public class BusinessUnitKeyResultHistoryController {
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory} Items
+     * @param pageable The parameters determining which page to return
+     * @return the requested page of historical BusinessUnitKeyResults
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<BusinessUnitKeyResultHistoryDto>> getAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitKeyResultHistoryService.findAll(pageable));
     }
 
+    /**
+     * Returns the {@link de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory} Item with the given id
+     * @param id of the BusinessUnitKeyResultHistory Item to be returned
+     * @return the requested historical BusinessUnitKeyResult
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE

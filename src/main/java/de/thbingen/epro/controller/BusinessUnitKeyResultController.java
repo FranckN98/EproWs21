@@ -3,6 +3,8 @@ package de.thbingen.epro.controller;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
+import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
+import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -21,6 +23,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * This controller is responsible for the /businessUnitKeyResults endpoint
+ */
 @RestController
 @RequestMapping("/businessUnitKeyResults")
 public class BusinessUnitKeyResultController {
@@ -39,12 +44,24 @@ public class BusinessUnitKeyResultController {
         this.companyKeyResultService = companyKeyResultService;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.BusinessUnitKeyResult}s of the requested Page
+     *
+     * @param pageable the parameters, which determine which page to return
+     * @return The requested Page of BusinessUnitKeyResults
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(businessUnitKeyResultService.findAllBusinessUnitKeyResults(pageable));
     }
 
+    /**
+     * Returns the {@link BusinessUnitKeyResult} with the given id
+     *
+     * @param id of the BusinessUnitKeyResult which should be returned
+     * @return the BusinessUnitKeyResult with the given id
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -58,6 +75,13 @@ public class BusinessUnitKeyResultController {
         throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
     }
 
+    /**
+     * Updates the {@link BusinessUnitKeyResult} with the given id, with the values contained in the request body
+     *
+     * @param id                       of the BusinessUnitKeyResult to be updated
+     * @param businessUnitKeyResultDto The new values for the BusinessUnitKeyResult
+     * @return the BusinessUnitKeyResult with its new values
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -74,6 +98,12 @@ public class BusinessUnitKeyResultController {
         return ResponseEntity.ok(businessUnitKeyResultService.updateBusinessUnitKeyResult(id, businessUnitKeyResultDto));
     }
 
+    /**
+     * Deletes the {@link BusinessUnitKeyResult} with the given id
+     *
+     * @param id of the BusinessUnitKeyResult to be deleted
+     * @return NoContent
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -84,6 +114,13 @@ public class BusinessUnitKeyResultController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Returns the complete history belonging to the {@link BusinessUnitKeyResult} with the given id
+     *
+     * @param pageable the parameters, determining which page to return
+     * @param id       the id of the BusinessUnitKeyResult of which the history should be returned
+     * @return the complete history
+     */
     @GetMapping(value = "/{id}/history", produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<BusinessUnitKeyResultHistoryDto>> getHistory(
@@ -98,6 +135,12 @@ public class BusinessUnitKeyResultController {
         );
     }
 
+    /**
+     * Adds a reference between {@link BusinessUnitKeyResult} and {@link CompanyKeyResult}
+     * @param businessUnitKeyResultId The id of the BusinessUnitKeyResult which shall be linked to a CompanyKeyResult
+     * @param companyKeyResultId of the CompanyKeyResult that shall be linked to
+     * @return No Content
+     */
     @RequestMapping(
             value = "/{businessUnitKeyResultId}/companyKeyResultReference/{companyKeyResultId}",
             method = {RequestMethod.PUT, RequestMethod.POST}
@@ -120,6 +163,11 @@ public class BusinessUnitKeyResultController {
         }
     }
 
+    /**
+     * Deletes the link of the {@link BusinessUnitKeyResult} with the given {@code id} to any {@link CompanyKeyResult}
+     * @param businessUnitKeyResultId of the BusinessUnitKeyResult for which the link shall be deleted
+     * @return No Content
+     */
     @DeleteMapping("/{businessUnitKeyResultId}/companyKeyResultReference")
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<Void> deleteCompanyKeyResultReference(

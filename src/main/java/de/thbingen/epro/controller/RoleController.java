@@ -110,6 +110,15 @@ public class RoleController {
         return privilegeDtoPagedResourcesAssembler.toModel(privilegeService.findAllByRoleId(id, pageable));
     }
 
+    /**
+     * Adds the {@link de.thbingen.epro.model.entity.Privilege} with the given privilegeId to the {@link de.thbingen.epro.model.entity.Role}
+     * with the given id
+     *
+     * @param id          of the {@link de.thbingen.epro.model.entity.Role} that the {@link de.thbingen.epro.model.entity.Privilege}
+     *                    shall be added to
+     * @param privilegeId of the {@link de.thbingen.epro.model.entity.Privilege} that shall be added to the {@link de.thbingen.epro.model.entity.Role}
+     * @return NoContent
+     */
     @RequestMapping(
             value = "/{id}/privileges/{privilegeId}",
             method = {RequestMethod.PUT, RequestMethod.POST},

@@ -5,6 +5,9 @@ import de.thbingen.epro.model.dto.BusinessUnitDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.model.dto.OkrUserDto;
 import de.thbingen.epro.model.dto.OkrUserPostDto;
+import de.thbingen.epro.model.entity.BusinessUnit;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
+import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
 import de.thbingen.epro.service.BusinessUnitService;
 import de.thbingen.epro.service.OkrUserService;
@@ -138,6 +141,16 @@ public class BusinessUnitController {
 
     // region BusinessUnitObjective
 
+    /**
+     * Returns all {@link BusinessUnitObjective}s, which belong to this {@link de.thbingen.epro.model.entity.BusinessUnit}
+     * of the requested Page
+     *
+     * @param pageable The parameters, which determine which Page to return
+     * @param id       The id of the Businessunit, which the BusinessUnitObjectives to be returned belong to
+     * @param start    The date after or on which the BusinessUnits must start to be returned
+     * @param end      The date before or on which the BusinessUnits must end to be returned
+     * @return The requested Page of BusinessUnitObjectives
+     */
     @GetMapping(
             value = "/{id}/objectives",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -164,6 +177,13 @@ public class BusinessUnitController {
         );
     }
 
+    /**
+     * Adds a new {@link BusinessUnitObjective} to the {@link BusinessUnit} with the given id
+     *
+     * @param id                          the id of the BusinessUnit to which the new BusinessUnitObjective is to be added
+     * @param newBusinessUnitObjectiveDto the new BusinessUnitObjective which is to be added
+     * @return the newly inserted BusinessUnitObjective
+     */
     @PostMapping(
             value = "/{id}/objectives",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -187,6 +207,13 @@ public class BusinessUnitController {
 
     // region okruser
 
+    /**
+     * Returns all {@link OkrUser}s, that belong to the {@link BusinessUnit} with the given id
+     *
+     * @param pageable The parameters, which determine, which page to return
+     * @param id       the id of the BusinessUnit, which the users should belong to
+     * @return The requested Page of all OkrUsers, that belong to the BusinessUnit with the given id
+     */
     @GetMapping(
             value = "/{id}/users",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -200,6 +227,12 @@ public class BusinessUnitController {
         return pagedResourcesAssemblerOkrUser.toModel(okrUserService.findAllByBusinessUnitId(id, pageable));
     }
 
+    /**
+     * Adds a new {@link OkrUser} to the {@link BusinessUnit} with the given {@code id}
+     * @param id the id of the BusinessUnit the new user should be added to
+     * @param newOkrUserDto the new user to be added
+     * @return the newly added user
+     */
     @PostMapping(
             value = "/{id}/users",
             consumes = MediaType.APPLICATION_JSON_VALUE,

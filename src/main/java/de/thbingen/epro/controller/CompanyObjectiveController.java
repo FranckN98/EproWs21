@@ -4,6 +4,7 @@ import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultPostDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.entity.BusinessUnitObjective;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,9 @@ import java.util.Optional;
 import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 
+/**
+ * This controller is responsible for everything under the /companyObjectives endpoint
+ */
 @RestController
 @RequestMapping("/companyObjectives")
 public class CompanyObjectiveController {
@@ -43,6 +47,15 @@ public class CompanyObjectiveController {
         this.companyKeyResultDtoPagedResourcesAssembler = companyKeyResultDtoPagedResourcesAssembler;
     }
 
+    /**
+     * Returns all {@link de.thbingen.epro.model.entity.CompanyObjective}s of the requested Page, that have a
+     * start Date that starts after the given start date and an end date that ends after the given end date
+     *
+     * @param pageable the parameters determining which page to return
+     * @param start    the start date after which {@link de.thbingen.epro.model.entity.CompanyObjective}s must start to be returned
+     * @param end      the end date before which {@link de.thbingen.epro.model.entity.CompanyObjective}s must end to be returned
+     * @return the requested {@link de.thbingen.epro.model.entity.CompanyObjective}s
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyObjectiveDto>> findAll(
@@ -64,6 +77,12 @@ public class CompanyObjectiveController {
         );
     }
 
+    /**
+     * Returns the {@link de.thbingen.epro.model.entity.CompanyObjective} with the given id
+     *
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyObjective} to be returned
+     * @return the {@link de.thbingen.epro.model.entity.CompanyObjective} with the given id
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -77,6 +96,11 @@ public class CompanyObjectiveController {
         throw new EntityNotFoundException("No CompanyObjective with this id exists");
     }
 
+    /**
+     * Adds a new {@link de.thbingen.epro.model.entity.CompanyObjective} with the given values
+     * @param newCompanyObjective the new {@link de.thbingen.epro.model.entity.CompanyObjective} to be added
+     * @return the newly added {@link de.thbingen.epro.model.entity.CompanyObjective}
+     */
     @PostMapping(
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -87,6 +111,12 @@ public class CompanyObjectiveController {
         return ResponseEntity.created(companyObjectiveDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(companyObjectiveDto);
     }
 
+    /**
+     * Update the {@link de.thbingen.epro.model.entity.CompanyObjective} with the given id from the values in the request body
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyObjective} to be updated
+     * @param companyObjectiveDto the values to update the {@link de.thbingen.epro.model.entity.CompanyObjective} with
+     * @return the newly updated {@link de.thbingen.epro.model.entity.CompanyObjective}
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -104,6 +134,11 @@ public class CompanyObjectiveController {
         return ResponseEntity.ok(companyObjectiveService.updateCompanyObjective(id, companyObjectiveDto));
     }
 
+    /**
+     * Delete the {@link de.thbingen.epro.model.entity.CompanyObjective} with the given id
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyObjective} to be deleted
+     * @return no content
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -114,6 +149,14 @@ public class CompanyObjectiveController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Get all {@link de.thbingen.epro.model.entity.CompanyKeyResult}s belonging to the {@link de.thbingen.epro.model.entity.CompanyObjective}
+     * with the given id
+     *
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyObjective} that the returned {@link de.thbingen.epro.model.entity.CompanyKeyResult}s should belong to
+     * @param pageable the parameters determining which page to return
+     * @return the requested page of {@link de.thbingen.epro.model.entity.CompanyKeyResult}s
+     */
     @GetMapping(
             value = "/{id}/keyResults",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -126,6 +169,14 @@ public class CompanyObjectiveController {
         return companyKeyResultDtoPagedResourcesAssembler.toModel(companyKeyResultService.findAllByCompanyObjectiveId(id, pageable));
     }
 
+    /**
+     * Adds a new {@link de.thbingen.epro.model.entity.CompanyKeyResult} to the {@link de.thbingen.epro.model.entity.CompanyObjective}
+     * with the given id
+     *
+     * @param id of the {@link de.thbingen.epro.model.entity.CompanyObjective} the {@link de.thbingen.epro.model.entity.CompanyKeyResult} should be added to
+     * @param newCompanyKeyResultDto the {@link de.thbingen.epro.model.entity.CompanyKeyResult} to be added
+     * @return the newly added {@link de.thbingen.epro.model.entity.CompanyKeyResult}
+     */
     @PostMapping(
             value = "/{id}/keyResults",
             produces = MediaTypes.HAL_JSON_VALUE,
