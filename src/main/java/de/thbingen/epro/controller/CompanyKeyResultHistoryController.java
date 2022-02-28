@@ -8,6 +8,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ public class CompanyKeyResultHistoryController {
      * @return the requested page of {@link de.thbingen.epro.model.entity.CompanyKeyResultHistory} items
      */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public PagedModel<EntityModel<CompanyKeyResultHistoryDto>> getAll(
             @PageableDefault Pageable pageable
     ) {
@@ -52,6 +54,7 @@ public class CompanyKeyResultHistoryController {
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
     )
+    @PreAuthorize("hasAuthority('read')")
     public CompanyKeyResultHistoryDto getById(@PathVariable Long id) {
         Optional<CompanyKeyResultHistoryDto> result = companyKeyResultHistoryService.findById(id);
         if (result.isPresent())

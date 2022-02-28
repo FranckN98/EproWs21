@@ -4,6 +4,7 @@ import de.thbingen.epro.model.dto.dashboard.DashboardItem;
 import de.thbingen.epro.service.DashboardService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class DashboardController {
      * @return the current dashboard
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('read')")
     public CollectionModel<DashboardItem> getDashboard() {
         CollectionModel<DashboardItem> collectionModel = CollectionModel.of(dashboardService.getDashboardItems());
         collectionModel.add(linkTo(methodOn(DashboardController.class).getDashboard()).withSelfRel());

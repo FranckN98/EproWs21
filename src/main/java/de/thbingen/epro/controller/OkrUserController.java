@@ -89,7 +89,7 @@ public class OkrUserController {
      * Will throw an EntityNotFoundException if there is no OkrUser with the given id
      *
      * @param id The id of the OkrUser to be updated
-     * @param OkrUserUpdateDto The new values for the OkrUser
+     * @param okrUserDto The new values for the OkrUser
      * @return The newly updated OkrUser
      */
     @PutMapping(
@@ -156,6 +156,7 @@ public class OkrUserController {
             value = "/{id}/businessUnits/{businessUnitId}",
             method = {RequestMethod.POST, RequestMethod.PUT}
     )
+    @PreAuthorize("hasAuthority('change_users')")
     public ResponseEntity<Void> setBusinessUnit(
             @PathVariable Long id,
             @PathVariable Long businessUnitId
