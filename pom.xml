@@ -12,7 +12,7 @@
 
     <groupId>de.thbingen</groupId>
     <artifactId>epro21</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>epro21</name>
     <description>Epro project for Spring Boot</description>
 

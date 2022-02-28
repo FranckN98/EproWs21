@@ -12,7 +12,7 @@
 
 ## Usage
 To run this project you need to have an instance of PostgreSQL running, with the database initialized.
-We recommend using the provided Dockerfile to build a Docker Container which runs the Database.
+We recommend using the provided Dockerfile (`docker/postgres/Dockerfile`) to build a Docker Container which runs the Database.
 Alternatively you can also use the `createOkrDb.sql` Database initialization script on a custom installation of Postgresql,
 but you might need to change the `spring.datasource` properties defined in the application.properties or set the
 Properties yourself by passing them as Parameters when running the application.

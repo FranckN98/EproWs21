@@ -7,6 +7,9 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 
+/*
+ * Container Entity for the dataholder, HistoricalCompanyKeyResult
+ */
 @Entity
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class CompanyKeyResultHistory {
