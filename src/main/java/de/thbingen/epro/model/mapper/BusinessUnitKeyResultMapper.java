@@ -1,6 +1,8 @@
 package de.thbingen.epro.model.mapper;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import org.mapstruct.*;
 
@@ -11,20 +13,20 @@ public interface BusinessUnitKeyResultMapper {
     BusinessUnitKeyResultDto businessUnitKeyResultToDto(BusinessUnitKeyResult businessUnitKeyResult);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "businessUnitObjective", ignore = true)
     @Mapping(target = "companyKeyResult", ignore = true)
+    @Mapping(target = "businessUnitObjective", ignore = true)
     @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
-    @Mapping(target = "name", source = "businessUnitKeyResultDto.name")
-    @Mapping(target = "currentValue", source = "businessUnitKeyResultDto.currentValue")
-    @Mapping(target = "goalValue", source = "businessUnitKeyResultDto.goalValue")
-    @Mapping(target = "achievement", source = "businessUnitKeyResultDto.achievement")
-    BusinessUnitKeyResult dtoToBusinessUnitKeyResult(BusinessUnitKeyResultDto businessUnitKeyResultDto);
+    @Mapping(target = "achievement", constant = "0f")
+    BusinessUnitKeyResult postDtoToBusinessUnitKeyResult(BusinessUnitKeyResultPostDto businessUnitKeyResultPostDto);
 
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "goalValue", ignore = true)
+    @Mapping(target = "achievement", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "companyKeyResult", ignore = true)
     @Mapping(target = "businessUnitObjective", ignore = true)
     @Mapping(target = "businessUnitKeyResultHistories", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateBusinessUnitKeyResultFromDto(BusinessUnitKeyResultDto businessUnitKeyResultDto, @MappingTarget BusinessUnitKeyResult businessUnitKeyResult);
+    void updateBusinessUnitKeyResultFromUpdateDto(BusinessUnitKeyResultUpdateDto businessUnitKeyResultDto, @MappingTarget BusinessUnitKeyResult businessUnitKeyResult);
 
 }

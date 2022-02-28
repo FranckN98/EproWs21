@@ -17,23 +17,8 @@ public interface CompanyKeyResultMapper {
     @Mapping(target = "companyKeyResultHistories", ignore = true)
     @Mapping(target = "businessUnitObjectives", ignore = true)
     @Mapping(target = "businessUnitKeyResults", ignore = true)
-    CompanyKeyResult dtoToCompanyKeyResult(CompanyKeyResultDto companyKeyResultDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "companyObjective", ignore = true)
-    @Mapping(target = "companyKeyResultHistories", ignore = true)
-    @Mapping(target = "businessUnitObjectives", ignore = true)
-    @Mapping(target = "businessUnitKeyResults", ignore = true)
     @Mapping(target = "achievement", constant = "0f")
     CompanyKeyResult postDtoToCompanyKeyResult(CompanyKeyResultPostDto companyKeyResultPostDto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "companyObjective", ignore = true)
-    @Mapping(target = "companyKeyResultHistories", ignore = true)
-    @Mapping(target = "businessUnitObjectives", ignore = true)
-    @Mapping(target = "businessUnitKeyResults", ignore = true)
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateCompanyKeyResultFromDto(CompanyKeyResultDto companyKeyResultDto, @MappingTarget CompanyKeyResult companyKeyResult);
 
     @Mapping(target = "name", ignore = true)
     @Mapping(target = "id", ignore = true)

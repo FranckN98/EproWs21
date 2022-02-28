@@ -2,6 +2,8 @@ package de.thbingen.epro.service;
 
 import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
@@ -90,8 +92,8 @@ public class BusinessUnitKeyResultService {
      *                                 {@link BusinessUnitKeyResult} is to be added
      * @return The just inserted {@link BusinessUnitKeyResult} in it's {@link BusinessUnitKeyResultDto} representation
      */
-    public BusinessUnitKeyResultDto insertBusinessUnitKeyResultWithObjective(BusinessUnitKeyResultDto businessUnitKeyResultDto, Long id) {
-        BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultMapper.dtoToBusinessUnitKeyResult(businessUnitKeyResultDto);
+    public BusinessUnitKeyResultDto insertBusinessUnitKeyResultWithObjective(BusinessUnitKeyResultPostDto businessUnitKeyResultDto, Long id) {
+        BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultMapper.postDtoToBusinessUnitKeyResult(businessUnitKeyResultDto);
         businessUnitKeyResult.setBusinessUnitObjective(businessUnitObjectiveRepository.getById(id));
         return businessUnitKeyResultAssembler.toModel(businessUnitKeyResultRepository.save(businessUnitKeyResult));
     }
@@ -103,10 +105,10 @@ public class BusinessUnitKeyResultService {
      * @param businessUnitKeyResultDto The new data, with which a {@link BusinessUnitKeyResult} is to be updated
      * @return A {@link BusinessUnitKeyResultDto} of the new {@link BusinessUnitKeyResult}
      */
-    public BusinessUnitKeyResultDto updateBusinessUnitKeyResult(Long id, BusinessUnitKeyResultDto businessUnitKeyResultDto) {
+    public BusinessUnitKeyResultDto updateBusinessUnitKeyResult(Long id, BusinessUnitKeyResultUpdateDto businessUnitKeyResultDto) {
         Optional<BusinessUnitKeyResult> businessUnitKeyResultOptional = businessUnitKeyResultRepository.findById(id);
         BusinessUnitKeyResult businessUnitKeyResult = businessUnitKeyResultOptional.orElseThrow(() -> new EntityNotFoundException("No BusinessUnitKeyResult with this id exists"));
-        businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromDto(businessUnitKeyResultDto, businessUnitKeyResult);
+        businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromUpdateDto(businessUnitKeyResultDto, businessUnitKeyResult);
         return businessUnitKeyResultAssembler.toModel(businessUnitKeyResultRepository.save(businessUnitKeyResult));
     }
 

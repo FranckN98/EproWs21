@@ -326,7 +326,7 @@ public class BusinessUnitKeyResultServiceTest {
         initSecurityContextWithUser(ReadOnlyUser);
 
         BusinessUnitObjective rootBusinessUnitObjective = new BusinessUnitObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
-        BusinessUnitKeyResultDto toBeInserted = new BusinessUnitKeyResultDto("Insert Me", 0f, 100f, 100f, 0f, "comment", OffsetDateTime.now());
+        BusinessUnitKeyResultPostDto toBeInserted = new BusinessUnitKeyResultPostDto("Insert Me", 0f, 100f, 100f, "comment");
         BusinessUnitKeyResult inserted = new BusinessUnitKeyResult(1L, "Insert Me", 0f, 100f, 100f, "comment", OffsetDateTime.now(), rootBusinessUnitObjective, null, Collections.emptySet());
         when(repository.save(any(BusinessUnitKeyResult.class))).thenReturn(inserted);
 
@@ -342,8 +342,8 @@ public class BusinessUnitKeyResultServiceTest {
 
     @Test
     void updateShouldThrowNotFoundExceptionIfNoBusinessUnitExists() {
-        BusinessUnitKeyResultDto updater = new BusinessUnitKeyResultDto();
-        updater.setName("updater");
+        BusinessUnitKeyResultUpdateDto updater = new BusinessUnitKeyResultUpdateDto();
+        updater.setComment("updater");
         when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> service.updateBusinessUnitKeyResult(1L, updater));
@@ -354,14 +354,14 @@ public class BusinessUnitKeyResultServiceTest {
         initSecurityContextWithUser(ReadOnlyUser);
 
         BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "Old name", 0f, 100f, 100f, "comment", OffsetDateTime.now());
-        BusinessUnitKeyResultDto updater = new BusinessUnitKeyResultDto();
-        updater.setName("updater");
+        BusinessUnitKeyResultUpdateDto updater = new BusinessUnitKeyResultUpdateDto();
+        updater.setComment("updater");
         when(repository.findById(1L)).thenReturn(Optional.of(businessUnitKeyResult));
-        businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromDto(updater, businessUnitKeyResult);
+        businessUnitKeyResultMapper.updateBusinessUnitKeyResultFromUpdateDto(updater, businessUnitKeyResult);
         when(repository.save(any(BusinessUnitKeyResult.class))).thenReturn(businessUnitKeyResult);
 
         BusinessUnitKeyResultDto updated = service.updateBusinessUnitKeyResult(1L, updater);
-        assertEquals(updater.getName(), updated.getName());
+        assertEquals(updater.getComment(), updated.getComment());
         assertDoesNotThrow(() -> updated.getRequiredLink(IanaLinkRelations.SELF));
     }
 

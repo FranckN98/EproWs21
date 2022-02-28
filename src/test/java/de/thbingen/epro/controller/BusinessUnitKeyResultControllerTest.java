@@ -6,6 +6,7 @@ import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
@@ -135,17 +136,18 @@ public class BusinessUnitKeyResultControllerTest {
     public void validPutShouldReturnOkWhenObjectIsBeingUpdated() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
-        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "changedName", 10, 100, 50, "a comment", OffsetDateTime.now());
-        BusinessUnitKeyResultDto toPut = businessUnitKeyResultAssembler.toModel(businessUnitKeyResult);
+        BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "changedName", 10f, 100, 50, "a comment", OffsetDateTime.now());
+        BusinessUnitKeyResultUpdateDto toPut = new BusinessUnitKeyResultUpdateDto(10f, null, "a comment");
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
         when(businessUnitKeyResultService.existsById(1L)).thenReturn(true);
-        when(businessUnitKeyResultService.updateBusinessUnitKeyResult(anyLong(), any(BusinessUnitKeyResultDto.class))).thenReturn(toPut);
+        when(businessUnitKeyResultService.updateBusinessUnitKeyResult(anyLong(), any(BusinessUnitKeyResultUpdateDto.class)))
+                .thenReturn(businessUnitKeyResultAssembler.toModel(businessUnitKeyResult));
 
         mockMvc.perform(put("/businessUnitKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("changedName"))
+                .andExpect(jsonPath("$.comment").value("a comment"))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResults/1")));
     }

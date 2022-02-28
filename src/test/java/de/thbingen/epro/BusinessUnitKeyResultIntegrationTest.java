@@ -2,6 +2,7 @@ package de.thbingen.epro;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
 import de.thbingen.epro.util.UserLogin;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
@@ -34,14 +35,12 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
         void newKeyResultShouldHaveOneHistoryElementAfterUpdatingItOnce() throws Exception {
             String token = doLogin(UserLogin.CO_ADMIN);
 
-            BusinessUnitKeyResultDto inserted = new BusinessUnitKeyResultDto(
+            BusinessUnitKeyResultPostDto inserted = new BusinessUnitKeyResultPostDto(
                     "Created",
                     0f,
                     100f,
                     100f,
-                    0f,
-                    "create",
-                    OffsetDateTime.now()
+                    "create"
             );
             String jsonToPost = objectMapper.writeValueAsString(inserted);
 
@@ -108,14 +107,12 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
         void achievementShouldChangeAfterUpdatingCurrentValue() throws Exception {
             String token = doLogin(UserLogin.CO_ADMIN);
 
-            BusinessUnitKeyResultDto inserted = new BusinessUnitKeyResultDto(
+            BusinessUnitKeyResultPostDto inserted = new BusinessUnitKeyResultPostDto(
                     "Created",
                     0f,
                     100f,
                     100f,
-                    0f,
-                    "create",
-                    OffsetDateTime.now()
+                    "create"
             );
             String jsonToPost = objectMapper.writeValueAsString(inserted);
 
@@ -174,14 +171,12 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.achievement", is(0.0)));
 
-            BusinessUnitKeyResultDto inserted = new BusinessUnitKeyResultDto(
+            BusinessUnitKeyResultPostDto inserted = new BusinessUnitKeyResultPostDto(
                     "Created",
                     50f,
                     100f,
                     100f,
-                    0f,
-                    "create",
-                    OffsetDateTime.now()
+                    "create"
             );
             String jsonToPost = objectMapper.writeValueAsString(inserted);
 

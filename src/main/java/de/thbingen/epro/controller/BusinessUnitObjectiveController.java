@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
 import de.thbingen.epro.model.dto.BusinessUnitObjectiveDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.BusinessUnitObjectiveService;
@@ -165,7 +166,7 @@ public class BusinessUnitObjectiveController {
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> addNewKeyResult(
             @PathVariable Long businessUnitObjectiveId,
-            @RequestBody @Valid BusinessUnitKeyResultDto newBusinessUnitKeyResultDto
+            @RequestBody @Valid BusinessUnitKeyResultPostDto newBusinessUnitKeyResultDto
     ) {
         if (!businessUnitObjectiveService.existsById(businessUnitObjectiveId))
             throw new EntityNotFoundException("No BusinessUnitObjective with this ID exists.");

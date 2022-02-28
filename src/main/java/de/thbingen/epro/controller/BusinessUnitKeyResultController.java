@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
+import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.CompanyKeyResultService;
@@ -65,7 +66,7 @@ public class BusinessUnitKeyResultController {
     @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,
-            @RequestBody @Valid BusinessUnitKeyResultDto businessUnitKeyResultDto
+            @RequestBody @Valid BusinessUnitKeyResultUpdateDto businessUnitKeyResultDto
     ) {
         if (!businessUnitKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
