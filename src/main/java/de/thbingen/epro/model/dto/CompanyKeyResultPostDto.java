@@ -1,16 +1,13 @@
 package de.thbingen.epro.model.dto;
 
-import org.springframework.hateoas.RepresentationModel;
-import org.springframework.hateoas.server.core.Relation;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.OffsetDateTime;
 
-@Relation(collectionRelation = "businessUnitKeyResults", itemRelation = "businessUnitKeyResult")
-public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKeyResultDto> {
+public class CompanyKeyResultPostDto {
 
+    @NotBlank
     private String name;
     private Float currentValue;
     @Min(value = 1, message = "Goal Value must be at least 1")
@@ -18,25 +15,19 @@ public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKe
     @Min(value = 0, message = "You shouldn't be negatively confident")
     @Max(value = 100, message = "Don't be too overconfident")
     private Float confidenceLevel;
-    @Min(value = 0, message = "Achievement must be 0 when creating a new Bussines Unit KeyResult")
-    @Max(value = 0, message = "Achievement must be 0 when creating a new Bussines Unit KeyResult")
-    private Float achievement = 0f;
     @NotBlank
     private String comment;
-    private OffsetDateTime timestamp = OffsetDateTime.now();
+    private final OffsetDateTime timestamp = OffsetDateTime.now();
 
-
-    public BusinessUnitKeyResultDto() {
+    public CompanyKeyResultPostDto() {
     }
 
-    public BusinessUnitKeyResultDto(String name, float currentValue, float goalValue, float confidenceLevel, float achievement, String comment, OffsetDateTime timestamp) {
+    public CompanyKeyResultPostDto(String name, Float currentValue, Float goalValue, Float confidenceLevel, String comment) {
         this.name = name;
         this.currentValue = currentValue;
         this.goalValue = goalValue;
         this.confidenceLevel = confidenceLevel;
-        this.achievement = achievement;
         this.comment = comment;
-        this.timestamp = timestamp;
     }
 
     public String getName() {
@@ -71,14 +62,6 @@ public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKe
         this.confidenceLevel = confidenceLevel;
     }
 
-    public Float getAchievement() {
-        return achievement;
-    }
-
-    public void setAchievement(Float achievement) {
-        this.achievement = achievement;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -89,9 +72,5 @@ public class BusinessUnitKeyResultDto extends RepresentationModel<BusinessUnitKe
 
     public OffsetDateTime getTimestamp() {
         return timestamp;
-    }
-
-    public void setTimestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
     }
 }

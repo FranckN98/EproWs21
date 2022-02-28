@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.InvalidDateRangeException;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultPostDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import de.thbingen.epro.service.CompanyObjectiveService;
@@ -133,7 +134,7 @@ public class CompanyObjectiveController {
     @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyKeyResultDto> addNew(
             @PathVariable Long id,
-            @RequestBody @Valid CompanyKeyResultDto newCompanyKeyResultDto
+            @RequestBody @Valid CompanyKeyResultPostDto newCompanyKeyResultDto
     ) {
         if (companyObjectiveService.existsById(id)) {
             CompanyKeyResultDto companyKeyResultDto = companyKeyResultService.insertCompanyKeyResultWithObjective(newCompanyKeyResultDto, id);

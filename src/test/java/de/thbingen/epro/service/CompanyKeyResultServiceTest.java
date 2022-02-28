@@ -3,10 +3,7 @@ package de.thbingen.epro.service;
 
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
-import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
-import de.thbingen.epro.model.dto.CompanyKeyResultDto;
-import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
-import de.thbingen.epro.model.dto.CompanyObjectiveDto;
+import de.thbingen.epro.model.dto.*;
 import de.thbingen.epro.model.entity.*;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.repository.BusinessUnitKeyResultRepository;
@@ -210,7 +207,7 @@ public class CompanyKeyResultServiceTest {
         initSecurityContextWithUser(ReadOnlyUser);
 
         CompanyObjective rootCompanyObjective = new CompanyObjective(1L, 0f, "root", LocalDate.now(), LocalDate.now().plusDays(1));
-        CompanyKeyResultDto toBeInserted = new CompanyKeyResultDto("Insert Me", 0f, 100f, 100f, 0f, "comment", OffsetDateTime.now());
+        CompanyKeyResultPostDto toBeInserted = new CompanyKeyResultPostDto("Insert Me", 0f, 100f, 100f, "comment");
         CompanyKeyResult inserted = new CompanyKeyResult(1L, "Insert Me", 0f, 100f, 0f, 100f, "comment", OffsetDateTime.now());
         when(repository.save(any(CompanyKeyResult.class))).thenReturn(inserted);
 

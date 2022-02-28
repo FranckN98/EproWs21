@@ -2,6 +2,8 @@ package de.thbingen.epro.service;
 
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultPostDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultUpdateDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
 import de.thbingen.epro.repository.CompanyKeyResultRepository;
@@ -93,8 +95,8 @@ public class CompanyKeyResultService {
      *                            {@link CompanyKeyResult} is to be added
      * @return The just inserted {@link CompanyKeyResult} in it's {@link CompanyKeyResultDto} representation
      */
-    public CompanyKeyResultDto insertCompanyKeyResultWithObjective(CompanyKeyResultDto companyKeyResultDto, Long id) {
-        CompanyKeyResult companyKeyResult = companyKeyResultMapper.dtoToCompanyKeyResult(companyKeyResultDto);
+    public CompanyKeyResultDto insertCompanyKeyResultWithObjective(CompanyKeyResultPostDto companyKeyResultDto, Long id) {
+        CompanyKeyResult companyKeyResult = companyKeyResultMapper.postDtoToCompanyKeyResult(companyKeyResultDto);
         companyKeyResult.setCompanyObjective(companyObjectiveRepository.getById(id));
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
     }
@@ -106,9 +108,9 @@ public class CompanyKeyResultService {
      * @param companyKeyResultDto The new data, with which a {@link CompanyKeyResult} is to be updated
      * @return A {@link CompanyKeyResultDto} of the new {@link CompanyKeyResult}
      */
-    public CompanyKeyResultDto updateCompanyKeyResult(Long id, CompanyKeyResultDto companyKeyResultDto) {
+    public CompanyKeyResultDto updateCompanyKeyResult(Long id, CompanyKeyResultUpdateDto companyKeyResultDto) {
         CompanyKeyResult companyKeyResult = companyKeyResultRepository.getById(id);
-        companyKeyResultMapper.updateCompanyKeyResultFromDto(companyKeyResultDto, companyKeyResult);
+        companyKeyResultMapper.updateCompanyKeyResultFromUpdateDto(companyKeyResultDto, companyKeyResult);
         return assembler.toModel(companyKeyResultRepository.save(companyKeyResult));
     }
 

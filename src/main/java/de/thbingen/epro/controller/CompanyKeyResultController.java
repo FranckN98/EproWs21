@@ -2,6 +2,7 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultUpdateDto;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import org.springframework.data.domain.Page;
@@ -66,7 +67,7 @@ public class CompanyKeyResultController {
     @PreAuthorize("hasAuthority('change_CO_OKRs')")
     public ResponseEntity<CompanyKeyResultDto> updateById(
             @PathVariable Long id,
-            @RequestBody @Valid CompanyKeyResultDto companyKeyResultDto
+            @RequestBody @Valid CompanyKeyResultUpdateDto companyKeyResultDto
     ) {
         if (!companyKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No CompanyKeyResult with this id exists");

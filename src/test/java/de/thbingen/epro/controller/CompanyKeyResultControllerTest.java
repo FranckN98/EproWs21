@@ -5,6 +5,7 @@ import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
 import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
+import de.thbingen.epro.model.dto.CompanyKeyResultUpdateDto;
 import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
@@ -72,6 +73,9 @@ public class CompanyKeyResultControllerTest {
     @Autowired
     private CompanyKeyResultAssembler companyKeyResultAssembler;
 
+    @Autowired
+    private CompanyKeyResultMapper companyKeyResultMapper;
+
 
     // region GET ALL
 
@@ -125,11 +129,11 @@ public class CompanyKeyResultControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         CompanyKeyResult companyKeyResult = new CompanyKeyResult(1L, "changedName", 10f, 100f, 0f, 50f, "a comment", OffsetDateTime.now());
-        CompanyKeyResultDto toPut = companyKeyResultAssembler.toModel(companyKeyResult);
+        CompanyKeyResultUpdateDto toPut = new CompanyKeyResultUpdateDto(10f, null, "Comment");
         String jsonToPut = objectMapper.writeValueAsString(toPut);
 
         when(companyKeyResultService.existsById(1L)).thenReturn(true);
-        when(companyKeyResultService.updateCompanyKeyResult(anyLong(), any(CompanyKeyResultDto.class))).thenReturn(toPut);
+        when(companyKeyResultService.updateCompanyKeyResult(anyLong(), any(CompanyKeyResultUpdateDto.class))).thenReturn(companyKeyResultAssembler.toModel(companyKeyResult));
 
         mockMvc.perform(put("/companyKeyResults/1").contentType(MediaType.APPLICATION_JSON).content(jsonToPut))
                 .andDo(print())
