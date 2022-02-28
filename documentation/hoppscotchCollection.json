@@ -1129,7 +1129,70 @@
       {
         "v": 1,
         "name": "OkrUser",
-        "folders": [],
+        "folders": [
+          {
+            "v": 1,
+            "name": "roles",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/users/5/roles/1",
+                "name": "Change Users Role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "businessUnit",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/users/5/businessUnits/1",
+                "name": "add user to businessUnit",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
         "requests": [
           {
             "v": "1",
@@ -1174,6 +1237,443 @@
               "contentType": null,
               "body": null
             }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users",
+            "name": "Save new user",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Bla\",\n  \"surname\": \"Bla\",\n  \"username\": \"Bla\",\n  \"password\": \"Bla\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users/4",
+            "name": "Update User",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Test\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users/4",
+            "name": "Delete User",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Test\"\n}"
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "Role",
+        "folders": [
+          {
+            "v": 1,
+            "name": "users",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/1/users",
+                "name": "Add new user with role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"username\": \"vor.nach1\",\n  \"password\": \"password1\"\n}"
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "privileges",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/1/privileges",
+                "name": "get all privileges by role",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/5/privileges/1",
+                "name": "Add new privilege to role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/5/privileges/1",
+                "name": "Add new privilege to role (put)",
+                "params": [],
+                "headers": [],
+                "method": "PUT",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/",
+            "name": "Get All Roles",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/1",
+            "name": "Get Role with id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/",
+            "name": "Add new role",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"rolename\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/1",
+            "name": "update role",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"test\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/4",
+            "name": "delete role",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "Privilege",
+        "folders": [],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/1",
+            "name": "Get privilege by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges",
+            "name": "Get all privileges",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges",
+            "name": "Add new Privilege",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"LKSJDF\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/10",
+            "name": "Update Privilege",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"asdf\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/10",
+            "name": "Delete Privilege",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
           }
         ]
       }
@@ -1197,10 +1697,34 @@
           "password": "password3"
         },
         "preRequestScript": "",
-        "testScript": "",
+        "testScript": "pw.env.set(\"bearer\", pw.response.body);",
         "body": {
           "contentType": "application/json",
           "body": "{\n  \"username\": \"vor.nach1\",\n  \"password\": \"password1\"\n}"
+        }
+      },
+      {
+        "v": "1",
+        "endpoint": "http://<<base_url>><<base_path>>/dashboard",
+        "name": "Get dashboard",
+        "params": [],
+        "headers": [],
+        "method": "GET",
+        "auth": {
+          "authType": "bearer",
+          "authActive": true,
+          "addTo": "Headers",
+          "key": "",
+          "value": "",
+          "token": "<<bearer>>",
+          "username": "vor.nach3",
+          "password": "password3"
+        },
+        "preRequestScript": "",
+        "testScript": "",
+        "body": {
+          "contentType": null,
+          "body": null
         }
       }
     ]
