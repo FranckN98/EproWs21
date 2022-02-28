@@ -87,7 +87,7 @@ public class BusinessUnitKeyResultController {
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs') and @customExpressions.buKeyResultBelongsToSameBuAsUser(#id, principal.username)")
     public ResponseEntity<BusinessUnitKeyResultDto> updateById(
             @PathVariable Long id,
             @RequestBody @Valid BusinessUnitKeyResultUpdateDto businessUnitKeyResultDto
@@ -105,7 +105,7 @@ public class BusinessUnitKeyResultController {
      * @return NoContent
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs') and @customExpressions.buKeyResultBelongsToSameBuAsUser(#id, principal.username)")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!businessUnitKeyResultService.existsById(id)) {
             throw new EntityNotFoundException("No BusinessUnitKeyResult with this id exists");
@@ -145,7 +145,7 @@ public class BusinessUnitKeyResultController {
             value = "/{businessUnitKeyResultId}/companyKeyResultReference/{companyKeyResultId}",
             method = {RequestMethod.PUT, RequestMethod.POST}
     )
-    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs') and @customExpressions.buKeyResultBelongsToSameBuAsUser(#businessUnitKeyResultId, principal.username)")
     public ResponseEntity<Void> referenceCompanyKeyResult(
             @PathVariable Long businessUnitKeyResultId,
             @PathVariable Long companyKeyResultId
@@ -169,7 +169,7 @@ public class BusinessUnitKeyResultController {
      * @return No Content
      */
     @DeleteMapping("/{businessUnitKeyResultId}/companyKeyResultReference")
-    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs')")
+    @PreAuthorize("hasAuthority('change_all_BU_OKRs') or hasAuthority('change_own_BU_OKRs') and @customExpressions.buKeyResultBelongsToSameBuAsUser(#businessUnitKeyResultId, principal.username)")
     public ResponseEntity<Void> deleteCompanyKeyResultReference(
             @PathVariable Long businessUnitKeyResultId
     ) {
