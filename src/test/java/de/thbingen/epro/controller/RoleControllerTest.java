@@ -399,8 +399,7 @@ public class RoleControllerTest {
             String jsonToPost = objectMapper.writeValueAsString(toPost);
 
             when(roleService.existsById(anyLong())).thenReturn(true);
-            when(roleService.addNewPrivilege(anyLong(), ArgumentMatchers.any(PrivilegeDto.class)))
-                    .thenReturn(toPost);
+            doNothing().when(roleService).addNewPrivilege(anyLong(), anyLong());
 
             mockMvc.perform(
                             post("/roles/1/privileges")
@@ -424,8 +423,7 @@ public class RoleControllerTest {
             String jsonToPost = objectMapper.writeValueAsString(toPost);
 
             when(roleService.existsById(anyLong())).thenReturn(false);
-            when(roleService.addNewPrivilege(anyLong(), ArgumentMatchers.any(PrivilegeDto.class)))
-                    .thenReturn(toPost);
+            doNothing().when(roleService).addNewPrivilege(anyLong(), anyLong());
 
             mockMvc.perform(
                             post("/roles/1/privileges")

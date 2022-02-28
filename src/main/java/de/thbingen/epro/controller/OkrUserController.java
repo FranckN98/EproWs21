@@ -85,14 +85,32 @@ public class OkrUserController {
     }
 
     @PostMapping(
-            value = "/{id}/roles",
+            value = "/{id}/roles/{roleId}",
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasAuthority('add_users')")
-    public ResponseEntity<RoleDto> addNewRole(@PathVariable Long id, @RequestBody @Valid RoleDto newRoleDto) {
-        RoleDto roleDto = okrUserService.addNewRole(id, newRoleDto);
-        return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
+    public ResponseEntity<Void> setRole(@PathVariable Long id, @PathVariable Long roleId) {
+        if (!okrUserService.existsById(id)) {
+            throw new EntityNotFoundException("No OkrUser with this id exists");
+        }
+        okrUserService.setRole(id, roleId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(
+            value = "/{id}/businessUnits/{businessUnitId}",
+            method = {RequestMethod.POST, RequestMethod.PUT}
+    )
+    public ResponseEntity<Void> setBusinessUnit(
+            @PathVariable Long id,
+            @PathVariable Long businessUnitId
+    ) {
+        if (!okrUserService.existsById(id)) {
+            throw new EntityNotFoundException("No OkrUser with this id exists");
+        }
+        okrUserService.setBusinessUnit(id, businessUnitId);
+        return ResponseEntity.noContent().build();
     }
 
 }

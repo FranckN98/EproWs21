@@ -218,7 +218,7 @@ public class OkrUserServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(okrUser));
         when(repository.save(any(OkrUser.class))).thenReturn(okrUser);
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
-        service.addNewRole(1L, newRoleDto);
+        service.setRole(1L, 1L);
 
         assertTrue(okrUser.getRole() == role);
     }

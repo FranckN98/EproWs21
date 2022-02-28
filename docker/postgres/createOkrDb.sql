@@ -95,7 +95,7 @@ create table okr_user
     id               int primary key generated always as identity,
     name             varchar(64) NOT NULL,
     surname          varchar(64) NOT NULL,
-    username         varchar(64) NOT NULL,
+    username         varchar(64) NOT NULL UNIQUE,
     password         varchar(64) NOT NULL DEFAULT 'passwort',
     role_id          int         REFERENCES Role (id) ON DELETE SET NULL,
     business_unit_id int REFERENCES business_unit (id) ON DELETE SET DEFAULT

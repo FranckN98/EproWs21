@@ -1,5 +1,6 @@
 package de.thbingen.epro.service;
 
+import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
@@ -27,19 +28,22 @@ public class RoleService {
     private final RoleAssembler assembler;
     private final PrivilegeRepository privilegeRepository;
 
+    private final PrivilegeAssembler privilegeAssembler;
+
     /**
      * Default constructor to be used for Constructor Injection
-     *
-     * @param roleRepository      The Repository for DB access
+     *  @param roleRepository      The Repository for DB access
      * @param roleMapper          The Mapstruct mapper to convert from DTO to entity and back
      * @param assembler           The RepresentationModelAssembler to add the hateoas relations
      * @param privilegeRepository
+     * @param privilegeAssembler
      */
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository) {
+    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository, PrivilegeAssembler privilegeAssembler) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.assembler = assembler;
         this.privilegeRepository = privilegeRepository;
+        this.privilegeAssembler = privilegeAssembler;
     }
 
     /**
@@ -111,19 +115,24 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
-    public PrivilegeDto addNewPrivilege(Long id, PrivilegeDto privilegeDto) {
+    public void addNewPrivilege(Long id, Long privilegeId) {
         Optional<Role> roleResult = roleRepository.findById(id);
         if (roleResult.isEmpty()) {
             throw new EntityNotFoundException("No role with this id exists");
         }
         Role role = roleResult.get();
-        Optional<Privilege> privilegeResult = privilegeRepository.findById(id);
+
+        Optional<Privilege> privilegeResult = privilegeRepository.findById(privilegeId);
         if (privilegeResult.isEmpty()) {
             throw new EntityNotFoundException("No privilege with this id exists");
         }
         Privilege privilege = privilegeResult.get();
+
+        if(role.getPrivileges().contains(privilege)) {
+            return;
+        }
+
         role.addPrivilege(privilege);
         roleRepository.save(role);
-        return privilegeDto;
     }
 }

@@ -110,16 +110,16 @@ public class RoleController {
         return privilegeDtoPagedResourcesAssembler.toModel(privilegeService.findAllByRoleId(id, pageable));
     }
 
-    @PostMapping(
-            value = "/{id}/privileges",
-            produces = MediaTypes.HAL_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
+    @RequestMapping(
+            value = "/{id}/privileges/{privilegeId}",
+            method = {RequestMethod.PUT, RequestMethod.POST},
+            produces = MediaTypes.HAL_JSON_VALUE
     )
-    public ResponseEntity<PrivilegeDto> addNewPrivilege(@PathVariable Long id, @RequestBody @Valid PrivilegeDto newPrivilegeDto) {
+    public ResponseEntity<Void> addNewPrivilege(@PathVariable Long id, @PathVariable Long privilegeId) {
         if (!roleService.existsById(id))
             throw new EntityNotFoundException("No Role with this id exists");
-        PrivilegeDto privilegeDto = roleService.addNewPrivilege(id, newPrivilegeDto);
-        return ResponseEntity.created(privilegeDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(privilegeDto);
+        roleService.addNewPrivilege(id, privilegeId);
+        return ResponseEntity.noContent().build();
     }
 
     /**

@@ -162,20 +162,19 @@ public class OkrUserService {
         okrUserRepository.deleteById(id);
     }
 
-    public RoleDto addNewRole(Long id, RoleDto roleDto) {
+    public void setRole(Long id, Long roleId) {
         Optional<OkrUser> okrUserResult = okrUserRepository.findById(id);
         if (okrUserResult.isEmpty()) {
             throw new EntityNotFoundException("No user with this id exists");
         }
         OkrUser okrUser = okrUserResult.get();
-        Optional<Role> roleResult = roleRepository.findById(id);
+        Optional<Role> roleResult = roleRepository.findById(roleId);
         if (roleResult.isEmpty()) {
             throw new EntityNotFoundException(("No role with this id exists"));
         }
         Role role = roleResult.get();
         okrUser.setRole(role);
         okrUserRepository.save(okrUser);
-        return roleDto;
     }
 
     /**
@@ -197,4 +196,19 @@ public class OkrUserService {
         return Page.empty();
     }
 
+    public void setBusinessUnit(Long id, Long businessUnitId) {
+        Optional<OkrUser> okrUserResult = okrUserRepository.findById(id);
+        if (okrUserResult.isEmpty()) {
+            throw new EntityNotFoundException("No user with this id exists");
+        }
+
+        Optional<BusinessUnit> businessUnitResult = businessUnitRepository.findById(businessUnitId);
+        if(businessUnitResult.isEmpty()) {
+            throw new EntityNotFoundException("No BusinessUnit with this id exists");
+        }
+
+        OkrUser okrUser = okrUserResult.get();
+        okrUser.setBusinessUnit(businessUnitResult.get());
+        okrUserRepository.save(okrUser);
+    }
 }

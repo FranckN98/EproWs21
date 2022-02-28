@@ -1,11 +1,13 @@
 package de.thbingen.epro.service;
 
 import de.thbingen.epro.exception.RestExceptionHandler;
+import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.Privilege;
 import de.thbingen.epro.model.entity.Role;
+import de.thbingen.epro.model.mapper.PrivilegeMapper;
 import de.thbingen.epro.model.mapper.RoleMapper;
 import de.thbingen.epro.repository.PrivilegeRepository;
 import de.thbingen.epro.repository.RoleRepository;
@@ -41,7 +43,13 @@ import static org.mockito.Mockito.when;
         includeFilters = {
                 @ComponentScan.Filter(
                         type = FilterType.ASSIGNABLE_TYPE,
-                        value = {RoleService.class, RoleMapper.class, RoleAssembler.class}
+                        value = {
+                                RoleService.class,
+                                RoleMapper.class,
+                                RoleAssembler.class,
+                                PrivilegeMapper.class,
+                                PrivilegeAssembler.class
+                        }
                 )
         }
 )
@@ -158,7 +166,7 @@ public class RoleServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.of(role));
         when(repository.save(any(Role.class))).thenReturn(role);
         when(privilegeRepository.findById(1L)).thenReturn(Optional.of(privilege));
-        service.addNewPrivilege(1L, newPrivilegeDto);
+        service.addNewPrivilege(1L, 2L);
 
         assertTrue(role.getPrivileges().contains(privilege));
     }

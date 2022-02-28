@@ -40,7 +40,7 @@ public class PrivilegeController {
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
     )
-    public PrivilegeDto findById(@RequestParam Long id) {
+    public PrivilegeDto findById(@PathVariable Long id) {
         Optional<PrivilegeDto> result = privilegeService.findById(id);
         if (result.isPresent())
             return result.get();
