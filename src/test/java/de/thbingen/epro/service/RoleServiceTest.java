@@ -72,7 +72,7 @@ public class RoleServiceTest {
 
         List<Role> roles = List.of(
                 new Role(1L, "R1"),
-                new Role(1L, "R2")
+                new Role(2L, "R2")
         );
         Pageable pageable = Pageable.ofSize(10);
 
@@ -84,7 +84,7 @@ public class RoleServiceTest {
         assertEquals("R1", roleDtos.get(0).getName());
         assertEquals("R2", roleDtos.get(1).getName());
         assertEquals("/roles/1", roleDtos.get(0).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
-        assertEquals("/roles/1", roleDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
+        assertEquals("/roles/2", roleDtos.get(1).getRequiredLink(IanaLinkRelations.SELF).toUri().toString());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class RoleServiceTest {
     }
 
     @Test
-    void insertPrivilegeShouldInsertNewPrivilege() {
+    void insertRoleShouldInsertNewRole() {
         initSecurityContextWithUser(ReadOnlyUser);
 
         RoleDto toBeInserted = new RoleDto("Test Name");
@@ -133,7 +133,7 @@ public class RoleServiceTest {
     // region existsById
 
     @Test
-    void existsByIdShouldReturnTrueIfPrivilegeExists() {
+    void existsByIdShouldReturnTrueIfRoleExists() {
         initSecurityContextWithUser(ReadOnlyUser);
 
         when(repository.existsById(1L)).thenReturn(true);
@@ -142,7 +142,7 @@ public class RoleServiceTest {
     }
 
     @Test
-    void existsByIdShouldReturnFalseIfPrivilegeDoesNotExist() {
+    void existsByIdShouldReturnFalseIfRoleDoesNotExist() {
         initSecurityContextWithUser(ReadOnlyUser);
 
         when(repository.existsById(1L)).thenReturn(false);
