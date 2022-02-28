@@ -1,6 +1,5 @@
 package de.thbingen.epro.service;
 
-import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.Privilege;
@@ -27,8 +26,6 @@ public class RoleService {
     private final RoleAssembler assembler;
     private final PrivilegeRepository privilegeRepository;
 
-    private final PrivilegeAssembler privilegeAssembler;
-
     /**
      * Default constructor to be used for Constructor Injection
      *
@@ -36,14 +33,12 @@ public class RoleService {
      * @param roleMapper          The Mapstruct mapper to convert from DTO to entity and back
      * @param assembler           The RepresentationModelAssembler to add the hateoas relations
      * @param privilegeRepository The Repository for DB Access to Privileges
-     * @param privilegeAssembler  The Assembler to add hateoas relations to privileges
      */
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository, PrivilegeAssembler privilegeAssembler) {
+    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RoleAssembler assembler, PrivilegeRepository privilegeRepository) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
         this.assembler = assembler;
         this.privilegeRepository = privilegeRepository;
-        this.privilegeAssembler = privilegeAssembler;
     }
 
     /**
@@ -115,6 +110,12 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
+    /**
+     * Adds a new {@link Privilege} with the given {@code privilegeId} to the {@link Role} with the given {@code id}
+     *
+     * @param id The id of the {@link Role} which will have the {@link Privilege} added
+     * @param privilegeId The id of the {@link Privilege} which will be added to the {@link Role}
+     */
     public void addNewPrivilegeToRole(Long id, Long privilegeId) {
         Optional<Role> roleResult = roleRepository.findById(id);
         if (roleResult.isEmpty()) {
