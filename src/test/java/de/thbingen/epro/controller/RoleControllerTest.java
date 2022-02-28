@@ -6,7 +6,6 @@ import de.thbingen.epro.model.assembler.OkrUserAssembler;
 import de.thbingen.epro.model.assembler.PrivilegeAssembler;
 import de.thbingen.epro.model.assembler.RoleAssembler;
 import de.thbingen.epro.model.dto.OkrUserDto;
-import de.thbingen.epro.model.dto.OkrUserPostDto;
 import de.thbingen.epro.model.dto.PrivilegeDto;
 import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.OkrUser;
@@ -94,7 +93,7 @@ public class RoleControllerTest {
 
     @Autowired
     private PrivilegeAssembler privilegeAssembler;
-    
+
     @Autowired
     private OkrUserAssembler okrUserAssembler;
 
@@ -443,7 +442,7 @@ public class RoleControllerTest {
                     .andExpect(jsonPath("$.errors", nullValue()));
         }
     }
-    
+
     @Nested
     class FindAllUsersWithRoleTests {
         @Test

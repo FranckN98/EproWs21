@@ -2,7 +2,10 @@ package de.thbingen.epro.service;
 
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.OkrUserAssembler;
-import de.thbingen.epro.model.dto.*;
+import de.thbingen.epro.model.dto.OkrUserDto;
+import de.thbingen.epro.model.dto.OkrUserPostDto;
+import de.thbingen.epro.model.dto.OkrUserUpdateDto;
+import de.thbingen.epro.model.dto.RoleDto;
 import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.OkrUser;
 import de.thbingen.epro.model.entity.Role;
@@ -26,7 +29,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
@@ -70,7 +72,7 @@ public class OkrUserServiceTest {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
-    
+
 
     @Autowired
     private AnnotationLinkRelationProvider annotationLinkRelationProvider;

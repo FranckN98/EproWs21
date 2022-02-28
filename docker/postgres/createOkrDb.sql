@@ -116,9 +116,8 @@ $$
 BEGIN
     INSERT INTO business_unit_key_result_history (ref_id, historical_data)
     VALUES (old.id, to_jsonb(old));
-
     RETURN NEW;
-end;
+end
 $$;
 
 CREATE TRIGGER do_businessunit_keyresult_historization
@@ -139,9 +138,8 @@ $$
 BEGIN
     INSERT INTO company_key_result_history (ref_id, historical_data)
     VALUES (old.id, to_jsonb(old));
-
     RETURN NEW;
-end;
+end
 $$;
 
 CREATE TRIGGER do_company_keyresult_historization
@@ -169,9 +167,8 @@ BEGIN
     SET achievement = subq.average
     FROM subq
     WHERE id = NEW.company_objective_id;
-
     RETURN NEW;
-END;
+END
 $$;
 
 CREATE TRIGGER update_company_objective_achievement
@@ -199,9 +196,8 @@ BEGIN
     SET achievement = subq.average
     FROM subq
     WHERE id = NEW.business_unit_objective_id;
-
     RETURN NEW;
-END;
+END
 $$;
 
 CREATE TRIGGER update_businessunit_objective_achievement

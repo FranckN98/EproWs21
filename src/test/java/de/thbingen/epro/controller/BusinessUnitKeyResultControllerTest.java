@@ -3,21 +3,15 @@ package de.thbingen.epro.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitKeyResultAssembler;
-import de.thbingen.epro.model.assembler.CompanyKeyResultAssembler;
-import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultUpdateDto;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultMapper;
-import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
-import de.thbingen.epro.model.mapper.CompanyKeyResultMapper;
-import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import de.thbingen.epro.service.BusinessUnitKeyResultService;
 import de.thbingen.epro.service.CompanyKeyResultService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,7 +40,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BusinessUnitKeyResultController.class,
         useDefaultFilters = false,

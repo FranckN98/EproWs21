@@ -42,14 +42,14 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(controllers = {CompanyKeyResultService.class},
         useDefaultFilters = false,
         includeFilters = {
-            @ComponentScan.Filter(
-                    type = FilterType.ASSIGNABLE_TYPE,
-                    value = {
-                           CompanyKeyResultService.class,
-                           CompanyKeyResultMapper.class,
-                           CompanyKeyResultAssembler.class
-                    }
-            )
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {
+                                CompanyKeyResultService.class,
+                                CompanyKeyResultMapper.class,
+                                CompanyKeyResultAssembler.class
+                        }
+                )
         }
 )
 @Import({RestExceptionHandler.class})
@@ -96,7 +96,7 @@ public class CompanyKeyResultServiceTest {
         List<CompanyKeyResult> companyKeyResults = List.of(
                 new CompanyKeyResult(1L, "COKR1", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now()),
                 new CompanyKeyResult(2L, "COKR2", 0f, 100f, 100f, 5f, "comment", OffsetDateTime.now())
-                );
+        );
         companyKeyResults.get(0).setCompanyObjective(rootCompanyObjective);
         companyKeyResults.get(1).setCompanyObjective(rootCompanyObjective);
         Pageable pageable = Pageable.ofSize(10);

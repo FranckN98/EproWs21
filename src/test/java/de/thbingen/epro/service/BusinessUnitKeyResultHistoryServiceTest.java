@@ -162,7 +162,6 @@ public class BusinessUnitKeyResultHistoryServiceTest {
     // region findAllByBusinessUnitKeyResultId
 
 
-
     @Test
     void findAllByBusinessUnitKeyResultIdReturnsEmptyPageWhenNoneExist() {
         when(repository.findAllByCurrentBusinessUnitKeyResultIdOrderByChangeTimeStampDesc(anyLong(), any(Pageable.class)))

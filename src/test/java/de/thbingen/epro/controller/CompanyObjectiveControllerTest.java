@@ -219,10 +219,10 @@ public class CompanyObjectiveControllerTest {
         when(companyObjectiveService.updateCompanyObjective(anyLong(), any(CompanyObjectiveDto.class))).thenReturn(companyObjectiveDto);
 
         mockMvc.perform(
-                put("/companyObjectives/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonToPut)
-                        .characterEncoding(Charset.defaultCharset())
+                        put("/companyObjectives/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonToPut)
+                                .characterEncoding(Charset.defaultCharset())
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -324,7 +324,7 @@ public class BusinessUnitServiceTest {
     // region deleteById
 
     @Test
-    // No way to unit test without testing the already tested framework to be honest
+        // No way to unit test without testing the already tested framework to be honest
     void deleteByIdReturnsNothing() {
         doNothing().when(repository).deleteById(1L);
         assertDoesNotThrow(() -> businessUnitService.deleteById(1L));

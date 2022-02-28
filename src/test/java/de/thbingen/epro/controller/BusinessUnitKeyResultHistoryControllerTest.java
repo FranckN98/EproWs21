@@ -2,17 +2,12 @@ package de.thbingen.epro.controller;
 
 import de.thbingen.epro.exception.RestExceptionHandler;
 import de.thbingen.epro.model.assembler.BusinessUnitKeyResultHistoryAssembler;
-import de.thbingen.epro.model.assembler.CompanyKeyResultHistoryAssembler;
-import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
-import de.thbingen.epro.model.entity.BusinessUnit;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.entity.HistoricalBusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
-import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
 import de.thbingen.epro.model.mapper.HistoricalBusinessUnitKeyResultMapper;
-import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,15 +25,12 @@ import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -97,11 +89,11 @@ public class BusinessUnitKeyResultHistoryControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)))
                 .andExpect(jsonPath("$.page").exists())
                 .andExpect(jsonPath("$._embedded").exists())
-                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation).exists())
-                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation, hasSize(2)))
-                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[*]._links").exists())
-                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[0]._links.self.href", endsWith("/businessUnitKeyResultHistory/1")))
-                .andExpect(jsonPath("$._embedded."+ expectedLinkRelation + "[1]._links.self.href", endsWith("/businessUnitKeyResultHistory/2")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation).exists())
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation, hasSize(2)))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[*]._links").exists())
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[0]._links.self.href", endsWith("/businessUnitKeyResultHistory/1")))
+                .andExpect(jsonPath("$._embedded." + expectedLinkRelation + "[1]._links.self.href", endsWith("/businessUnitKeyResultHistory/2")))
                 .andExpect(jsonPath("$._links").exists())
                 .andExpect(jsonPath("$._links.self.href", endsWith("/businessUnitKeyResultHistory")))
                 .andReturn();

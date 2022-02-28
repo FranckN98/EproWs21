@@ -1,12 +1,9 @@
 package de.thbingen.epro;
 
-import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultDto;
 import de.thbingen.epro.model.dto.CompanyKeyResultHistoryDto;
 import de.thbingen.epro.model.dto.CompanyObjectiveDto;
-import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import de.thbingen.epro.util.UserLogin;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

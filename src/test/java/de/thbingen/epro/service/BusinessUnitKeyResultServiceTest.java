@@ -468,7 +468,6 @@ public class BusinessUnitKeyResultServiceTest {
     // region deleteCompanyKeyResultReference
 
 
-
     @Test
     void deleteCompanyKeyResultShouldReturnTrueIfReferenceCouldBeDeleted() {
         BusinessUnitKeyResult businessUnitKeyResult = new BusinessUnitKeyResult(1L, "Old name", 0f, 100f, 100f, "comment", OffsetDateTime.now());

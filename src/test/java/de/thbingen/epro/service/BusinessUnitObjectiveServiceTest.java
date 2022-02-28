@@ -14,7 +14,6 @@ import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +27,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -43,13 +41,13 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(controllers = {BusinessUnitObjectiveService.class},
         useDefaultFilters = false,
         includeFilters = {
-            @ComponentScan.Filter(
-                    type = FilterType.ASSIGNABLE_TYPE,
-                    value = {BusinessUnitObjectiveService.class,
-                            BusinessUnitObjectiveMapper.class,
-                            BusinessUnitObjectiveAssembler.class
-                    }
-            )
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        value = {BusinessUnitObjectiveService.class,
+                                BusinessUnitObjectiveMapper.class,
+                                BusinessUnitObjectiveAssembler.class
+                        }
+                )
         }
 )
 @Import({RestExceptionHandler.class})
@@ -136,7 +134,7 @@ public class BusinessUnitObjectiveServiceTest {
         Pageable pageable = Pageable.ofSize(10);
 
         when(repository.findAllByStartDateAfterAndEndDateBefore(
-                 date, date, pageable))
+                date, date, pageable))
                 .thenReturn(new PageImpl<>(businessUnitObjectives, pageable, businessUnitObjectives.size()));
 
         Page<BusinessUnitObjectiveDto> businessUnitObjectiveDto = service.getAllBusinessUnitObjectives(pageable, date, date);

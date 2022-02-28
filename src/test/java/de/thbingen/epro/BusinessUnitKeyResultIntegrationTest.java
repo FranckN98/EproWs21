@@ -4,7 +4,6 @@ import de.thbingen.epro.model.dto.BusinessUnitKeyResultDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultHistoryDto;
 import de.thbingen.epro.model.dto.BusinessUnitKeyResultPostDto;
 import de.thbingen.epro.util.UserLogin;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.Charset;
-import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,12 +44,12 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
 
             // post new KR
             MvcResult mvcResult = mockMvc.perform(
-                    post("/businessUnitObjectives/2/keyResults")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonToPost)
-                        .characterEncoding(Charset.defaultCharset())
-            )
+                            post("/businessUnitObjectives/2/keyResults")
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
                     .andExpect(status().isCreated()).andReturn();
 
             Pattern idAtEndOfUrlPattern = Pattern.compile("(\\d+)$");
@@ -79,12 +77,12 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
             jsonToPost = objectMapper.writeValueAsString(updateKeyResult);
 
             mockMvc.perform(
-                    put("/businessUnitKeyResults/" + id)
-                            .header("Authorization", "Bearer " + token)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(jsonToPost)
-                            .characterEncoding(Charset.defaultCharset())
-            )
+                            put("/businessUnitKeyResults/" + id)
+                                    .header("Authorization", "Bearer " + token)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(jsonToPost)
+                                    .characterEncoding(Charset.defaultCharset())
+                    )
                     .andExpect(status().isOk());
 
             LinkRelation bukrhCollectionRelation = annotationLinkRelationProvider.getCollectionResourceRelFor(BusinessUnitKeyResultHistoryDto.class);
@@ -152,9 +150,9 @@ public class BusinessUnitKeyResultIntegrationTest extends IntegrationBase {
                     .andExpect(status().isOk());
 
             mockMvc.perform(
-                    get("/businessUnitKeyResults/" + id)
-                            .header("Authorization", "Bearer " + token)
-            )
+                            get("/businessUnitKeyResults/" + id)
+                                    .header("Authorization", "Bearer " + token)
+                    )
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.achievement", is(0.5)));
         }

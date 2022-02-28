@@ -86,7 +86,7 @@ public class PrivilegeControllerTest {
                     )
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$._embedded." + privilegesCollectionRelation +".length()", is(2)))
+                    .andExpect(jsonPath("$._embedded." + privilegesCollectionRelation + ".length()", is(2)))
                     .andExpect(jsonPath("$._links").exists())
                     .andExpect(jsonPath("$.page").exists());
         }
