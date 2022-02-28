@@ -20,6 +20,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * This Controller is responsible for returning all resources under the /users path
+ */
 @RestController
 @RequestMapping("/users")
 public class OkrUserController {
@@ -31,13 +34,26 @@ public class OkrUserController {
         this.okrUserService = okrUserService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
-
+    /**
+     * Returns all OkrUsers of the requested Page
+     *
+     * @param pageable Allows requesting a certain page of a certain size with a certain sort
+     * @return The requested Page of OkrUsers
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @PreAuthorize("hasAuthority('view_users')")
     public PagedModel<EntityModel<OkrUserDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(okrUserService.findAll(pageable));
     }
 
+    /**
+     * Returns the OkrUser with the given id
+     * <p>
+     * Will throw an EntitiyNotFoundException if there is no OkrUser with the given id
+     *
+     * @param id  Id of the requested OkrUser
+     * @return The requested OkrUser
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -50,6 +66,14 @@ public class OkrUserController {
         throw new EntityNotFoundException("No User with this id exists");
     }
 
+    /**
+     * Adds the OkrUser given in the RequestBody
+     * <p>
+     * The location header will contain the location at which the new OkrUser can be queried
+     *
+     * @param newUser The OkrUser to be added
+     * @return The newly added OkrUser
+     */
     @PostMapping(
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -60,6 +84,14 @@ public class OkrUserController {
         return ResponseEntity.created(okrUserDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(okrUserDto);
     }
 
+    /**
+     * Update the OkrUser with the given id with the OkrUser in the Request Body
+     * Will throw an EntityNotFoundException if there is no OkrUser with the given id
+     *
+     * @param id The id of the OkrUser to be updated
+     * @param OkrUserUpdateDto The new values for the OkrUser
+     * @return The newly updated OkrUser
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -72,7 +104,14 @@ public class OkrUserController {
 
         return ResponseEntity.ok(okrUserService.updateOkrUser(id, okrUserDto));
     }
-
+    /**
+     * Deletes the OkrUser with the given id
+     * <p>
+     * Will throw an EntityNotFoundException if there is no OkrUser with the given id
+     *
+     * @param id The id of the OkrUser to be deleted
+     * @return An empty response with the noContent Status Code
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('change_users')")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
@@ -83,6 +122,15 @@ public class OkrUserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Sets a Role for the OkrUser with the given id
+     * <p>
+     * Will throw an EntityNotFoundException if there is no OkrUser with the given id
+     *
+     * @param id The id of the OkrUser
+     * @param roleId The id of the Role which is to be added to the OkrUser
+     * @return An empty response with the noContent Status Code
+     */
     @PostMapping(
             value = "/{id}/roles/{roleId}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -96,7 +144,14 @@ public class OkrUserController {
         okrUserService.setRole(id, roleId);
         return ResponseEntity.noContent().build();
     }
-
+    /**
+     * Sets a BusinessUnit for the OkrUser with the given id
+     * <p>
+     * Will throw an EntityNotFoundException if there is no OkrUser with the given id
+     * @param id The id of the OkrUser
+     * @param businessUnitId The id of the BusinessUnit which is to be added to the OkrUser
+     * @return An empty response with the noContent Status Code
+     */
     @RequestMapping(
             value = "/{id}/businessUnits/{businessUnitId}",
             method = {RequestMethod.POST, RequestMethod.PUT}
