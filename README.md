@@ -1,5 +1,15 @@
 # EPRO OKR-Projekt WS21/22
 
+## Table of Contents
+- [Usage](#usage)
+- [Structure](#structure)
+- [Architecture](#architecture)
+  - [DB-Access](#dbaccess)
+  - [Presentation](#presentation)
+  - [Business Logic](#business_logic)
+  - [Testing](#testing)
+- [Known Bugs](#known_bugs)
+
 ## Usage
 To run this project you need to have an instance of PostgreSQL running, with the database initialized.
 We recommend using the provided Dockerfile to build a Docker Container which runs the Database.
