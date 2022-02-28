@@ -23,6 +23,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+/**
+ * This Controller is responsible for returning all resources under the /roles path
+ */
 @RestController
 @RequestMapping("/roles")
 @PreAuthorize("hasAuthority('access_roles')")
@@ -45,11 +48,24 @@ public class RoleController {
         this.privilegeDtoPagedResourcesAssembler = privilegeDtoPagedResourcesAssembler;
     }
 
+    /**
+     * Returns all Roles of the requested Page
+     *
+     * @param pageable Allows requesting a certain page of a certain size with a certain sort
+     * @return The requested Page of Roles
+     */
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public PagedModel<EntityModel<RoleDto>> findAll(@PageableDefault Pageable pageable) {
         return pagedResourcesAssembler.toModel(roleService.findAll(pageable));
     }
-
+    /**
+     * Returns the Role with the given id
+     * <p>
+     * Will throw an EntityNotFoundException if there is no Role with the given id
+     *
+     * @param id The id of the requested Role
+     * @return The requested Role
+     */
     @GetMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE
@@ -60,7 +76,13 @@ public class RoleController {
             return result.get();
         throw new EntityNotFoundException("No Role with this id exists");
     }
-
+    /**
+     * Adds the Role given in the Request Body
+     * The location header will contain the location at which the new Role can be queried
+     *
+     * @param newRole The Role to be added
+     * @return The newly added Role
+     */
     @PostMapping(
             produces = MediaTypes.HAL_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
@@ -70,6 +92,13 @@ public class RoleController {
         return ResponseEntity.created(roleDto.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(roleDto);
     }
 
+    /**
+     * Update the Role with the given id with the Role in the Request Body
+     *
+     * @param id The id of the Role to be updated
+     * @param roleDto The new values for the Role
+     * @return The newly updated Role
+     */
     @PutMapping(
             value = "/{id}",
             produces = MediaTypes.HAL_JSON_VALUE,
@@ -82,6 +111,14 @@ public class RoleController {
         return ResponseEntity.ok(roleService.updateRole(id, roleDto));
     }
 
+    /**
+     * Deletes the Role with the given id
+     * <p>
+     * Will throw an EntityNotFoundException if there is no Role with the given id
+     *
+     * @param id The id of the Role to be deleted
+     * @return An empty Response with the noContent Status Code
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         if (!roleService.existsById(id))

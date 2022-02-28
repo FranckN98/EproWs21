@@ -44,7 +44,7 @@ public class PrivilegeController {
         return pagedResourcesAssembler.toModel(privilegeService.findAll(pageable));
     }
     /**
-     * Returns the BusinessUnit with the given id
+     * Returns the Privilege with the given id
      * <p>
      * Will throw an EntityNotFoundException if there is no Privilege with the given id
      *
