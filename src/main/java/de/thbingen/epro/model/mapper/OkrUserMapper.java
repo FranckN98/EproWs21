@@ -11,14 +11,6 @@ public interface OkrUserMapper {
 
     OkrUserDto okrUserToDto(OkrUser okrUser);
 
-    @Mapping(target = "role", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "businessUnit", ignore = true)
-    OkrUser dtoToOkrUser(OkrUserDto okrUserDto);
-
-    OkrUserPostDto okrUserToPostDto(OkrUser okrUser);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "businessUnit", ignore = true)

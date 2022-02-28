@@ -9,10 +9,12 @@ public interface CompanyObjectiveMapper {
 
     CompanyObjectiveDto companyObjectiveToDto(CompanyObjective companyObjective);
 
+    @Mapping(target = "companyKeyResults", ignore = true)
     @Mapping(target = "id", ignore = true)
     CompanyObjective dtoToCompanyObjective(CompanyObjectiveDto companyObjectiveDto);
 
 
+    @Mapping(target = "companyKeyResults", ignore = true)
     @Mapping(target = "id", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateCompanyObjectiveFromDto(CompanyObjectiveDto companyObjectiveDto, @MappingTarget CompanyObjective companyObjective);

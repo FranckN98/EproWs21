@@ -7,7 +7,6 @@ import de.thbingen.epro.model.entity.BusinessUnitKeyResult;
 import de.thbingen.epro.model.entity.BusinessUnitKeyResultHistory;
 import de.thbingen.epro.model.entity.HistoricalBusinessUnitKeyResult;
 import de.thbingen.epro.model.mapper.BusinessUnitKeyResultHistoryMapper;
-import de.thbingen.epro.model.mapper.HistoricalBusinessUnitKeyResultMapper;
 import de.thbingen.epro.service.BusinessUnitKeyResultHistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,8 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                         value = {
                                 BusinessUnitKeyResultHistoryController.class,
                                 BusinessUnitKeyResultHistoryMapper.class,
-                                BusinessUnitKeyResultHistoryAssembler.class,
-                                HistoricalBusinessUnitKeyResultMapper.class
+                                BusinessUnitKeyResultHistoryAssembler.class
                         }
                 )}
 )

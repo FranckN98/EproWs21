@@ -9,7 +9,6 @@ import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import de.thbingen.epro.model.entity.HistoricalCompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
-import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.repository.CompanyKeyResultHistoryRepository;
 import de.thbingen.epro.util.CamelCaseDisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -48,8 +47,7 @@ import static org.mockito.Mockito.when;
                         value = {
                                 CompanyKeyResultHistoryService.class,
                                 CompanyKeyResultHistoryMapper.class,
-                                CompanyKeyResultHistoryAssembler.class,
-                                HistoricalCompanyKeyResultMapper.class
+                                CompanyKeyResultHistoryAssembler.class
                         }
                 )
         }

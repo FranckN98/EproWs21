@@ -7,7 +7,6 @@ import de.thbingen.epro.model.entity.CompanyKeyResult;
 import de.thbingen.epro.model.entity.CompanyKeyResultHistory;
 import de.thbingen.epro.model.entity.HistoricalCompanyKeyResult;
 import de.thbingen.epro.model.mapper.CompanyKeyResultHistoryMapper;
-import de.thbingen.epro.model.mapper.HistoricalCompanyKeyResultMapper;
 import de.thbingen.epro.service.CompanyKeyResultHistoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                                 CompanyKeyResultHistoryController.class,
                                 CompanyKeyResultHistoryMapper.class,
                                 CompanyKeyResultHistoryAssembler.class,
-                                HistoricalCompanyKeyResultMapper.class
                         }
                 )}
 )
