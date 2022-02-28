@@ -1,0 +1,1732 @@
+[
+  {
+    "v": 1,
+    "name": "Epro",
+    "folders": [
+      {
+        "v": 1,
+        "name": "CompanyObjective",
+        "folders": [
+          {
+            "v": 1,
+            "name": "keyResults",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1/keyResults",
+                "name": "Get All CKRs by CO",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1/keyResults",
+                "name": "Add new CKR to CO",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"name\": \"TestName\",\n  \"currentValue\": 1.0,\n  \"goalValue\":  100.0,\n  \"confidenceLevel\": 1.0,\n  \"achievement\":  0,\n  \"comment\": \"Comment\"\n}"
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
+            "name": "Get All Company Objectives",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
+            "name": "Save valid Company Objective",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"achievement\": 0,\n  \"name\": \"new\",\n  \"startDate\": \"2023-01-01\",\n  \"endDate\": \"2023-12-31\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
+            "name": "Save Company Objective with achievement greater 0",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n    \"achievement\": 1,\n    \"name\": \"Test\",\n    \"startDate\": \"2023-01-01\",\n    \"endDate\": \"2023-12-31\"\n  }"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives",
+            "name": "Save Company Objective with name blank",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n    \"achievement\": 0,\n    \"name\": \"\",\n    \"startDate\": \"2023-01-01\",\n    \"endDate\": \"2023-12-31\"\n  }"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1",
+            "name": "Get CompanyObjective by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/10",
+            "name": "Get CompanyObjective by invalid id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/2",
+            "name": "update company objective without id in json",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n    \"name\": \"Updated\",\n    \"startDate\": \"2023-01-01\",\n    \"endDate\": \"2023-12-31\"\n  }"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyObjectives/1",
+            "name": "delete company objective",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "BusinessUnitKeyResultHistory",
+        "folders": [],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResultHistory",
+            "name": "Get All Business Unit Key Result Histories",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResultHistory/1",
+            "name": "Get BusinessUnitKeyResultHistory by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "BusinessUnit",
+        "folders": [
+          {
+            "v": 1,
+            "name": "Users",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1/users",
+                "name": "Get Users by BU",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1/users",
+                "name": "Add User to BU",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"name\": \"firstname\",\n  \"surname\": \"lastname\",\n  \"password\": \"test\"\n}"
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "BUO",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1/objectives",
+                "name": "Get BUO by BU",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1/objectives",
+                "name": "Add BUO to BU",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"name\": \"TestName\"\n}"
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits",
+            "name": "Get All BusinessUnits",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWyiwuVrJSKkktLsnMS1fSUcpMLFGyMjQzMTW3MDI3tNBRKi1OLcpLzE0FqirLL9LLS0zOMFSqBQAFCW-WOQAAAA.ff2Ua8D-YOwgOGNVyQbmLKnVOaVvtnQZL6YhBR5apso"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1",
+            "name": "Get Business Unit by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits",
+            "name": "Create new BU",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Test\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1",
+            "name": "Update BU",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"LALA\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits/100",
+            "name": "Upsert BU",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"LALA\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnits/1",
+            "name": "Delete BU",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "CompanyKeyResultHistory",
+        "folders": [],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResultHistory",
+            "name": "Get All Company Key Result Histories",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResultHistory/1",
+            "name": "Get CompanyKeyResultHistory by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "BusinessUnitKeyResult",
+        "folders": [
+          {
+            "v": 1,
+            "name": "history",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1/history",
+                "name": "Get complete  history of BUKR",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "companyKeyResultReference",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1/companyKeyResultReference/1",
+                "name": "Add link between BUKR and CKR",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1/companyKeyResultReference/1",
+                "name": "Add link between BUKR and CKR",
+                "params": [],
+                "headers": [],
+                "method": "PUT",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1/companyKeyResultReference/",
+                "name": "Delete link between BUKR and CKR",
+                "params": [],
+                "headers": [],
+                "method": "DELETE",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults",
+            "name": "Get all BUKRs",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1",
+            "name": "Get BUKR by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/1",
+            "name": "Update BUKR",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"currentValue\": 25,\n  \"comment\": \"La\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitKeyResults/4",
+            "name": "Delete BUKR",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "BusinessUnitObjectives",
+        "folders": [
+          {
+            "v": 1,
+            "name": "companyKeyResultReference",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/2/companyKeyResultReference/2",
+                "name": "Add reference to CKR",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/2/companyKeyResultReference/2",
+                "name": "Add reference to CKR",
+                "params": [],
+                "headers": [],
+                "method": "PUT",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/2/companyKeyResultReference",
+                "name": "delete reference to CKR",
+                "params": [],
+                "headers": [],
+                "method": "DELETE",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "keyResults",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/2/keyResults",
+                "name": "Get all BUKR by BUO",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/2/keyResults",
+                "name": "Add BUKR to BUO",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"name\": \"Test\",\n  \"currentValue\": 10,\n  \"goalValue\": 100,\n  \"confidenceLevel\": 100,\n  \"comment\": \"Create\"\n}"
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives",
+            "name": "Get all BUOs",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/1",
+            "name": "Get BUO by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/1",
+            "name": "Update BUO",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"La\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/businessUnitObjectives/1",
+            "name": "Delete BUO",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "CompanyKeyResults",
+        "folders": [
+          {
+            "v": 1,
+            "name": "history",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/companyKeyResults/2/history",
+                "name": "Get CKR history by id",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResults",
+            "name": "Get all CKRs",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResults/1",
+            "name": "Get CKR by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResults/1",
+            "name": "Update CKR by id",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Bla\",\n  \"comment\": \"Change name\",\n  \"currentValue\": 10\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/companyKeyResults/1",
+            "name": "Delete CKR by id",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "OkrUser",
+        "folders": [
+          {
+            "v": 1,
+            "name": "roles",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/users/5/roles/1",
+                "name": "Change Users Role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "businessUnit",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/users/5/businessUnits/1",
+                "name": "add user to businessUnit",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users",
+            "name": "Get all OkrUsers",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users/1",
+            "name": "Get OkrUser by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users",
+            "name": "Save new user",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Bla\",\n  \"surname\": \"Bla\",\n  \"username\": \"Bla\",\n  \"password\": \"Bla\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users/4",
+            "name": "Update User",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Test\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/users/4",
+            "name": "Delete User",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"Test\"\n}"
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "Role",
+        "folders": [
+          {
+            "v": 1,
+            "name": "users",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/1/users",
+                "name": "Add new user with role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": "application/json",
+                  "body": "{\n  \"username\": \"vor.nach1\",\n  \"password\": \"password1\"\n}"
+                }
+              }
+            ]
+          },
+          {
+            "v": 1,
+            "name": "privileges",
+            "folders": [],
+            "requests": [
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/1/privileges",
+                "name": "get all privileges by role",
+                "params": [],
+                "headers": [],
+                "method": "GET",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/5/privileges/1",
+                "name": "Add new privilege to role",
+                "params": [],
+                "headers": [],
+                "method": "POST",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              },
+              {
+                "v": "1",
+                "endpoint": "http://<<base_url>><<base_path>>/roles/5/privileges/1",
+                "name": "Add new privilege to role (put)",
+                "params": [],
+                "headers": [],
+                "method": "PUT",
+                "auth": {
+                  "authType": "bearer",
+                  "authActive": true,
+                  "addTo": "Headers",
+                  "key": "",
+                  "value": "",
+                  "token": "<<bearer>>",
+                  "username": "vor.nach3",
+                  "password": "password3"
+                },
+                "preRequestScript": "",
+                "testScript": "",
+                "body": {
+                  "contentType": null,
+                  "body": null
+                }
+              }
+            ]
+          }
+        ],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/",
+            "name": "Get All Roles",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/1",
+            "name": "Get Role with id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/",
+            "name": "Add new role",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"rolename\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/1",
+            "name": "update role",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"test\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/roles/4",
+            "name": "delete role",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      },
+      {
+        "v": 1,
+        "name": "Privilege",
+        "folders": [],
+        "requests": [
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/1",
+            "name": "Get privilege by id",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges",
+            "name": "Get all privileges",
+            "params": [],
+            "headers": [],
+            "method": "GET",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges",
+            "name": "Add new Privilege",
+            "params": [],
+            "headers": [],
+            "method": "POST",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"LKSJDF\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/10",
+            "name": "Update Privilege",
+            "params": [],
+            "headers": [],
+            "method": "PUT",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": "application/json",
+              "body": "{\n  \"name\": \"asdf\"\n}"
+            }
+          },
+          {
+            "v": "1",
+            "endpoint": "http://<<base_url>><<base_path>>/privileges/10",
+            "name": "Delete Privilege",
+            "params": [],
+            "headers": [],
+            "method": "DELETE",
+            "auth": {
+              "authType": "bearer",
+              "authActive": true,
+              "addTo": "Headers",
+              "key": "",
+              "value": "",
+              "token": "<<bearer>>",
+              "username": "vor.nach3",
+              "password": "password3"
+            },
+            "preRequestScript": "",
+            "testScript": "",
+            "body": {
+              "contentType": null,
+              "body": null
+            }
+          }
+        ]
+      }
+    ],
+    "requests": [
+      {
+        "v": "1",
+        "endpoint": "http://<<base_url>><<base_path>>/login",
+        "name": "login",
+        "params": [],
+        "headers": [],
+        "method": "POST",
+        "auth": {
+          "authType": "none",
+          "authActive": true,
+          "addTo": "Headers",
+          "key": "",
+          "value": "",
+          "token": "vor.nach3",
+          "username": "vor.nach3",
+          "password": "password3"
+        },
+        "preRequestScript": "",
+        "testScript": "pw.env.set(\"bearer\", pw.response.body);",
+        "body": {
+          "contentType": "application/json",
+          "body": "{\n  \"username\": \"vor.nach1\",\n  \"password\": \"password1\"\n}"
+        }
+      },
+      {
+        "v": "1",
+        "endpoint": "http://<<base_url>><<base_path>>/dashboard",
+        "name": "Get dashboard",
+        "params": [],
+        "headers": [],
+        "method": "GET",
+        "auth": {
+          "authType": "bearer",
+          "authActive": true,
+          "addTo": "Headers",
+          "key": "",
+          "value": "",
+          "token": "<<bearer>>",
+          "username": "vor.nach3",
+          "password": "password3"
+        },
+        "preRequestScript": "",
+        "testScript": "",
+        "body": {
+          "contentType": null,
+          "body": null
+        }
+      }
+    ]
+  }
+]
